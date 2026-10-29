@@ -51,7 +51,7 @@ body {
 }
 
 .admin-layout {
-  max-width: 1400px;
+  max-width: 1440px;
   margin: 0 auto;
 }
 
@@ -159,6 +159,43 @@ body {
   background: rgba(99, 102, 241, 0.2);
   border-color: var(--primary);
   color: #a5b4fc;
+}
+
+.btn-danger-outline {
+  background: var(--danger-bg);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  color: #fca5a5;
+  padding: 6px 12px;
+  border-radius: var(--radius-sm);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-danger-outline:hover {
+  background: var(--danger);
+  color: white;
+}
+
+.btn-pdf {
+  background: rgba(139, 92, 246, 0.18);
+  border: 1px solid rgba(139, 92, 246, 0.4);
+  color: #c4b5fd;
+  padding: 6px 12px;
+  border-radius: var(--radius-sm);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  transition: all 0.2s ease;
+}
+
+.btn-pdf:hover {
+  background: var(--secondary);
+  color: white;
 }
 
 /* Stat Cards */
@@ -299,7 +336,7 @@ body {
 /* Submissions Grid */
 .submissions-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
   gap: 20px;
 }
 
@@ -322,7 +359,7 @@ body {
 
 .sub-thumb-wrap {
   width: 100%;
-  height: 200px;
+  height: 220px;
   background: #000;
   position: relative;
   overflow: hidden;
@@ -348,26 +385,42 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: 8px;
 }
 
 .badge-team {
-  background: rgba(0, 0, 0, 0.75);
+  background: rgba(0, 0, 0, 0.85);
   backdrop-filter: blur(8px);
   color: #a5b4fc;
   border: 1px solid rgba(99, 102, 241, 0.4);
-  padding: 4px 10px;
+  padding: 5px 12px;
   border-radius: var(--radius-full);
   font-size: 12px;
   font-weight: 700;
 }
 
 .badge-time {
-  background: rgba(0, 0, 0, 0.75);
+  background: rgba(0, 0, 0, 0.85);
   backdrop-filter: blur(8px);
-  color: var(--text-sub);
-  padding: 4px 10px;
+  color: #f1f5f9;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 5px 12px;
   border-radius: var(--radius-full);
-  font-size: 11px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+/* Time Banner directly under photo */
+.sub-time-banner {
+  background: rgba(99, 102, 241, 0.12);
+  border-bottom: 1px solid rgba(99, 102, 241, 0.25);
+  padding: 8px 14px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #c7d2fe;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .sub-body {
@@ -379,7 +432,7 @@ body {
 }
 
 .sub-clue-title {
-  font-size: 15px;
+  font-size: 16px;
   font-weight: 700;
   color: var(--text-main);
   margin-bottom: 6px;
@@ -389,7 +442,7 @@ body {
   background: rgba(255, 255, 255, 0.03);
   border: 1px solid rgba(255, 255, 255, 0.06);
   border-radius: var(--radius-sm);
-  padding: 8px 12px;
+  padding: 10px 12px;
   margin-bottom: 12px;
   font-size: 13px;
 }
@@ -399,11 +452,13 @@ body {
   font-size: 11px;
   text-transform: uppercase;
   font-weight: 700;
+  margin-bottom: 2px;
 }
 
 .sub-answer-val {
   color: var(--success);
   font-weight: 700;
+  font-size: 14px;
 }
 
 .sub-actions {
@@ -435,7 +490,7 @@ body {
   color: #fff;
 }
 
-/* Leaderboard Table */
+/* Leaderboard & Tables */
 .data-table-card {
   background: var(--admin-card);
   backdrop-filter: blur(16px);
@@ -452,7 +507,7 @@ body {
 }
 
 .data-table th {
-  background: rgba(0, 0, 0, 0.3);
+  background: rgba(0, 0, 0, 0.35);
   padding: 14px 18px;
   font-size: 12px;
   font-weight: 700;
@@ -463,10 +518,11 @@ body {
 }
 
 .data-table td {
-  padding: 14px 18px;
+  padding: 12px 18px;
   border-bottom: 1px solid var(--admin-border);
   font-size: 14px;
   color: var(--text-main);
+  vertical-align: middle;
 }
 
 .data-table tr:last-child td {
@@ -546,7 +602,7 @@ body {
   border: 1px solid var(--admin-border);
   border-radius: var(--radius-sm);
   color: var(--text-main);
-  padding: 6px 10px;
+  padding: 8px 12px;
   font-size: 13px;
   width: 100%;
 }
@@ -554,9 +610,16 @@ body {
 .editable-input:focus {
   border-color: var(--primary);
   outline: none;
+  background: rgba(0, 0, 0, 0.7);
 }
 
-/* Lightbox Modal */
+.cred-actions-cell {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+/* Lightbox Modal & Add Team Modal */
 .modal-overlay {
   display: none;
   position: fixed;
@@ -586,6 +649,10 @@ body {
   flex-direction: column;
 }
 
+.modal-card.modal-card-sm {
+  max-width: 460px;
+}
+
 .modal-header {
   padding: 16px 20px;
   display: flex;
@@ -595,7 +662,7 @@ body {
 }
 
 .modal-title {
-  font-size: 16px;
+  font-size: 17px;
   font-weight: 700;
   color: var(--text-main);
 }
@@ -629,6 +696,20 @@ body {
   align-items: center;
 }
 
+/* Form Groups in Modal */
+.modal-form-group {
+  text-align: left;
+  margin-bottom: 16px;
+}
+
+.modal-form-label {
+  display: block;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-sub);
+  margin-bottom: 6px;
+}
+
 @keyframes fadeIn {
   from { opacity: 0; }
   to { opacity: 1; }
@@ -645,4 +726,3 @@ body {
     grid-template-columns: repeat(2, 1fr);
   }
 }
-

@@ -7,11 +7,59 @@ let allCredentials = [];
 let questionsConfig = null;
 let soundAlerts = true;
 let pollTimer = null;
-let lastSeenId = 0;
 let isFirstLoad = true;
+let activeModalTeamId = null;
 
 // ----------------------------------------------------
-// 1. SOUND SYNTHESIZER FOR LIVE ALERTS
+// 1. DATE & TIME FORMATTERS (EXACT TIMESTAMPS)
+// ----------------------------------------------------
+function formatExactTime(dateInput) {
+  if (!dateInput) return '--';
+  const d = new Date(dateInput);
+  if (isNaN(d.getTime())) return String(dateInput);
+
+  return d.toLocaleString('en-US', {
+    day: '2-digit',
+    month: 'short',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+    hour12: true
+  });
+}
+
+function formatTimeOnly(dateInput) {
+  if (!dateInput) return '--';
+  const d = new Date(dateInput);
+  if (isNaN(d.getTime())) return String(dateInput);
+
+  return d.toLocaleTimeString('en-US', {
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+    hour12: true
+  });
+}
+
+function formatRelativeTime(dateString) {
+  if (!dateString) return '';
+  const now = Date.now();
+  const past = new Date(dateString).getTime();
+  if (isNaN(past)) return '';
+  const diffSecs = Math.max(0, Math.floor((now - past) / 1000));
+
+  if (diffSecs < 10) return 'Just now';
+  if (diffSecs < 60) return `${diffSecs}s ago`;
+  const diffMins = Math.floor(diffSecs / 60);
+  if (diffMins < 60) return `${diffMins}m ago`;
+  const diffHours = Math.floor(diffMins / 60);
+  if (diffHours < 24) return `${diffHours}h ago`;
+  return formatTimeOnly(dateString);
+}
+
+// ----------------------------------------------------
+// 2. SOUND SYNTHESIZER FOR LIVE ALERTS
 // ----------------------------------------------------
 let audioCtx = null;
 
@@ -33,7 +81,6 @@ function playSubmissionAlertSound() {
     if (!ctx) return;
     const now = ctx.currentTime;
     
-    // Modern dual chime: F5 (698.46Hz) -> A5 (880Hz)
     const osc1 = ctx.createOscillator();
     const gain1 = ctx.createGain();
     osc1.type = 'sine';
@@ -61,18 +108,17 @@ function playSubmissionAlertSound() {
 function toggleSoundAlerts() {
   soundAlerts = !soundAlerts;
   const btn = document.getElementById('soundToggleBtn');
-  const icon = document.getElementById('soundIcon');
   if (soundAlerts) {
     btn.classList.add('active');
-    btn.innerHTML = '<span>🔔</span> Sound Alerts: ON';
+    btn.innerHTML = '<span id="soundIcon">🔔</span> Sound Alerts: ON';
   } else {
     btn.classList.remove('active');
-    btn.innerHTML = '<span>🔕</span> Sound Alerts: OFF';
+    btn.innerHTML = '<span id="soundIcon">🔕</span> Sound Alerts: OFF';
   }
 }
 
 // ----------------------------------------------------
-// 2. TAB SWITCHING
+// 3. TAB SWITCHING
 // ----------------------------------------------------
 function switchTab(tabId) {
   document.querySelectorAll('.tab-panel').forEach((p) => p.classList.remove('active'));
@@ -86,15 +132,15 @@ function switchTab(tabId) {
   );
   if (clickedBtn) clickedBtn.classList.add('active');
 
-  // Trigger special tab renders
   if (tabId === 'tabMatrix') renderMatrix();
   if (tabId === 'tabLeaderboard') renderLeaderboard();
   if (tabId === 'tabCredentials') renderCredentialsTable();
   if (tabId === 'tabQuestions') renderQuestionsTable();
+  if (tabId === 'tabExport') populateExportSelect();
 }
 
 // ----------------------------------------------------
-// 3. DATA FETCHING & LIVE POLLING
+// 4. DATA FETCHING & LIVE POLLING
 // ----------------------------------------------------
 async function fetchAllData() {
   try {
@@ -111,10 +157,8 @@ async function fetchAllData() {
     allCredentials = Array.isArray(creds.teams) ? creds.teams : [];
     questionsConfig = quests;
 
-    // Check for newly arrived submissions
     if (Array.isArray(subs)) {
       if (!isFirstLoad && subs.length > allSubmissions.length) {
-        const newItemsCount = subs.length - allSubmissions.length;
         playSubmissionAlertSound();
       }
       allSubmissions = subs;
@@ -123,6 +167,7 @@ async function fetchAllData() {
     isFirstLoad = false;
     updateStats();
     populateTeamFilter();
+    populateExportSelect();
     filterSubmissions();
     renderLeaderboard();
   } catch (err) {
@@ -141,7 +186,7 @@ function manualRefresh() {
 }
 
 // ----------------------------------------------------
-// 4. STATS & LIVE FEED
+// 5. STATS & LIVE FEED (WITH EXACT TIME WISE PROOFS)
 // ----------------------------------------------------
 function updateStats() {
   const activeTeams = new Set(allSubmissions.map((s) => String(s.teamId)));
@@ -181,8 +226,9 @@ function updateStats() {
 
 function populateTeamFilter() {
   const select = document.getElementById('teamFilterSelect');
+  if (!select) return;
   const currentVal = select.value;
-  select.innerHTML = '<option value="">All Teams (45)</option>';
+  select.innerHTML = '<option value="">All Teams</option>';
 
   const teams = [...allCredentials].sort((a, b) => Number(a.id) - Number(b.id));
   teams.forEach((t) => {
@@ -195,19 +241,21 @@ function populateTeamFilter() {
   select.value = currentVal;
 }
 
-function formatRelativeTime(dateString) {
-  if (!dateString) return '';
-  const now = Date.now();
-  const past = new Date(dateString).getTime();
-  const diffSecs = Math.max(0, Math.floor((now - past) / 1000));
+function populateExportSelect() {
+  const select = document.getElementById('pdfTeamSelect');
+  if (!select) return;
+  const currentVal = select.value || 'all';
+  select.innerHTML = '<option value="all">🌟 All Teams (Combined Dossier)</option>';
 
-  if (diffSecs < 10) return 'Just now';
-  if (diffSecs < 60) return `${diffSecs}s ago`;
-  const diffMins = Math.floor(diffSecs / 60);
-  if (diffMins < 60) return `${diffMins}m ago`;
-  const diffHours = Math.floor(diffMins / 60);
-  if (diffHours < 24) return `${diffHours}h ago`;
-  return new Date(dateString).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  const teams = [...allCredentials].sort((a, b) => Number(a.id) - Number(b.id));
+  teams.forEach((t) => {
+    const opt = document.createElement('option');
+    opt.value = String(t.id);
+    opt.textContent = `Team ${t.id}: ${t.name || 'Team ' + t.id}`;
+    select.appendChild(opt);
+  });
+
+  select.value = currentVal;
 }
 
 function filterSubmissions() {
@@ -248,27 +296,37 @@ function renderSubmissionsGrid(items) {
     .map((sub) => {
       const photoSrc = sub.photoPath || 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="300" height="200" viewBox="0 0 300 200"><rect width="100%" height="100%" fill="%231e293b"/><text x="50%" y="50%" fill="%2364748b" dominant-baseline="middle" text-anchor="middle">No Photo</text></svg>';
       const relTime = formatRelativeTime(sub.createdAt);
-      const exactTime = sub.submittedAt || (sub.createdAt ? new Date(sub.createdAt).toLocaleTimeString() : '');
+      const exactTimeStr = formatExactTime(sub.createdAt || sub.submittedAt);
+      const timeOnly = formatTimeOnly(sub.createdAt || sub.submittedAt);
 
       return `
         <div class="sub-card">
-          <div class="sub-thumb-wrap" onclick="openPhotoModal('${encodeURIComponent(photoSrc)}', '${escapeHtml(sub.teamName)}', 'Checkpoint ${sub.questionId}', '${escapeHtml(sub.answer)}', '${exactTime}')">
+          <div class="sub-thumb-wrap" onclick="openPhotoModal('${encodeURIComponent(photoSrc)}', '${escapeHtml(sub.teamName)}', 'Checkpoint ${sub.questionId}', '${escapeHtml(sub.answer)}', '${exactTimeStr}', '${sub.teamId}')">
             <img class="sub-thumb" src="${photoSrc}" loading="lazy" alt="Proof">
             <div class="sub-badge-row">
               <span class="badge-team">${escapeHtml(sub.teamName || 'Team ' + sub.teamId)}</span>
-              <span class="badge-time">⏱️ ${relTime}</span>
+              <span class="badge-time">⏱️ ${relTime || timeOnly}</span>
             </div>
           </div>
+          
+          <!-- Explicit Time Banner -->
+          <div class="sub-time-banner">
+            <span>📅 ${exactTimeStr}</span>
+            <span style="font-size: 11px; opacity: 0.85;">${relTime}</span>
+          </div>
+
           <div class="sub-body">
             <div>
-              <div class="sub-clue-title">Checkpoint #${sub.questionId}</div>
+              <div class="sub-clue-title">Checkpoint #${sub.questionId}: ${escapeHtml(sub.question || '')}</div>
               <div class="sub-answer-box">
                 <div class="sub-answer-label">Team Answer</div>
                 <div class="sub-answer-val">✓ ${escapeHtml(sub.answer)}</div>
               </div>
             </div>
             <div class="sub-actions">
-              <span style="font-size: 11px; color: var(--text-dim);">Time: ${exactTime}</span>
+              <button type="button" class="btn-pdf" onclick="generateTeamProgressPdf('${sub.teamId}')">
+                📄 PDF Report
+              </button>
               <a class="btn-download-photo" download="team${sub.teamId}-q${sub.questionId}.jpg" href="${photoSrc}">
                 ⬇️ Download
               </a>
@@ -281,15 +339,14 @@ function renderSubmissionsGrid(items) {
 }
 
 // ----------------------------------------------------
-// 5. LEADERBOARD
+// 6. LEADERBOARD (WITH PDF ACTION BUTTONS)
 // ----------------------------------------------------
 function renderLeaderboard() {
   const tbody = document.getElementById('leaderboardTbody');
   if (!tbody) return;
 
-  const totalCheckpoints = (questionsConfig && questionsConfig.questions ? questionsConfig.questions.length : 21) + 4;
+  const totalCheckpoints = 25;
 
-  // Group verified submissions by team
   const teamsMap = {};
   allCredentials.forEach((t) => {
     teamsMap[String(t.id)] = {
@@ -337,9 +394,7 @@ function renderLeaderboard() {
       else if (rank === 3 && team.completedSet.size > 0) badgeClass = 'rank-3';
 
       const pct = Math.round((team.completedSet.size / totalCheckpoints) * 100);
-      const timeStr = team.lastSubmissionTime
-        ? new Date(team.lastSubmissionTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })
-        : '--';
+      const timeStr = team.lastSubmissionTime ? formatExactTime(team.lastSubmissionTime) : '--';
 
       return `
         <tr>
@@ -355,11 +410,16 @@ function renderLeaderboard() {
             </div>
             <div style="font-size: 11px; color: var(--text-dim); margin-top: 4px;">${pct}% completed</div>
           </td>
-          <td>${timeStr}</td>
+          <td style="font-size: 13px;">${timeStr}</td>
           <td>
-            <a href="team-responses.html?teamId=${encodeURIComponent(team.id)}" class="btn-control" style="padding: 4px 10px; font-size: 12px;">
-              🔍 Photos
-            </a>
+            <div style="display: flex; gap: 6px;">
+              <button type="button" class="btn-pdf" onclick="generateTeamProgressPdf('${team.id}')">
+                📄 PDF
+              </button>
+              <a href="team-responses.html?teamId=${encodeURIComponent(team.id)}" class="btn-control" style="padding: 4px 10px; font-size: 12px;">
+                🔍 Photos
+              </a>
+            </div>
           </td>
         </tr>
       `;
@@ -368,7 +428,7 @@ function renderLeaderboard() {
 }
 
 // ----------------------------------------------------
-// 6. 45-TEAM PROGRESS MATRIX
+// 7. 45-TEAM PROGRESS MATRIX
 // ----------------------------------------------------
 function renderMatrix() {
   const table = document.getElementById('matrixTable');
@@ -377,7 +437,6 @@ function renderMatrix() {
   const totalCheckpoints = 25;
   const teams = [...allCredentials].sort((a, b) => Number(a.id) - Number(b.id));
 
-  // Build matrix lookup
   const teamSolves = {};
   allSubmissions.forEach((s) => {
     if (!s.isCorrect) return;
@@ -403,7 +462,8 @@ function renderMatrix() {
       const sub = solvedMap[c];
       if (sub) {
         const photoUrl = sub.photoPath || '';
-        html += `<td class="matrix-cell-done" title="Solved at ${sub.submittedAt || ''}: ${escapeHtml(sub.answer)}" onclick="openPhotoModal('${encodeURIComponent(photoUrl)}', '${escapeHtml(t.name)}', 'Checkpoint ${c}', '${escapeHtml(sub.answer)}', '${sub.submittedAt || ''}')">📷</td>`;
+        const exactTime = formatExactTime(sub.createdAt || sub.submittedAt);
+        html += `<td class="matrix-cell-done" title="Solved at ${exactTime}: ${escapeHtml(sub.answer)}" onclick="openPhotoModal('${encodeURIComponent(photoUrl)}', '${escapeHtml(t.name)}', 'Checkpoint ${c}', '${escapeHtml(sub.answer)}', '${exactTime}', '${tid}')">📷</td>`;
       } else if (c === solvedCount + 1) {
         html += `<td class="matrix-cell-current" title="Currently solving">⚡</td>`;
       } else {
@@ -419,45 +479,79 @@ function renderMatrix() {
 }
 
 // ----------------------------------------------------
-// 7. TEAM CREDENTIALS MANAGER
+// 8. TEAM CREDENTIALS MANAGER (EDIT, ADD, DELETE)
 // ----------------------------------------------------
 function renderCredentialsTable() {
   const tbody = document.getElementById('credentialsTbody');
   if (!tbody) return;
 
-  const teams = [...allCredentials].sort((a, b) => Number(a.id) - Number(b.id));
+  const search = (document.getElementById('searchTeamCredInput')?.value || '').toLowerCase().trim();
+
+  let teams = [...allCredentials].sort((a, b) => Number(a.id) - Number(b.id));
+  if (search) {
+    teams = teams.filter((t) => {
+      return String(t.id).includes(search) || String(t.name || '').toLowerCase().includes(search);
+    });
+  }
+
+  // Count cleared checkpoints per team
+  const clearedCounts = {};
+  allSubmissions.forEach((s) => {
+    if (s.isCorrect) {
+      const tid = String(s.teamId);
+      if (!clearedCounts[tid]) clearedCounts[tid] = new Set();
+      clearedCounts[tid].add(Number(s.questionId));
+    }
+  });
 
   tbody.innerHTML = teams
-    .map(
-      (t, idx) => `
-      <tr id="cred-row-${idx}">
-        <td>
-          <input type="text" class="editable-input" id="cred-id-${idx}" value="${escapeHtml(t.id)}">
-        </td>
-        <td>
-          <input type="text" class="editable-input" id="cred-name-${idx}" value="${escapeHtml(t.name || 'Team ' + t.id)}">
-        </td>
-        <td>
-          <input type="text" class="editable-input" id="cred-pass-${idx}" value="${escapeHtml(t.password || '')}">
-        </td>
-        <td>
-          <button type="button" class="btn-control active" style="padding: 6px 12px; font-size: 12px;" onclick="saveSingleTeamCredential(${idx})">
-            💾 Save
-          </button>
-        </td>
-      </tr>
-    `
-    )
+    .map((t) => {
+      const count = clearedCounts[String(t.id)] ? clearedCounts[String(t.id)].size : 0;
+      return `
+        <tr id="cred-row-${t.id}">
+          <td>
+            <code style="font-weight: 700; color: #a5b4fc; font-size: 14px;">${escapeHtml(t.id)}</code>
+          </td>
+          <td>
+            <input type="text" class="editable-input" id="cred-name-${t.id}" value="${escapeHtml(t.name || 'Team ' + t.id)}" placeholder="Team Name">
+          </td>
+          <td>
+            <input type="text" class="editable-input" id="cred-pass-${t.id}" value="${escapeHtml(t.password || '')}" placeholder="Password">
+          </td>
+          <td>
+            <span style="font-weight: 700; color: ${count > 0 ? 'var(--success)' : 'var(--text-dim)'};">
+              ${count} / 25
+            </span>
+          </td>
+          <td>
+            <div class="cred-actions-cell">
+              <button type="button" class="btn-control active" style="padding: 6px 12px; font-size: 12px;" onclick="saveSingleTeamCredential('${t.id}')">
+                💾 Save
+              </button>
+              <button type="button" class="btn-pdf" onclick="generateTeamProgressPdf('${t.id}')">
+                📄 PDF
+              </button>
+              <button type="button" class="btn-danger-outline" onclick="deleteSingleTeam('${t.id}', '${escapeHtml(t.name || 'Team ' + t.id)}')">
+                🗑️ Delete
+              </button>
+            </div>
+          </td>
+        </tr>
+      `;
+    })
     .join('');
 }
 
-async function saveSingleTeamCredential(idx) {
-  const id = document.getElementById(`cred-id-${idx}`).value.trim();
-  const name = document.getElementById(`cred-name-${idx}`).value.trim();
-  const password = document.getElementById(`cred-pass-${idx}`).value.trim();
+async function saveSingleTeamCredential(teamId) {
+  const nameInput = document.getElementById(`cred-name-${teamId}`);
+  const passInput = document.getElementById(`cred-pass-${teamId}`);
 
-  if (!id || !password) {
-    alert('Team ID and Password cannot be blank.');
+  if (!nameInput || !passInput) return;
+  const name = nameInput.value.trim();
+  const password = passInput.value.trim();
+
+  if (!password) {
+    alert('Team password cannot be empty.');
     return;
   }
 
@@ -467,12 +561,12 @@ async function saveSingleTeamCredential(idx) {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         action: 'update',
-        team: { id, name, password }
+        team: { id: String(teamId), name, password }
       })
     });
 
     if (res.ok) {
-      alert(`✓ Credentials for Team ${id} saved successfully!`);
+      alert(`✓ Credentials for Team ${teamId} saved successfully!`);
       fetchAllData();
     } else {
       const err = await res.json();
@@ -483,18 +577,86 @@ async function saveSingleTeamCredential(idx) {
   }
 }
 
-function addNewTeamRow() {
-  const nextId = String(allCredentials.length + 1);
-  const newTeam = {
-    id: nextId,
-    name: `Team ${nextId}`,
-    password: `team@${nextId}`
-  };
-  allCredentials.push(newTeam);
-  renderCredentialsTable();
-  const lastIndex = allCredentials.length - 1;
-  const row = document.getElementById(`cred-row-${lastIndex}`);
-  if (row) row.scrollIntoView({ behavior: 'smooth' });
+async function deleteSingleTeam(teamId, teamName) {
+  const confirmed = confirm(`Are you sure you want to delete ${teamName} (ID: ${teamId})?\n\nThis will remove the team from the active roster.`);
+  if (!confirmed) return;
+
+  try {
+    const res = await fetch(`/api/credentials?id=${encodeURIComponent(teamId)}`, {
+      method: 'DELETE'
+    });
+
+    if (res.ok) {
+      alert(`✓ Team ${teamId} deleted successfully.`);
+      fetchAllData();
+    } else {
+      const err = await res.json();
+      alert('Failed to delete team: ' + (err.error || 'Server error'));
+    }
+  } catch (e) {
+    alert('Network error while deleting team.');
+  }
+}
+
+function openAddTeamModal() {
+  const modal = document.getElementById('addTeamModal');
+  const existingIds = allCredentials.map((t) => Number(t.id)).filter(Number.isFinite);
+  const nextId = existingIds.length > 0 ? Math.max(...existingIds) + 1 : 1;
+
+  document.getElementById('newTeamId').value = String(nextId);
+  document.getElementById('newTeamName').value = `Team ${nextId}`;
+  document.getElementById('newTeamPassword').value = `team@${nextId}`;
+
+  modal.classList.add('show');
+  document.getElementById('newTeamName').focus();
+}
+
+function closeAddTeamModal(e) {
+  if (e && e.target && e.target.id !== 'addTeamModal' && !e.target.classList.contains('btn-close-modal')) {
+    return;
+  }
+  document.getElementById('addTeamModal').classList.remove('show');
+}
+
+async function handleAddTeamSubmit(event) {
+  event.preventDefault();
+  const id = document.getElementById('newTeamId').value.trim();
+  const name = document.getElementById('newTeamName').value.trim();
+  const password = document.getElementById('newTeamPassword').value.trim();
+
+  if (!id || !password) {
+    alert('Team ID and Password are required.');
+    return;
+  }
+
+  // Check if ID already exists
+  const exists = allCredentials.some((t) => String(t.id) === String(id));
+  if (exists) {
+    alert(`Team with ID ${id} already exists. Please choose a unique ID.`);
+    return;
+  }
+
+  try {
+    const res = await fetch('/api/credentials', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        action: 'add',
+        team: { id, name, password }
+      })
+    });
+
+    if (res.ok) {
+      alert(`✓ Team ${id} (${name}) created successfully!`);
+      closeAddTeamModal();
+      fetchAllData();
+    } else {
+      const err = await res.json();
+      alert('Failed to create team: ' + (err.error || 'Server error'));
+    }
+  } catch (e) {
+    alert('Network error while creating team.');
+  }
 }
 
 function exportCredentialsCsv() {
@@ -507,7 +669,7 @@ function exportCredentialsCsv() {
 }
 
 // ----------------------------------------------------
-// 8. QUESTIONS DIRECTORY TABLE
+// 9. QUESTIONS DIRECTORY TABLE
 // ----------------------------------------------------
 function renderQuestionsTable() {
   const tbody = document.getElementById('questionsTbody');
@@ -515,7 +677,6 @@ function renderQuestionsTable() {
 
   const clues = Array.isArray(questionsConfig.questions) ? questionsConfig.questions : [];
   const games = Array.isArray(questionsConfig.gameCheckpoints) ? questionsConfig.gameCheckpoints : [];
-
   const allItems = [...clues, ...games];
 
   tbody.innerHTML = allItems
@@ -539,7 +700,230 @@ function renderQuestionsTable() {
 }
 
 // ----------------------------------------------------
-// 9. EXPORT: ZIP DOWNLOAD & CSV EXPORT
+// 10. PDF PROGRESS REPORT GENERATION (TIME-WISE PHOTOS)
+// ----------------------------------------------------
+async function imageSrcToDataUrl(src) {
+  if (!src) return null;
+  if (src.startsWith('data:image')) return src;
+
+  return new Promise((resolve) => {
+    const img = new Image();
+    img.crossOrigin = 'Anonymous';
+    img.onload = () => {
+      try {
+        const canvas = document.createElement('canvas');
+        canvas.width = img.width;
+        canvas.height = img.height;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0);
+        resolve(canvas.toDataURL('image/jpeg', 0.8));
+      } catch (err) {
+        resolve(null);
+      }
+    };
+    img.onerror = () => resolve(null);
+    img.src = src;
+  });
+}
+
+async function generateTeamProgressPdf(targetTeamId) {
+  const { jsPDF } = window.jspdf || {};
+  if (!jsPDF) {
+    alert('PDF library is loading. Please try again in a moment.');
+    return;
+  }
+
+  const team = allCredentials.find((t) => String(t.id) === String(targetTeamId));
+  const teamName = team ? team.name || `Team ${team.id}` : `Team ${targetTeamId}`;
+
+  // Get and sort team submissions chronologically
+  const teamSubs = allSubmissions
+    .filter((s) => String(s.teamId) === String(targetTeamId) && s.isCorrect)
+    .sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
+
+  if (teamSubs.length === 0) {
+    alert(`No verified submissions found for ${teamName} yet.`);
+    return;
+  }
+
+  const doc = new jsPDF({
+    orientation: 'portrait',
+    unit: 'mm',
+    format: 'a4'
+  });
+
+  const pageWidth = 210;
+  const pageHeight = 297;
+  const margin = 14;
+  const contentWidth = pageWidth - margin * 2;
+
+  // Header Banner
+  doc.setFillColor(15, 23, 42); // Dark Navy #0F172A
+  doc.rect(0, 0, pageWidth, 42, 'F');
+
+  doc.setTextColor(255, 255, 255);
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(17);
+  doc.text('CAMPUS TREASURE HUNT 2.0', margin, 16);
+
+  doc.setFontSize(10);
+  doc.setFont('helvetica', 'bold');
+  doc.setTextColor(165, 180, 252);
+  doc.text('OFFICIAL TEAM JOURNEY & TIME-WISE PHOTO REPORT', margin, 24);
+
+  doc.setFontSize(8);
+  doc.setFont('helvetica', 'normal');
+  doc.setTextColor(148, 163, 184);
+  doc.text(`Report Generated: ${formatExactTime(new Date())}`, margin, 32);
+
+  // Team Summary Card
+  doc.setFillColor(248, 250, 252);
+  doc.setDrawColor(226, 232, 240);
+  doc.roundedRect(margin, 48, contentWidth, 28, 3, 3, 'FD');
+
+  doc.setFontSize(14);
+  doc.setFont('helvetica', 'bold');
+  doc.setTextColor(30, 41, 59);
+  doc.text(teamName, margin + 6, 57);
+
+  doc.setFontSize(9);
+  doc.setFont('helvetica', 'normal');
+  doc.setTextColor(100, 116, 139);
+  doc.text(`Team ID: ${targetTeamId}   |   Checkpoints Cleared: ${teamSubs.length} of 25 (${Math.round((teamSubs.length / 25) * 100)}%)`, margin + 6, 64);
+
+  const firstTime = teamSubs[0] ? formatExactTime(teamSubs[0].createdAt || teamSubs[0].submittedAt) : '--';
+  const lastTime = teamSubs[teamSubs.length - 1] ? formatExactTime(teamSubs[teamSubs.length - 1].createdAt || teamSubs[teamSubs.length - 1].submittedAt) : '--';
+  doc.text(`Hunt Started: ${firstTime}   |   Latest Checkpoint: ${lastTime}`, margin + 6, 71);
+
+  // Chronological Checkpoints List
+  let cursorY = 84;
+
+  for (let i = 0; i < teamSubs.length; i++) {
+    const s = teamSubs[i];
+    const exactTime = formatExactTime(s.createdAt || s.submittedAt);
+    const boxHeight = 76;
+
+    // Check if new page is needed
+    if (cursorY + boxHeight > pageHeight - 15) {
+      doc.addPage();
+      cursorY = 20;
+    }
+
+    // Checkpoint Card Box
+    doc.setFillColor(255, 255, 255);
+    doc.setDrawColor(203, 213, 225);
+    doc.roundedRect(margin, cursorY, contentWidth, boxHeight, 2, 2, 'FD');
+
+    // Left color bar
+    doc.setFillColor(99, 102, 241);
+    doc.rect(margin, cursorY, 3, boxHeight, 'F');
+
+    // Checkpoint Title
+    doc.setFontSize(11);
+    doc.setFont('helvetica', 'bold');
+    doc.setTextColor(15, 23, 42);
+    doc.text(`Checkpoint #${s.questionId}: ${s.question ? s.question.slice(0, 70) : 'Location Clue'}`, margin + 7, cursorY + 7);
+
+    // EXACT UPLOAD TIME (Highlight in purple/bold)
+    doc.setFontSize(9);
+    doc.setFont('helvetica', 'bold');
+    doc.setTextColor(79, 70, 229);
+    doc.text(`[UPLOAD TIME]: ${exactTime}`, margin + 7, cursorY + 14);
+
+    // Answer & Status
+    doc.setFont('helvetica', 'normal');
+    doc.setTextColor(71, 85, 105);
+    doc.text(`Team Answer: "${s.answer}"   |   Status: Verified Correct [OK]`, margin + 7, cursorY + 20);
+
+    // Photo Proof Box
+    const photoSrc = s.photoPath;
+    if (photoSrc) {
+      try {
+        const dataUrl = await imageSrcToDataUrl(photoSrc);
+        if (dataUrl) {
+          doc.addImage(dataUrl, 'JPEG', margin + 7, cursorY + 24, 72, 48);
+          doc.setDrawColor(203, 213, 225);
+          doc.rect(margin + 7, cursorY + 24, 72, 48, 'S');
+
+          // Photo details beside the image
+          doc.setFontSize(8);
+          doc.setTextColor(100, 116, 139);
+          doc.text(`Original Photo Proof`, margin + 84, cursorY + 30);
+          doc.text(`Timestamp: ${exactTime}`, margin + 84, cursorY + 36);
+          doc.text(`Uploaded by: ${teamName}`, margin + 84, cursorY + 42);
+        } else {
+          doc.setFontSize(9);
+          doc.setTextColor(148, 163, 184);
+          doc.text('[Photo Proof Attached on Server]', margin + 7, cursorY + 35);
+        }
+      } catch (err) {
+        doc.setFontSize(9);
+        doc.setTextColor(148, 163, 184);
+        doc.text('[Photo Proof Render Error]', margin + 7, cursorY + 35);
+      }
+    } else {
+      doc.setFontSize(9);
+      doc.setTextColor(148, 163, 184);
+      doc.text('[No Photo Available]', margin + 7, cursorY + 35);
+    }
+
+    cursorY += boxHeight + 6;
+  }
+
+  // Footer page numbering
+  const pageCount = doc.internal.getNumberOfPages();
+  for (let p = 1; p <= pageCount; p++) {
+    doc.setPage(p);
+    doc.setFontSize(8);
+    doc.setFont('helvetica', 'normal');
+    doc.setTextColor(148, 163, 184);
+    doc.text(`Campus Treasure Hunt 2.0 • ${teamName} Progress Dossier • Page ${p} of ${pageCount}`, pageWidth / 2, pageHeight - 7, { align: 'center' });
+  }
+
+  doc.save(`TreasureHunt_Team_${targetTeamId}_Progress_Report.pdf`);
+}
+
+async function generateTeamProgressPdfFromExportTab() {
+  const select = document.getElementById('pdfTeamSelect');
+  const prog = document.getElementById('pdfExportProgress');
+  const selected = select.value;
+
+  prog.style.display = 'block';
+  prog.textContent = 'Generating PDF report with time-wise photo proofs...';
+
+  try {
+    if (selected === 'all') {
+      // Generate for all teams that have submissions
+      const activeTeamIds = [...new Set(allSubmissions.filter((s) => s.isCorrect).map((s) => String(s.teamId)))];
+      if (activeTeamIds.length === 0) {
+        alert('No team submissions found yet to generate report.');
+        prog.style.display = 'none';
+        return;
+      }
+      for (let i = 0; i < activeTeamIds.length; i++) {
+        prog.textContent = `Generating PDF for Team ${activeTeamIds[i]} (${i + 1} of ${activeTeamIds.length})...`;
+        await generateTeamProgressPdf(activeTeamIds[i]);
+      }
+      prog.textContent = `✓ Successfully generated PDF reports for ${activeTeamIds.length} teams!`;
+    } else {
+      await generateTeamProgressPdf(selected);
+      prog.textContent = `✓ PDF Progress Report downloaded for Team ${selected}!`;
+    }
+  } catch (err) {
+    console.error('PDF export error:', err);
+    alert('Failed to generate PDF: ' + err.message);
+    prog.textContent = '❌ PDF generation error.';
+  }
+}
+
+function downloadCurrentTeamPdfFromModal() {
+  if (activeModalTeamId) {
+    generateTeamProgressPdf(activeModalTeamId);
+  }
+}
+
+// ----------------------------------------------------
+// 11. EXPORT: ZIP DOWNLOAD & CSV EXPORT
 // ----------------------------------------------------
 async function downloadAllPhotosZip() {
   const btn = document.getElementById('btnDownloadZip');
@@ -575,11 +959,9 @@ async function downloadAllPhotosZip() {
       const photoSrc = s.photoPath;
 
       if (photoSrc.startsWith('data:image')) {
-        // Base64 image
         const base64Data = photoSrc.split(',')[1];
         zip.folder(folderName).file(fileName, base64Data, { base64: true });
       } else {
-        // URL fetch
         try {
           const resp = await fetch(photoSrc);
           const blob = await resp.blob();
@@ -617,9 +999,10 @@ function exportSubmissionsCsv() {
     return;
   }
 
-  let csv = 'ID,Team ID,Team Name,Checkpoint No,Question,Answer,Correct,Submitted Time,Created At,Has Photo\n';
+  let csv = 'ID,Team ID,Team Name,Checkpoint No,Question,Answer,Correct,Exact Upload Timestamp,Relative Time,Has Photo\n';
 
   allSubmissions.forEach((s) => {
+    const exact = formatExactTime(s.createdAt || s.submittedAt);
     csv += [
       s.id,
       `"${s.teamId}"`,
@@ -628,8 +1011,8 @@ function exportSubmissionsCsv() {
       `"${(s.question || '').replace(/"/g, '""')}"`,
       `"${(s.answer || '').replace(/"/g, '""')}"`,
       s.isCorrect ? 'YES' : 'NO',
-      `"${s.submittedAt || ''}"`,
-      `"${s.createdAt || ''}"`,
+      `"${exact}"`,
+      `"${formatRelativeTime(s.createdAt)}"`,
       s.photoPath ? 'YES' : 'NO'
     ].join(',') + '\n';
   });
@@ -650,7 +1033,7 @@ function downloadTextFile(content, fileName, mimeType) {
 }
 
 // ----------------------------------------------------
-// 10. RESET SUBMISSIONS
+// 12. RESET SUBMISSIONS
 // ----------------------------------------------------
 async function resetEventSubmissions() {
   const confirmText = prompt('Type RESET to confirm clearing all submissions:');
@@ -681,9 +1064,9 @@ async function resetEventSubmissions() {
 }
 
 // ----------------------------------------------------
-// 11. LIGHTBOX PHOTO MODAL
+// 13. LIGHTBOX PHOTO MODAL (WITH EXACT TIMESTAMPS)
 // ----------------------------------------------------
-function openPhotoModal(encodedUrl, teamName, clueTitle, answer, timestamp) {
+function openPhotoModal(encodedUrl, teamName, clueTitle, answer, exactTimestamp, teamId) {
   const url = decodeURIComponent(encodedUrl);
   const modal = document.getElementById('photoModal');
   const img = document.getElementById('modalImg');
@@ -691,9 +1074,14 @@ function openPhotoModal(encodedUrl, teamName, clueTitle, answer, timestamp) {
   const meta = document.getElementById('modalMeta');
   const dlBtn = document.getElementById('modalDownloadBtn');
 
+  activeModalTeamId = teamId || null;
+
   img.src = url;
   title.textContent = `${teamName} — ${clueTitle}`;
-  meta.textContent = `Answer: "${answer}" • Time: ${timestamp}`;
+  meta.innerHTML = `
+    <div><strong>Answer:</strong> "${answer}"</div>
+    <div style="color: #a5b4fc; font-weight: 700; margin-top: 3px;">📅 Exact Upload Time: ${exactTimestamp}</div>
+  `;
   dlBtn.href = url;
 
   modal.classList.add('show');
@@ -707,7 +1095,7 @@ function closePhotoModal(e) {
 }
 
 // ----------------------------------------------------
-// 12. UTILITIES
+// 14. UTILITIES
 // ----------------------------------------------------
 function escapeHtml(str) {
   if (str === null || str === undefined) return '';
@@ -720,4 +1108,3 @@ function escapeHtml(str) {
 }
 
 document.addEventListener('DOMContentLoaded', startLivePolling);
-

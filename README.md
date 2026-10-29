@@ -11,9 +11,10 @@ A high-performance, real-time web platform built for high-energy campus treasure
 | **Hosting Platform** | Render (cold start delays, sleeping instances) | **Vercel Serverless** (0 cold starts, instant edge response) |
 | **Live Tracking** | Manual page refreshes | **Instant Live Activity Feed & Polling** with audio chimes & toast alerts |
 | **Photo Capacity** | Heavy raw photos causing payload limits | **Client-side Canvas Compression** (5MB $\rightarrow$ ~130KB), effortlessly stores 1,000+ photos (45 teams $\times$ 25 checkpoints) |
-| **Photo Downloads** | Single download only | **1-Click Download All Photos (ZIP)** organized by team + Individual Lightbox downloads |
-| **Team Credentials** | Static JSON file | **Live Admin Credential Manager**: change any team's ID, Name, or Password in real-time |
+| **Photo Downloads** | Single download only | **1-Click PDF Progress Dossier** (with time-wise photos) + **1-Click ZIP Archive** per team |
+| **Team Credentials** | Static JSON file | **Live Team Manager**: add new teams, delete teams, and edit IDs/names/passwords in real-time |
 | **Progress Persistence** | Only in browser localStorage (lost on device switch) | **Dual Cloud + Local Persistence**: automatically resumes exactly where the team left off after reconnecting or re-logging |
+| **Timestamps** | Simple date | **Exact Time-Wise Tracking** (e.g. `29 Oct 2026, 05:24:18 PM` with seconds) displayed on every photo and PDF |
 | **Team Capacity** | 30 teams | **Pre-configured for 45+ teams** (expandable dynamically) |
 | **Questions & Clues** | Hardcoded in JS | **Modular `questions.json`** with 25 checkpoints & smart alias matching |
 | **UI / UX Design** | Basic CSS | **Modern Cyberpunk / Obsidian Glassmorphism**, mobile-first responsive layout, sound effects & confetti celebrations |
@@ -33,11 +34,11 @@ A high-performance, real-time web platform built for high-energy campus treasure
 
 ## ⚡ Organizer Command Center (`admin.html`)
 
-- **📡 Live Tracking Feed**: Real-time stream of team submissions with upload timestamps, team badges, answers, and photo previews with sound alert toggle.
-- **🏆 Live Leaderboard**: Dynamic ranking calculated by most checkpoints cleared, broken down by earliest completion time.
+- **📡 Live Tracking Feed**: Real-time stream of team submissions with exact upload timestamps (`29 Oct 2026, 05:24:18 PM`), team badges, answers, and photo previews with sound alert toggle.
+- **🏆 Live Leaderboard**: Dynamic ranking calculated by most checkpoints cleared, broken down by earliest completion time, with individual team PDF export buttons.
 - **📊 45-Team Progress Matrix**: Interactive $45 \times 25$ grid showing the live status of every team across all 25 checkpoints with 1-click photo lightbox zoom.
-- **👥 Credentials Manager**: Inline editor to change Team IDs, Names, and Passwords on the fly. Includes an "Add Team" button and CSV export.
-- **❓ Checkpoints Directory**: Full table of all 25 riddles, target answers, and physical mini-game checkpoints.
+- **👥 Team Credentials Manager**: Add new teams, delete teams, and edit Team IDs, Names, and Passwords on the fly. Includes quick search filter and CSV export.
+- **📄 1-Click PDF Report Generator**: Generates comprehensive PDF reports with full team profile and **chronological, time-wise photo proofs** with exact seconds timestamps.
 - **📦 1-Click ZIP Exporter**: Bundles all high-res photos into a structured ZIP archive (`Team_01/Checkpoint_01.jpg`, etc.) directly inside the admin's browser.
 - **📊 Submissions CSV Export**: Detailed spreadsheet download with submission timestamps and answers.
 
