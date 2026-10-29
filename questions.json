@@ -1,0 +1,241 @@
+{
+  "version": "2.0.0",
+  "info": "Edit this file to update clues, answers, and game checkpoints. Total questions can be expanded or adjusted.",
+  "fixedLastClueId": 18,
+  "gameCheckpointsInterval": 4,
+  "questions": [
+    {
+      "id": 1,
+      "type": "clue",
+      "title": "The Threshold",
+      "question": "I am not a classroom, yet all must pass. Morning rush and evening mass. Guarded strong where journeys start, Through me begins your campus part.",
+      "answer": "Main Gate",
+      "aliases": ["main gate", "maingate", "main entrance", "gate", "campus gate"],
+      "hint": "Where everyone enters and leaves the campus."
+    },
+    {
+      "id": 2,
+      "type": "clue",
+      "title": "The Pavilion",
+      "question": "I never bat, I never bowl, Yet I watch each wicket and every goal. Steps climb high in steady lines, Where cheers grow loud at thrilling times.",
+      "answer": "Cricket Ground",
+      "aliases": ["cricket ground", "cricket pitch", "stadium", "sports pavilion", "cricket"],
+      "hint": "Look for the grassy field with spectator stairs."
+    },
+    {
+      "id": 3,
+      "type": "clue",
+      "title": "The Crimson Sign",
+      "question": "Find the place where business meets law. A tall red sign will guide what you saw. Not a classroom, yet it shows the way, To minds at work both night and day.",
+      "answer": "LC1 Sign Board",
+      "aliases": ["lc1 sign board", "lc1 sign", "lc-1 sign board", "lc 1 signboard", "lc1"],
+      "hint": "Near Learning Complex 1 entrance sign."
+    },
+    {
+      "id": 4,
+      "type": "clue",
+      "title": "The Paper Spitter",
+      "question": "When your wallet is empty and hopes are high, Follow the path of fancy stones. To the machine that eats cards and spits notes.",
+      "answer": "ATM",
+      "aliases": ["atm", "cash machine", "bank atm"],
+      "hint": "Dispenses physical cash."
+    },
+    {
+      "id": 5,
+      "type": "clue",
+      "title": "The Canopy",
+      "question": "Food and water in name I claim, Seek the tent that shares the same. Beneath the colors overhead, Your next direction waits to be read.",
+      "answer": "Dana Paani",
+      "aliases": ["dana paani", "danapaani", "dana pani", "dana paani tent"],
+      "hint": "A food stall with overhead shade."
+    },
+    {
+      "id": 6,
+      "type": "clue",
+      "title": "Tricolor Arena",
+      "question": "Saffron, white, and green held high, Watching quietly as football players pass by. Not part of the game, yet central to all. Find the colors that never fall.",
+      "answer": "Football Ground",
+      "aliases": ["football ground", "football field", "flag post", "football turf"],
+      "hint": "The ground where the national flag flies."
+    },
+    {
+      "id": 7,
+      "type": "clue",
+      "title": "The Fluffy Burrow",
+      "question": "Long ears, quick hops, and cotton tail white, I munch on greens from morning till night. I am not free to roam, I stay in a cage. Find me near food but off the stage.",
+      "answer": "Rabbit Cage",
+      "aliases": ["rabbit cage", "rabbit enclosure", "rabbits"],
+      "hint": "Caged furry friends located close to eating areas."
+    },
+    {
+      "id": 8,
+      "type": "clue",
+      "title": "The Crimson Cube",
+      "question": "Heading for fun or heading to eat, You will pass a red cube on this street. Big, bold, and hard to ignore. Your next clue waits at its door.",
+      "answer": "Red Room",
+      "aliases": ["red room", "the red room", "red cube"],
+      "hint": "Prominent red colored structure."
+    },
+    {
+      "id": 9,
+      "type": "clue",
+      "title": "The Dancing Waters",
+      "question": "I stand where many paths are curved, Between the halls where food is served. I throw up water, cool and bright, Shining gently in plain sight.",
+      "answer": "Mess Fountain",
+      "aliases": ["mess fountain", "fountain", "central fountain", "dining fountain"],
+      "hint": "Water feature between the dining mess halls."
+    },
+    {
+      "id": 10,
+      "type": "clue",
+      "title": "The Dairy Treat",
+      "question": "When the sun is hot and games are tight, I bring cold smiles in every bite. Butter, milk and creamy delight, Standing close to the tennis sight.",
+      "answer": "Amul",
+      "aliases": ["amul", "amul parlor", "amul parlour", "amul booth"],
+      "hint": "The taste of India, right near the sports court."
+    },
+    {
+      "id": 11,
+      "type": "clue",
+      "title": "Southern Flavors",
+      "question": "Where dosas crisp and chutneys flow, Long red seats sit row by row. Hungry crowds gather day and night. Find the place of southern delight.",
+      "answer": "Anantha Aahara",
+      "aliases": ["anantha aahara", "anantha ahara", "ananta aahara", "south mess"],
+      "hint": "Popular canteen known for dosas with red benches."
+    },
+    {
+      "id": 12,
+      "type": "clue",
+      "title": "The Open Sea",
+      "question": "No single purpose, yet always full, No doors to close, no crowds to pull. Where sport meets snack and talks run free. Find the campus open sea.",
+      "answer": "Alfresco",
+      "aliases": ["alfresco", "al fresco", "open cafeteria", "alfresco area"],
+      "hint": "Open-air gathering hub for snacks and banter."
+    },
+    {
+      "id": 13,
+      "type": "clue",
+      "title": "The Headquarters",
+      "question": "No exams are written here, Yet every student must appear. Fees, IDs, or documents in stock, Find the college control block.",
+      "answer": "Admin Block",
+      "aliases": ["admin block", "administrative block", "admin building", "central office"],
+      "hint": "Where student records and paperwork are handled."
+    },
+    {
+      "id": 14,
+      "type": "clue",
+      "title": "The Mentors' Haven",
+      "question": "After knowledge travels far and wide, Its keepers here choose to reside. No timetable rules this place. Find the homes of guiding grace.",
+      "answer": "Faculty Quarters",
+      "aliases": ["faculty quarters", "teachers quarters", "professors quarters", "staff quarters"],
+      "hint": "Campus residential area for professors."
+    },
+    {
+      "id": 15,
+      "type": "clue",
+      "title": "The Silent Sanctuary",
+      "question": "Silence speaks louder than sound, Knowledge is waiting to be found. Before the books line every side, Find the door where minds open wide.",
+      "answer": "Library",
+      "aliases": ["library", "central library", "library entrance"],
+      "hint": "Where quiet study rules and shelves are endless."
+    },
+    {
+      "id": 16,
+      "type": "clue",
+      "title": "The Hive of Talents",
+      "question": "Where fun and fests come alive, And student talents always thrive. Near the office that guides your way, A locker quietly waits today.",
+      "answer": "Activity Centre",
+      "aliases": ["activity centre", "activity center", "student activity centre", "sac"],
+      "hint": "Hub of student clubs, music, and council offices."
+    },
+    {
+      "id": 17,
+      "type": "clue",
+      "title": "The Forge",
+      "question": "Where tools speak louder than words, And practice matters more than awards. Not theory alone, but hands that work. Find the place where skills do not shirk.",
+      "answer": "Workshop",
+      "aliases": ["workshop", "mechanical workshop", "engineering workshop"],
+      "hint": "Where machines, lathes, and welding sparks fly."
+    },
+    {
+      "id": 18,
+      "type": "clue",
+      "title": "The Summit (Final Destination)",
+      "question": "Where power is studied and justice is taught, Rise above both to the place they forgot. No deals are signed, no verdicts spoken. Just sky above and silence unbroken.",
+      "answer": "LC1 Top Floor",
+      "aliases": ["lc1 top floor", "lc-1 top floor", "top floor lc1", "lc1 rooftop", "terrace lc1"],
+      "hint": "The highest accessible level of Learning Complex 1.",
+      "isLastClue": true
+    },
+    {
+      "id": 19,
+      "type": "clue",
+      "title": "The Hardcourt Hoop",
+      "question": "Dribble, pivot, shoot and score, Sneakers squeak on this level floor. Under the backboard net hangs low, Point your lens where the baskets glow.",
+      "answer": "Basketball Court",
+      "aliases": ["basketball court", "basketball", "hoops", "bball court"],
+      "hint": "Look for the backboards and hoops."
+    },
+    {
+      "id": 20,
+      "type": "clue",
+      "title": "The Grand Stage",
+      "question": "Echoes of applause and dramatic cries, Where spotlights shine before hundred eyes. Stepped rows rise up to the night sky view, Capture the stage where applause is due.",
+      "answer": "Auditorium",
+      "aliases": ["auditorium", "amphitheatre", "open air theatre", "audi", "stage"],
+      "hint": "The grand venue for performances and college events."
+    },
+    {
+      "id": 21,
+      "type": "clue",
+      "title": "The Roasted Bean",
+      "question": "Steam rises high with a dark roasted brew, Where students gather when lectures are through. Pastries and cold drinks fill the display, Snap a photo where energy saves the day.",
+      "answer": "Campus Cafe",
+      "aliases": ["campus cafe", "coffee shop", "cafe", "canteen"],
+      "hint": "The favorite coffee and quick bite corner."
+    }
+  ],
+  "gameCheckpoints": [
+    {
+      "id": 101,
+      "isGame": true,
+      "gameNumber": 1,
+      "title": "Mini-Game 1: The Outpost",
+      "question": "Reach this location: Departmental Store and find the game coordinator.",
+      "answer": "Debi",
+      "aliases": ["debi", "debi store", "coordinator debi"],
+      "hint": "Check with the coordinator stationed near the departmental store."
+    },
+    {
+      "id": 102,
+      "isGame": true,
+      "gameNumber": 2,
+      "title": "Mini-Game 2: The Serene Shrine",
+      "question": "Reach this location: Campus Temple and complete the coordinator's challenge.",
+      "answer": "Nripendra",
+      "aliases": ["nripendra", "nripendra sir", "temple coordinator"],
+      "hint": "Find coordinator Nripendra stationed near the temple steps."
+    },
+    {
+      "id": 103,
+      "isGame": true,
+      "gameNumber": 3,
+      "title": "Mini-Game 3: The Lecture Hall",
+      "question": "Reach this location: LT201 (Lecture Theatre 201) and solve the mystery task.",
+      "answer": "Akash",
+      "aliases": ["akash", "akash coordinator", "lt201 coordinator"],
+      "hint": "Look inside or near the entrance of LT201 for Akash."
+    },
+    {
+      "id": 104,
+      "isGame": true,
+      "gameNumber": 4,
+      "title": "Mini-Game 4: The Flagpost Arena",
+      "question": "Reach this location: Football Ground Flag Hosting Area and pass the final physical challenge.",
+      "answer": "Joy",
+      "aliases": ["joy", "coordinator joy", "flagpost joy"],
+      "hint": "Coordinator Joy awaits you at the football flag post."
+    }
+  ]
+}
+

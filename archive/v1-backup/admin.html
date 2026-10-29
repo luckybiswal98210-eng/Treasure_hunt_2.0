@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - Team Credentials</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .header h1 {
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .table-container {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        thead {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        th {
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        td {
+            padding: 15px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tr:hover {
+            background: #f8f9ff;
+        }
+
+        .team-id {
+            color: #667eea;
+            font-weight: 600;
+        }
+
+        .password-input {
+            padding: 8px 12px;
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            font-size: 13px;
+            width: 150px;
+        }
+
+        .name-input {
+            padding: 8px 12px;
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            font-size: 13px;
+            width: 120px;
+        }
+
+        .btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+
+        .btn-save {
+            background: #28a745;
+            color: white;
+        }
+
+        .btn-save:hover {
+            background: #218838;
+        }
+
+        .btn-export {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-export:hover {
+            background: #764ba2;
+        }
+
+        .btn-download {
+            background: #007bff;
+            color: white;
+            margin-top: 20px;
+        }
+
+        .btn-download:hover {
+            background: #0056b3;
+        }
+
+        .btn-danger {
+            background: #dc3545;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #c82333;
+        }
+
+        .actions {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .success-message {
+            background: #d4edda;
+            color: #155724;
+            padding: 12px 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: none;
+            border: 1px solid #c3e6cb;
+        }
+
+        .success-message.show {
+            display: block;
+        }
+
+        @media (max-width: 768px) {
+            .password-input,
+            .name-input {
+                width: 100px;
+                font-size: 12px;
+            }
+
+            th, td {
+                padding: 10px;
+                font-size: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>⚙️ Admin Panel - Team Credentials</h1>
+            <p>Customize Team IDs, Passwords, and Names for all 30 teams</p>
+        </div>
+
+        <!-- Success Message -->
+        <div class="success-message" id="successMessage">✓ Credentials saved successfully!</div>
+
+        <!-- Actions -->
+        <div class="actions">
+            <button class="btn btn-export" onclick="exportCredentials()">📥 Export & Download</button>
+            <button class="btn btn-download" onclick="resetToDefault()">🔄 Reset to Default</button>
+            <button class="btn btn-export" onclick="openTeamResponsesPage()">🧾 Load Team Responses</button>
+            <button class="btn btn-danger" onclick="resetAllSubmissions()">🗑️ Reset All Responses</button>
+        </div>
+
+        <!-- Credentials Table -->
+        <div class="table-container">
+            <table id="credentialsTable">
+                <thead>
+                    <tr>
+                        <th>Team ID</th>
+                        <th>Password</th>
+                        <th>Team Name</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="tableBody"></tbody>
+            </table>
+        </div>
+
+    </div>
+
+    <script>
+        let credentials = {};
+
+        // Load credentials
+        async function loadCredentials() {
+            try {
+                const response = await fetch('credentials.json');
+                const data = await response.json();
+                credentials = data.teams;
+                displayCredentials();
+            } catch (error) {
+                console.error('Error loading credentials:', error);
+                alert('Error loading credentials file');
+            }
+        }
+
+        function displayCredentials() {
+            const tbody = document.getElementById('tableBody');
+            tbody.innerHTML = '';
+
+            credentials.forEach((team, index) => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td class="team-id">${team.id}</td>
+                    <td>
+                        <input type="text" class="password-input" id="pass-${index}" value="${team.password}">
+                    </td>
+                    <td>
+                        <input type="text" class="name-input" id="name-${index}" value="${team.name}">
+                    </td>
+                    <td>
+                        <button class="btn btn-save" onclick="updateTeam(${index})">Save</button>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        function updateTeam(index) {
+            const password = document.getElementById(`pass-${index}`).value.trim();
+            const name = document.getElementById(`name-${index}`).value.trim();
+
+            if (!password) {
+                alert('Password cannot be empty');
+                return;
+            }
+
+            credentials[index].password = password;
+            credentials[index].name = name;
+
+            showSuccessMessage();
+        }
+
+        function showSuccessMessage() {
+            const msg = document.getElementById('successMessage');
+            msg.classList.add('show');
+            setTimeout(() => {
+                msg.classList.remove('show');
+            }, 3000);
+        }
+
+        function openTeamResponsesPage() {
+            window.location.href = 'responses.html';
+        }
+
+        function exportCredentials() {
+            // Create new credentials.json structure
+            const data = { teams: credentials };
+
+            // Create blob and download
+            const dataStr = JSON.stringify(data, null, 2);
+            const dataBlob = new Blob([dataStr], { type: 'application/json' });
+            const url = URL.createObjectURL(dataBlob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = 'credentials.json';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+
+            showSuccessMessage();
+        }
+
+        function resetToDefault() {
+            if (confirm('Are you sure? This will reset all credentials to default values.')) {
+                credentials = [];
+                for (let i = 1; i <= 30; i++) {
+                    credentials.push({
+                        id: i.toString(),
+                        password: `team${i}@hunt`,
+                        name: `Team ${i}`
+                    });
+                }
+                displayCredentials();
+                showSuccessMessage();
+            }
+        }
+
+        async function resetAllSubmissions() {
+            const confirmText = 'This will delete all saved responses and all uploaded photos for every team. Continue?';
+            if (!confirm(confirmText)) return;
+
+            const token = prompt('Enter admin reset token (leave blank if not configured):') || '';
+
+            try {
+                const response = await fetch('/api/admin/reset-submissions', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ token })
+                });
+
+                const result = await response.json();
+                if (!response.ok) {
+                    throw new Error(result.error || 'Reset failed');
+                }
+
+                alert('All responses and photos cleared successfully.');
+            } catch (error) {
+                alert(`Failed to reset responses: ${error.message}`);
+            }
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', loadCredentials);
+    </script>
+</body>
+</html>

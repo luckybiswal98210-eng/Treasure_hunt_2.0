@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Campus Treasure Hunt</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <div class="form-wrapper">
+            <!-- Team Info -->
+            <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 15px; border-radius: 8px; margin-bottom: 20px; text-align: center;">
+                <p style="font-size: 14px; margin: 0;">🎯 <span id="teamName">Team</span> - ID: <span id="teamNumber">1</span></p>
+            </div>
+
+            <!-- Progress Bar -->
+            <div class="progress-section">
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+            </div>
+
+            <!-- Question Display -->
+            <div class="question-section">
+                <h2 id="questionTitle" style="display: none;"></h2>
+                <h3 style="color: #764ba2; font-size: 16px; margin-top: 15px; margin-bottom: 15px;">🔍 Campus Treasure Hunt - Find the Place!</h3>
+                <p id="questionText" style="font-style: italic; line-height: 1.8;">Loading...</p>
+            </div>
+
+            <!-- Form Inputs -->
+            <div id="questionForm" class="form-inputs" style="display: block;">
+                <!-- Answer Box -->
+                <div class="form-group">
+                    <label for="answerBox">🎯 Your Answer (lowercase):</label>
+                    <input 
+                        type="text" 
+                        id="answerBox" 
+                        placeholder="type in small letters..." 
+                    >
+                </div>
+
+                <!-- Photo Upload -->
+                <div class="form-group">
+                    <label>📷 Take Photo with Camera (Required):</label>
+                    <div style="text-align: center;">
+                        <input 
+                            type="file" 
+                            id="photoUpload" 
+                            accept="image/*"
+                            capture
+                            style="display: none;"
+                        >
+                        <button type="button" id="cameraBtn" class="btn btn-primary" style="width: 100%;">
+                            📸 Tap to open camera
+                        </button>
+                    </div>
+                    <div id="photoPreview" class="photo-preview" style="margin-top: 15px;"></div>
+                </div>
+
+                <!-- Buttons -->
+                <div class="button-group">
+                    <button type="button" id="validateBtn" class="btn btn-primary" style="grid-column: 1 / -1;">
+                        ✓ Check Answer
+                    </button>
+                </div>
+
+                <!-- Validation Message -->
+                <div id="validationMessage" class="validation-message"></div>
+            </div>
+
+            <!-- Summary -->
+            <div id="summarySection" class="summary-section" style="display: none;">
+                <h2>🎉 Campus Treasure Hunt Complete!</h2>
+                <div id="summaryContent"></div>
+                <button id="resetBtn" class="btn btn-primary">🔄 Restart Hunt</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

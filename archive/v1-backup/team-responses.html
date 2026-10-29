@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Team Profile Responses</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 28px 16px;
+        }
+        .container { max-width: 1100px; margin: 0 auto; }
+        .top {
+            background: #fff;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 18px;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        .top h1 { color: #667eea; font-size: 24px; }
+        .top p { color: #666; margin-top: 6px; font-size: 14px; }
+        .top-actions {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .btn {
+            border: none;
+            padding: 10px 14px;
+            border-radius: 8px;
+            background: #667eea;
+            color: #fff;
+            cursor: pointer;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 13px;
+        }
+        .btn:hover { background: #5a67d8; }
+        .list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 14px;
+        }
+        .item {
+            background: #fff;
+            border-radius: 12px;
+            padding: 16px;
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.16);
+        }
+        .q {
+            color: #764ba2;
+            font-weight: 800;
+            margin-bottom: 8px;
+        }
+        .label {
+            color: #666;
+            font-size: 12px;
+            margin-bottom: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .value {
+            color: #222;
+            font-size: 14px;
+            line-height: 1.5;
+            margin-bottom: 8px;
+        }
+        .photo {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            cursor: zoom-in;
+            background: #f2f2f2;
+        }
+        .photo-hint {
+            font-size: 12px;
+            color: #666;
+            margin-top: 6px;
+        }
+        .photo-modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.9);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 18px;
+            z-index: 1000;
+        }
+        .photo-modal.show { display: flex; }
+        .photo-modal img {
+            max-width: 100%;
+            max-height: 100%;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+        .photo-modal-close {
+            position: absolute;
+            top: 14px;
+            right: 14px;
+            border: none;
+            border-radius: 999px;
+            width: 34px;
+            height: 34px;
+            font-size: 20px;
+            line-height: 34px;
+            text-align: center;
+            cursor: pointer;
+            background: #fff;
+            color: #222;
+        }
+        .empty {
+            background: #fff;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.16);
+            color: #444;
+        }
+        @media print {
+            body {
+                background: #fff;
+                padding: 0;
+            }
+            .top {
+                box-shadow: none;
+                border: 1px solid #ddd;
+            }
+            .btn {
+                display: none;
+            }
+            .item, .empty {
+                box-shadow: none;
+                border: 1px solid #ddd;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="top">
+            <div>
+                <h1 id="pageTitle">Team Profile</h1>
+                <p id="pageSubtitle">Loading team responses...</p>
+            </div>
+            <div class="top-actions">
+                <button class="btn" type="button" id="csvBtn" onclick="exportCsv()" disabled>Export CSV</button>
+                <button class="btn" type="button" id="pdfBtn" onclick="exportPdf()" disabled>Export PDF</button>
+                <a class="btn" href="responses.html">← Back to Teams</a>
+            </div>
+        </div>
+
+        <div id="responseList" class="list"></div>
+    </div>
+    <div id="photoModal" class="photo-modal" role="dialog" aria-modal="true" aria-label="Photo preview">
+        <button id="photoModalClose" class="photo-modal-close" type="button" aria-label="Close">×</button>
+        <img id="photoModalImg" alt="Submission photo preview">
+    </div>
+
+    <script>
+        let currentTeamId = '';
+        let currentTeamName = '';
+        let currentTeamSubmissions = [];
+
+        function escapeHtml(value) {
+            return String(value)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#39;');
+        }
+
+        function getTeamId() {
+            const params = new URLSearchParams(window.location.search);
+            return params.get('teamId');
+        }
+
+        function toCsvCell(value) {
+            const text = String(value ?? '');
+            return `"${text.replace(/"/g, '""')}"`;
+        }
+
+        function exportCsv() {
+            if (!currentTeamSubmissions.length) return;
+
+            const header = [
+                'teamId',
+                'teamName',
+                'questionId',
+                'question',
+                'answer',
+                'submittedAt',
+                'photoPath'
+            ];
+
+            const rows = currentTeamSubmissions.map((item) => [
+                currentTeamId,
+                currentTeamName,
+                item.questionId,
+                item.question,
+                item.answer,
+                item.submittedAt || item.createdAt || '',
+                resolvePhotoUrl(item.photoPath)
+            ]);
+
+            const csvLines = [header, ...rows].map((row) => row.map(toCsvCell).join(',')).join('\n');
+            const blob = new Blob([csvLines], { type: 'text/csv;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `team-${currentTeamId}-responses.csv`;
+            document.body.appendChild(link);
+            link.click();
+            link.remove();
+            URL.revokeObjectURL(url);
+        }
+
+        function exportPdf() {
+            if (!currentTeamSubmissions.length) return;
+            window.print();
+        }
+
+        function resolvePhotoUrl(photoPath) {
+            const value = String(photoPath || '').trim();
+            if (!value) return '';
+            if (value.startsWith('data:image/')) return value;
+            if (value.startsWith('http://') || value.startsWith('https://')) return value;
+            if (value.startsWith('/')) return value;
+            return `/${value.replace(/^\/+/, '')}`;
+        }
+
+        function openPhotoModal(photoUrl) {
+            if (!photoUrl) return;
+            const modal = document.getElementById('photoModal');
+            const modalImg = document.getElementById('photoModalImg');
+            modalImg.src = photoUrl;
+            modal.classList.add('show');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closePhotoModal() {
+            const modal = document.getElementById('photoModal');
+            const modalImg = document.getElementById('photoModalImg');
+            modal.classList.remove('show');
+            modalImg.src = '';
+            document.body.style.overflow = '';
+        }
+
+        async function loadTeamProfile() {
+            const teamId = getTeamId();
+            const title = document.getElementById('pageTitle');
+            const subtitle = document.getElementById('pageSubtitle');
+            const list = document.getElementById('responseList');
+
+            if (!teamId) {
+                subtitle.textContent = 'Missing teamId in URL.';
+                list.innerHTML = '<div class="empty">No team selected.</div>';
+                return;
+            }
+
+            try {
+                const [teamsRes, submissionsRes] = await Promise.all([
+                    fetch('/credentials.json'),
+                    fetch(`/api/submissions?teamId=${encodeURIComponent(teamId)}`)
+                ]);
+
+                if (!teamsRes.ok || !submissionsRes.ok) {
+                    throw new Error('Failed to fetch data');
+                }
+
+                const teamData = await teamsRes.json();
+                const submissions = await submissionsRes.json();
+                const team = (teamData.teams || []).find((t) => String(t.id) === String(teamId));
+                const teamName = team ? team.name : `Team ${teamId}`;
+
+                currentTeamId = String(teamId);
+                currentTeamName = teamName;
+                title.textContent = `${teamName} (ID: ${teamId})`;
+                subtitle.textContent = `Total saved answers: ${submissions.length}`;
+
+                if (!submissions.length) {
+                    currentTeamSubmissions = [];
+                    list.innerHTML = '<div class="empty">No responses saved for this team yet.</div>';
+                    return;
+                }
+
+                submissions.sort((a, b) => {
+                    const aq = Number(a.questionId) || 0;
+                    const bq = Number(b.questionId) || 0;
+                    return aq - bq;
+                });
+
+                currentTeamSubmissions = submissions;
+                document.getElementById('csvBtn').disabled = false;
+                document.getElementById('pdfBtn').disabled = false;
+                list.innerHTML = '';
+                submissions.forEach((item) => {
+                    const photoUrl = resolvePhotoUrl(item.photoPath);
+                    const card = document.createElement('div');
+                    card.className = 'item';
+                    card.innerHTML = `
+                        <div class="q">Question ${escapeHtml(item.questionId)}</div>
+                        <div class="label">Question Text</div>
+                        <div class="value">${escapeHtml(item.question)}</div>
+                        <div class="label">Given Answer</div>
+                        <div class="value">${escapeHtml(item.answer)}</div>
+                        <div class="label">Submitted Time</div>
+                        <div class="value">${escapeHtml(item.submittedAt || item.createdAt || '-')}</div>
+                        <div class="label">Photo</div>
+                        <img class="photo" src="${escapeHtml(photoUrl)}" alt="Team submission photo">
+                        <div class="photo-hint">Tap image to view full size</div>
+                    `;
+                    const image = card.querySelector('.photo');
+                    image.addEventListener('click', () => openPhotoModal(photoUrl));
+                    image.addEventListener('error', () => {
+                        image.removeAttribute('src');
+                        image.style.height = 'auto';
+                        image.style.padding = '14px';
+                        image.style.cursor = 'default';
+                        image.alt = 'Photo unavailable';
+                    });
+                    list.appendChild(card);
+                });
+            } catch (error) {
+                subtitle.textContent = 'Failed to load team data.';
+                list.innerHTML = '<div class="empty">Could not load this profile. Check if server is running with npm start.</div>';
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            loadTeamProfile();
+            const modal = document.getElementById('photoModal');
+            const closeBtn = document.getElementById('photoModalClose');
+            closeBtn.addEventListener('click', closePhotoModal);
+            modal.addEventListener('click', (event) => {
+                if (event.target === modal) closePhotoModal();
+            });
+            document.addEventListener('keydown', (event) => {
+                if (event.key === 'Escape') closePhotoModal();
+            });
+        });
+    </script>
+</body>
+</html>

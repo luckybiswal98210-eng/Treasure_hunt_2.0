@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Campus Treasure Hunt - Team Login</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .login-container {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            padding: 50px 40px;
+            width: 100%;
+            max-width: 400px;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .login-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .login-header h1 {
+            color: #667eea;
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+
+        .login-header p {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            color: #333;
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            transition: border-color 0.3s ease;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            margin-top: 10px;
+        }
+
+        .login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .login-btn:active {
+            transform: translateY(0);
+        }
+
+        .error-message {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 12px 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: none;
+            border: 1px solid #f5c6cb;
+        }
+
+        .error-message.show {
+            display: block;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        @media (max-width: 600px) {
+            .login-container {
+                padding: 40px 25px;
+            }
+
+            .login-header h1 {
+                font-size: 24px;
+            }
+
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <!-- Header -->
+        <div class="login-header">
+            <h1>🗺️ Campus Treasure Hunt</h1>
+            <p>Team Login Portal</p>
+        </div>
+
+        <!-- Error Message -->
+        <div class="error-message" id="errorMessage"></div>
+
+        <!-- Login Form -->
+        <form id="loginForm" onsubmit="handleLogin(event)">
+            <div class="form-group">
+                <label for="teamId">Team ID:</label>
+                <input 
+                    type="text" 
+                    id="teamId" 
+                    placeholder="Enter your Team ID (1-30)" 
+                    required
+                    autofocus
+                >
+            </div>
+
+            <div class="form-group">
+                <label for="teamPass">Password:</label>
+                <input 
+                    type="password" 
+                    id="teamPass" 
+                    placeholder="Enter your password" 
+                    required
+                >
+            </div>
+
+            <button type="submit" class="login-btn">🚀 Start Treasure Hunt</button>
+        </form>
+
+    </div>
+
+    <script>
+        let allTeams = {};
+        let teamsByNormalizedId = {};
+
+        function normalizeCredential(value) {
+            return String(value || '')
+                .toLowerCase()
+                .replace(/[^a-z0-9]/g, '');
+        }
+
+        // Load credentials from JSON
+        async function loadCredentials() {
+            try {
+                const response = await fetch('credentials.json');
+                const data = await response.json();
+                
+                // Convert array to object for easier lookup
+                data.teams.forEach(team => {
+                    const normalizedId = normalizeCredential(team.id);
+                    const teamRecord = {
+                        password: team.password,
+                        name: team.name
+                    };
+                    allTeams[team.id] = teamRecord;
+                    teamsByNormalizedId[normalizedId] = {
+                        id: String(team.id),
+                        ...teamRecord
+                    };
+                });
+            } catch (error) {
+                console.error('Error loading credentials:', error);
+                showError('Error loading team credentials. Please refresh the page.');
+            }
+        }
+
+        function handleLogin(event) {
+            event.preventDefault();
+            
+            const teamIdInput = document.getElementById('teamId').value.trim();
+            const teamPassInput = document.getElementById('teamPass').value.trim();
+            const errorDiv = document.getElementById('errorMessage');
+            const normalizedTeamId = normalizeCredential(teamIdInput);
+            const normalizedPassword = normalizeCredential(teamPassInput);
+            const team = teamsByNormalizedId[normalizedTeamId];
+            const isListedPassword = team && normalizeCredential(team.password) === normalizedPassword;
+
+            // Validate credentials
+            if (team && isListedPassword) {
+                // Store team info in sessionStorage
+                sessionStorage.setItem('teamId', team.id);
+                sessionStorage.setItem('teamName', team.name);
+                sessionStorage.setItem('authenticated', 'true');
+                
+                // Redirect to form
+                window.location.href = 'index.html';
+            } else {
+                // Show error
+                errorDiv.textContent = '❌ Invalid Team ID or Password. Please try again.';
+                errorDiv.classList.add('show');
+                
+                // Clear password field
+                document.getElementById('teamPass').value = '';
+                
+                // Hide error after 5 seconds
+                setTimeout(() => {
+                    errorDiv.classList.remove('show');
+                }, 5000);
+            }
+        }
+
+        function showError(message) {
+            const errorDiv = document.getElementById('errorMessage');
+            errorDiv.textContent = message;
+            errorDiv.classList.add('show');
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', loadCredentials);
+    </script>
+</body>
+</html>

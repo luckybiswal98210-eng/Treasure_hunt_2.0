@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Treasure Hunt 2.0 - Organizer Command Center</title>
+  <link rel="stylesheet" href="admin.css">
+</head>
+<body>
+  <div class="admin-layout">
+    <!-- Navbar -->
+    <header class="admin-navbar">
+      <div class="brand">
+        <div class="brand-icon">⚡</div>
+        <div class="brand-title">
+          <h1>Treasure Hunt 2.0 Control Center</h1>
+          <p>Real-Time Campus Operations & Photo Intelligence</p>
+        </div>
+      </div>
+
+      <div class="navbar-controls">
+        <div class="live-indicator">
+          <span class="live-dot"></span>
+          <span>LIVE TRACKING ACTIVE</span>
+        </div>
+        <button type="button" id="soundToggleBtn" class="btn-control active" onclick="toggleSoundAlerts()">
+          <span id="soundIcon">🔔</span> Sound Alerts: ON
+        </button>
+        <button type="button" class="btn-control" onclick="manualRefresh()">
+          🔄 Refresh Now
+        </button>
+        <a href="login.html" class="btn-control" target="_blank">
+          🧭 Open Team Portal
+        </a>
+      </div>
+    </header>
+
+    <!-- Stat Metric Cards -->
+    <section class="stats-row">
+      <div class="stat-card">
+        <div class="stat-icon" style="background: rgba(99, 102, 241, 0.15); color: #818cf8;">👥</div>
+        <div class="stat-info">
+          <div class="stat-num" id="statActiveTeams">0 / 45</div>
+          <div class="stat-label">Active Teams</div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon" style="background: rgba(16, 185, 129, 0.15); color: #34d399;">✅</div>
+        <div class="stat-info">
+          <div class="stat-num" id="statCompletedClues">0</div>
+          <div class="stat-label">Checkpoints Cleared</div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon" style="background: rgba(236, 72, 153, 0.15); color: #f472b6;">📷</div>
+        <div class="stat-info">
+          <div class="stat-num" id="statTotalPhotos">0</div>
+          <div class="stat-label">Proof Photos Collected</div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon" style="background: rgba(245, 158, 11, 0.15); color: #fbbf24;">🏆</div>
+        <div class="stat-info">
+          <div class="stat-num" id="statLeadingTeam">--</div>
+          <div class="stat-label">Current Leader (#1)</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Navigation Tabs -->
+    <nav class="tabs-bar">
+      <button class="tab-btn active" onclick="switchTab('tabLiveFeed')">📡 Live Activity Feed</button>
+      <button class="tab-btn" onclick="switchTab('tabLeaderboard')">🏆 Live Leaderboard</button>
+      <button class="tab-btn" onclick="switchTab('tabMatrix')">📊 45-Team Matrix</button>
+      <button class="tab-btn" onclick="switchTab('tabCredentials')">👥 Manage Team Credentials</button>
+      <button class="tab-btn" onclick="switchTab('tabQuestions')">❓ Questions & Clues (25)</button>
+      <button class="tab-btn" onclick="switchTab('tabExport')">📦 Data & Photo Export</button>
+    </nav>
+
+    <!-- TAB 1: LIVE FEED -->
+    <section id="tabLiveFeed" class="tab-panel active">
+      <div class="filter-bar">
+        <input 
+          type="text" 
+          id="searchClueInput" 
+          class="search-input" 
+          placeholder="🔍 Search by Team name, Clue, or Answer..." 
+          oninput="filterSubmissions()"
+        >
+        <select id="teamFilterSelect" class="select-input" onchange="filterSubmissions()">
+          <option value="">All Teams (45)</option>
+        </select>
+        <span id="submissionCountBadge" style="font-size: 13px; color: var(--text-sub); margin-left: auto;">
+          Showing 0 submissions
+        </span>
+      </div>
+
+      <div id="submissionsGrid" class="submissions-grid">
+        <!-- Rendered dynamically -->
+      </div>
+    </section>
+
+    <!-- TAB 2: LIVE LEADERBOARD -->
+    <section id="tabLeaderboard" class="tab-panel">
+      <div class="data-table-card">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th style="width: 70px;">Rank</th>
+              <th>Team Name</th>
+              <th>Team ID</th>
+              <th>Checkpoints Cleared</th>
+              <th>Progress</th>
+              <th>Last Submission Time</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody id="leaderboardTbody">
+            <!-- Rendered dynamically -->
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- TAB 3: 45-TEAM PROGRESS MATRIX -->
+    <section id="tabMatrix" class="tab-panel">
+      <div class="data-table-card matrix-wrapper">
+        <table class="matrix-table" id="matrixTable">
+          <!-- Rendered dynamically -->
+        </table>
+      </div>
+    </section>
+
+    <!-- TAB 4: TEAM CREDENTIALS MANAGER -->
+    <section id="tabCredentials" class="tab-panel">
+      <div class="filter-bar">
+        <span style="font-weight: 700; color: var(--text-main); font-size: 15px;">
+          👥 Team Credentials Directory (Edit ID, Name & Password anytime)
+        </span>
+        <button type="button" class="btn-control active" style="margin-left: auto;" onclick="addNewTeamRow()">
+          ➕ Add New Team
+        </button>
+        <button type="button" class="btn-control" onclick="exportCredentialsCsv()">
+          📥 Export CSV
+        </button>
+      </div>
+
+      <div class="data-table-card">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th style="width: 100px;">Team ID</th>
+              <th>Team Name</th>
+              <th>Password</th>
+              <th style="width: 120px;">Save Action</th>
+            </tr>
+          </thead>
+          <tbody id="credentialsTbody">
+            <!-- Rendered dynamically with editable inputs -->
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- TAB 5: QUESTIONS & CLUES (25) -->
+    <section id="tabQuestions" class="tab-panel">
+      <div class="filter-bar">
+        <span style="font-weight: 700; color: var(--text-main); font-size: 15px;">
+          ❓ Campus Checkpoints & Clues Directory (25 Total)
+        </span>
+        <span style="margin-left: auto; color: var(--text-sub); font-size: 13px;">
+          Edit in <code style="color: #a5b4fc;">questions.json</code> or update via API
+        </span>
+      </div>
+      <div class="data-table-card">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th style="width: 60px;">#</th>
+              <th>Type</th>
+              <th>Title</th>
+              <th>Riddle Question / Task</th>
+              <th>Expected Answer</th>
+              <th>Aliases / Variations</th>
+            </tr>
+          </thead>
+          <tbody id="questionsTbody">
+            <!-- Rendered dynamically -->
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- TAB 6: DATA & PHOTO EXPORT -->
+    <section id="tabExport" class="tab-panel">
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 20px;">
+        <div class="stat-card" style="flex-direction: column; align-items: flex-start;">
+          <h3 style="font-size: 18px; margin-bottom: 8px;">📦 Download All Photos (ZIP)</h3>
+          <p style="color: var(--text-sub); font-size: 13px; margin-bottom: 16px;">
+            Bundles all high-resolution proof photos into an organized ZIP archive with folders per team directly inside your browser without hitting Vercel timeouts.
+          </p>
+          <button type="button" id="btnDownloadZip" class="btn-control active" onclick="downloadAllPhotosZip()">
+            <span>⬇️ Generate & Download ZIP</span>
+          </button>
+          <div id="zipProgress" style="font-size: 12px; color: var(--success); margin-top: 10px; display: none;"></div>
+        </div>
+
+        <div class="stat-card" style="flex-direction: column; align-items: flex-start;">
+          <h3 style="font-size: 18px; margin-bottom: 8px;">📊 Export Submissions Report (CSV)</h3>
+          <p style="color: var(--text-sub); font-size: 13px; margin-bottom: 16px;">
+            Download complete spreadsheet logs including submission timestamps, team answers, correctness status, and proof paths.
+          </p>
+          <button type="button" class="btn-control active" onclick="exportSubmissionsCsv()">
+            <span>📊 Download CSV Spreadsheet</span>
+          </button>
+        </div>
+
+        <div class="stat-card" style="flex-direction: column; align-items: flex-start; border-color: rgba(239, 68, 68, 0.3);">
+          <h3 style="font-size: 18px; color: var(--danger); margin-bottom: 8px;">🗑️ Reset Event Submissions</h3>
+          <p style="color: var(--text-sub); font-size: 13px; margin-bottom: 16px;">
+            Clear all test submissions and uploaded photos before starting the live event. Credentials will remain preserved.
+          </p>
+          <button type="button" class="btn-control" style="border-color: var(--danger); color: var(--danger);" onclick="resetEventSubmissions()">
+            <span>⚠️ Reset All Submissions</span>
+          </button>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- Lightbox Photo Modal -->
+  <div id="photoModal" class="modal-overlay" onclick="closePhotoModal(event)">
+    <div class="modal-card" onclick="event.stopPropagation()">
+      <div class="modal-header">
+        <h3 id="modalTitle" class="modal-title">Team Photo Proof</h3>
+        <button type="button" class="btn-close-modal" onclick="closePhotoModal()">✕</button>
+      </div>
+      <div class="modal-body">
+        <img id="modalImg" class="modal-img" src="" alt="Proof photo">
+      </div>
+      <div class="modal-footer">
+        <div id="modalMeta" style="font-size: 13px; color: var(--text-sub);"></div>
+        <a id="modalDownloadBtn" class="btn-download-photo" download="photo-proof.jpg" href="#">
+          ⬇️ Download Photo
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Vendor JSZip for direct in-browser ZIP generation -->
+  <script src="vendor/jszip.min.js"></script>
+  <!-- Admin Script -->
+  <script src="admin.js"></script>
+</body>
+</html>

@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Campus Treasure Hunt 2.0</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <!-- Offline Alert Banner -->
+  <div id="offlineBanner" class="offline-banner">
+    ⚠️ Internet connection lost! Don't worry — your progress and photos are saved offline.
+  </div>
+
+  <div class="app-container">
+    <!-- Header -->
+    <header class="hunt-header">
+      <div class="team-badge">
+        <div class="team-icon">🧭</div>
+        <div class="team-info">
+          <h1 id="headerTeamName">Team 1</h1>
+          <p>ID: <span id="headerTeamId">1</span></p>
+        </div>
+      </div>
+      <div class="header-actions">
+        <div id="connectionStatus" class="status-pill">
+          <span class="pulse-dot"></span>
+          <span id="connectionText">Online</span>
+        </div>
+        <button type="button" class="btn-icon" onclick="handleLogout()" title="Log out">🚪</button>
+      </div>
+    </header>
+
+    <!-- Progress Card -->
+    <section class="progress-card">
+      <div class="progress-meta">
+        <span class="progress-label" id="progressTitle">Current Progress</span>
+        <span class="progress-count" id="progressCount">Checkpoint 1 / 25</span>
+      </div>
+      <div class="progress-track">
+        <div id="progressFill" class="progress-bar-fill"></div>
+      </div>
+    </section>
+
+    <!-- Question / Clue Card -->
+    <section id="questionSection" class="clue-card">
+      <div class="clue-tag-row">
+        <span id="clueTypeTag" class="clue-tag">Clue 1</span>
+        <span id="clueIndexPill" style="font-size: 12px; color: var(--text-muted);">Step 1 of 25</span>
+      </div>
+      <h2 id="clueTitle" class="clue-title">Loading clue...</h2>
+      <div id="clueText" class="clue-text">Fetching campus coordinates...</div>
+      
+      <!-- Hint Toggle -->
+      <button type="button" id="hintToggleBtn" class="hint-toggle-btn" onclick="toggleHint()">
+        <span>💡 Need a hint?</span>
+      </button>
+      <div id="hintBox" class="hint-content">
+        <span id="hintText">Hints appear here when needed.</span>
+      </div>
+    </section>
+
+    <!-- Action & Submission Form Card -->
+    <section id="formSection" class="form-card">
+      <form id="submissionForm" onsubmit="handleAnswerSubmit(event)">
+        <!-- Answer Input -->
+        <div class="form-group">
+          <label class="form-label" for="answerInput">🎯 Your Answer / Location</label>
+          <input 
+            type="text" 
+            id="answerInput" 
+            class="input-text" 
+            placeholder="Type place or coordinator name..." 
+            autocomplete="off"
+            required
+          >
+          <p class="input-help">Case-insensitive. Common variations & minor typos are accepted.</p>
+        </div>
+
+        <!-- Camera / Photo Upload -->
+        <div class="form-group">
+          <label class="form-label">📷 Photo Proof (Required)</label>
+          
+          <!-- Hidden File Input with Camera Capture -->
+          <input 
+            type="file" 
+            id="cameraInput" 
+            accept="image/*" 
+            capture="environment" 
+            style="display: none;" 
+            onchange="handlePhotoSelected(event)"
+          >
+
+          <!-- Big Touch-friendly Camera Button -->
+          <div id="cameraDropzone" class="camera-dropzone" onclick="triggerCamera()">
+            <div class="camera-icon-wrap">📸</div>
+            <div class="camera-title">Tap to Take Photo or Upload</div>
+            <div class="camera-subtitle">Instant on-device compression for fast upload</div>
+          </div>
+
+          <!-- Preview & Retake -->
+          <div id="photoPreviewWrap" class="photo-preview-wrap">
+            <img id="photoPreviewImg" class="photo-preview-img" alt="Captured proof">
+            <div class="preview-overlay">
+              <span id="photoSizeBadge" class="preview-badge">✓ Photo ready (compressed)</span>
+              <button type="button" class="btn-retake" onclick="triggerCamera()">🔄 Retake</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Feedback Alert -->
+        <div id="formFeedback" class="feedback-box"></div>
+
+        <!-- Submit Button -->
+        <button type="submit" id="submitBtn" class="btn-primary">
+          <span>✓ Verify & Submit Checkpoint</span>
+        </button>
+      </form>
+    </section>
+
+    <!-- Victory Screen (Shown when all checkpoints are completed) -->
+    <section id="victorySection" class="victory-card">
+      <div class="trophy-icon">🏆</div>
+      <h2 class="victory-title">Treasure Hunt Complete!</h2>
+      <p class="victory-subtitle">Congratulations! Your team has discovered all campus locations and solved every mystery!</p>
+      
+      <div class="stats-grid">
+        <div class="stat-box">
+          <div class="stat-value" id="finalCheckpointsCount">25 / 25</div>
+          <div class="stat-label">Checkpoints Cleared</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-value">100%</div>
+          <div class="stat-label">Completion Score</div>
+        </div>
+      </div>
+
+      <p style="font-size: 14px; color: var(--text-secondary); margin-bottom: 24px;">
+        Head to the final checkpoint desk at LC1 to verify your team standing!
+      </p>
+
+      <button type="button" class="btn-primary" onclick="viewSolvedCluesModal()">
+        <span>📜 Review Solved Clues</span>
+      </button>
+    </section>
+  </div>
+
+  <!-- Vendor Scripts -->
+  <script src="vendor/confetti.min.js"></script>
+  <!-- Game Logic Script -->
+  <script src="script.js"></script>
+</body>
+</html>

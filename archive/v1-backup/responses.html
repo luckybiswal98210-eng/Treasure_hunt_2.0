@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Team Responses</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 30px 16px;
+        }
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+        .header {
+            background: #fff;
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 20px;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        .header h1 { color: #667eea; font-size: 24px; }
+        .header p { color: #666; margin-top: 6px; font-size: 14px; }
+        .btn {
+            border: none;
+            padding: 10px 14px;
+            border-radius: 8px;
+            background: #667eea;
+            color: #fff;
+            cursor: pointer;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 13px;
+        }
+        .btn:hover { background: #5a67d8; }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 14px;
+        }
+        .search-wrap {
+            background: #fff;
+            border-radius: 12px;
+            padding: 14px;
+            margin-bottom: 16px;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.16);
+        }
+        .search-input {
+            width: 100%;
+            border: 1px solid #d0d5dd;
+            border-radius: 8px;
+            padding: 11px 12px;
+            font-size: 14px;
+        }
+        .card {
+            background: #fff;
+            border-radius: 12px;
+            padding: 16px;
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.16);
+        }
+        .team-title {
+            color: #222;
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+        .meta {
+            color: #666;
+            font-size: 13px;
+            margin-bottom: 6px;
+        }
+        .actions {
+            margin-top: 12px;
+        }
+        .status {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 999px;
+            font-size: 12px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+        .status.done { background: #d4edda; color: #155724; }
+        .status.pending { background: #f8d7da; color: #721c24; }
+        .empty {
+            background: #fff;
+            border-radius: 12px;
+            padding: 16px;
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.16);
+            color: #444;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div>
+                <h1>Team Responses</h1>
+                <p>Click a team card to open full question/answer/photo details.</p>
+            </div>
+            <a class="btn" href="admin.html">← Back to Admin</a>
+        </div>
+
+        <div class="search-wrap">
+            <input id="searchInput" class="search-input" type="text" placeholder="Search by Team name or Team ID...">
+        </div>
+
+        <div class="grid" id="teamsGrid"></div>
+    </div>
+
+    <script>
+        let teamCards = [];
+
+        function escapeHtml(value) {
+            return String(value)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#39;');
+        }
+
+        function renderTeams(filterText) {
+            const grid = document.getElementById('teamsGrid');
+            const normalized = String(filterText || '').trim().toLowerCase();
+            const filtered = normalized
+                ? teamCards.filter((item) => item.searchText.includes(normalized))
+                : teamCards;
+
+            grid.innerHTML = '';
+            if (!filtered.length) {
+                grid.innerHTML = '<div class="empty">No teams matched your search.</div>';
+                return;
+            }
+
+            filtered.forEach((item) => {
+                const card = document.createElement('div');
+                card.className = 'card';
+                card.innerHTML = item.html;
+                grid.appendChild(card);
+            });
+        }
+
+        async function loadTeamCards() {
+            const grid = document.getElementById('teamsGrid');
+            grid.innerHTML = '<div class="empty">Loading teams...</div>';
+
+            try {
+                const [teamsRes, submissionsRes] = await Promise.all([
+                    fetch('/credentials.json'),
+                    fetch('/api/submissions')
+                ]);
+
+                if (!teamsRes.ok || !submissionsRes.ok) {
+                    throw new Error('Failed to load data');
+                }
+
+                const teamData = await teamsRes.json();
+                const submissions = await submissionsRes.json();
+                const byTeam = {};
+
+                submissions.forEach((item) => {
+                    const key = String(item.teamId);
+                    if (!byTeam[key]) byTeam[key] = [];
+                    byTeam[key].push(item);
+                });
+
+                const teams = Array.isArray(teamData.teams) ? teamData.teams : [];
+                teams.sort((a, b) => Number(a.id) - Number(b.id));
+
+                teamCards = [];
+                teams.forEach((team) => {
+                    const teamId = String(team.id);
+                    const teamName = team.name || `Team ${teamId}`;
+                    const items = byTeam[teamId] || [];
+                    const latest = items.length ? items[items.length - 1].createdAt || '-' : '-';
+                    const done = items.length > 0;
+
+                    const html = `
+                        <div class="status ${done ? 'done' : 'pending'}">${done ? 'Responses Found' : 'No Responses Yet'}</div>
+                        <div class="team-title">${escapeHtml(teamName)}</div>
+                        <div class="meta">Team ID: ${escapeHtml(teamId)}</div>
+                        <div class="meta">Saved Answers: ${items.length}</div>
+                        <div class="meta">Latest: ${escapeHtml(latest)}</div>
+                        <div class="actions">
+                            <a class="btn" href="team-responses.html?teamId=${encodeURIComponent(teamId)}">Open Team Profile</a>
+                        </div>
+                    `;
+
+                    teamCards.push({
+                        searchText: `${teamName} ${teamId}`.toLowerCase(),
+                        html: html
+                    });
+                });
+
+                renderTeams(document.getElementById('searchInput').value);
+            } catch (error) {
+                grid.innerHTML = '<div class="empty">Failed to load team responses. Make sure server is running with npm start.</div>';
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const input = document.getElementById('searchInput');
+            input.addEventListener('input', () => renderTeams(input.value));
+            loadTeamCards();
+        });
+    </script>
+</body>
+</html>
