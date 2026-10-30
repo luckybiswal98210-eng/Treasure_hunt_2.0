@@ -58,19 +58,28 @@
       text-align: center;
       margin-bottom: 20px;
     }
-    .alliance-logo-badge {
-      width: 96px;
-      height: 96px;
+    .alliance-logo-wrap {
+      width: 108px;
+      height: 108px;
       border-radius: 50%;
-      object-fit: cover;
-      background: #ffffff;
+      overflow: hidden;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
       border: 3px solid #f59e0b;
-      box-shadow: 0 0 25px rgba(245, 158, 11, 0.5), 0 6px 20px rgba(0, 0, 0, 0.5);
-      display: inline-block;
+      box-shadow: 0 0 30px rgba(245, 158, 11, 0.5), 0 8px 24px rgba(0, 0, 0, 0.6);
+      background: #0a0f1d;
+      margin: 0 auto;
       transition: transform 0.3s ease;
     }
-    .alliance-logo-badge:hover {
+    .alliance-logo-wrap:hover {
       transform: scale(1.06);
+    }
+    .alliance-logo-wrap img {
+      width: 132%;
+      height: 132%;
+      object-fit: cover;
+      display: block;
     }
     .univ-tag {
       display: inline-block;
@@ -270,7 +279,9 @@
 
     <div class="welcome-card">
       <div class="logo-container">
-        <img src="images/alliance-logo.png" alt="Alliance University Logo" class="alliance-logo-badge">
+        <div class="alliance-logo-wrap">
+          <img src="images/alliance-logo.png" alt="Alliance University Crest">
+        </div>
         <br>
         <span class="univ-tag">Alliance University</span>
         <h1 class="welcome-title">Treasure Hunt 2.0</h1>
