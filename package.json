@@ -3,9 +3,10 @@
   "version": "2.0.0",
   "description": "Next-generation real-time campus treasure hunt platform optimized for Vercel with live tracking, offline resilience, and high-capacity photo management.",
   "private": true,
+  "main": "server.js",
   "scripts": {
-    "start": "node local-server.js",
-    "dev": "node local-server.js"
+    "start": "node server.js",
+    "dev": "node server.js"
   },
   "dependencies": {
     "busboy": "^1.6.0",
