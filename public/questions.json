@@ -1,5 +1,5 @@
 {
-  "version": "2.2.0",
+  "version": "2.3.0",
   "info": "Alliance University Campus Treasure Hunt 2.0 Official Questions Configuration",
   "totalRounds": 22,
   "fixedLastClueId": 22,
@@ -16,9 +16,14 @@
         "alfreshco",
         "alfresco",
         "al fresco",
+        "al freshco",
+        "freshco",
+        "fresco",
         "open cafeteria",
+        "cafeteria",
         "alfresco area",
-        "alfreshco area"
+        "alfreshco area",
+        "the alfresco"
       ],
       "hint": "An open-air gathering spot with a roof overhead for shows and events."
     },
@@ -34,7 +39,11 @@
         "dining hall",
         "food mess",
         "dining mess",
-        "student mess"
+        "student mess",
+        "canteen",
+        "dining",
+        "central mess",
+        "food hall"
       ],
       "hint": "Where students take trays in hand for meals every day."
     },
@@ -46,10 +55,15 @@
       "answer": "Cricket Ground",
       "aliases": [
         "cricket ground",
+        "cricket field",
         "cricket pitch",
         "cricket stadium",
         "cricket",
-        "stadium"
+        "pitch",
+        "ground",
+        "stadium",
+        "criket ground",
+        "criket"
       ],
       "hint": "The pitch where wickets stand and cricket boundaries are hit."
     },
@@ -66,7 +80,10 @@
         "bike parking",
         "car parking",
         "vehicle parking",
-        "cycle parking"
+        "cycle parking",
+        "vehicle stand",
+        "scooter parking",
+        "two wheeler parking"
       ],
       "hint": "Where bikes, scooters, and cars rest their wheels in rows."
     },
@@ -80,8 +97,12 @@
         "activity centre",
         "activity center",
         "student activity centre",
+        "student activity center",
         "sac",
-        "student activity center"
+        "activity",
+        "student center",
+        "student centre",
+        "sac building"
       ],
       "hint": "The campus hub for student clubs, music, drama, and council activities."
     },
@@ -97,7 +118,10 @@
         "amul parlour",
         "amul store",
         "amul booth",
-        "amul shop"
+        "amul shop",
+        "ice cream parlour",
+        "ice cream parlor",
+        "amul kiosk"
       ],
       "hint": "Famous for dairy delights, ice cream, and its iconic butter girl mascot."
     },
@@ -113,7 +137,12 @@
         "danapaani",
         "daanapaani",
         "dana pani",
-        "daana pani"
+        "daana pani",
+        "danapani",
+        "dana",
+        "paani",
+        "pani",
+        "daanapani"
       ],
       "hint": "The popular eating canopy named after grains and water."
     },
@@ -127,7 +156,12 @@
         "library",
         "central library",
         "campus library",
-        "reading room"
+        "reading room",
+        "the library",
+        "books",
+        "digital library",
+        "lib",
+        "librari"
       ],
       "hint": "Surrounded by quiet study desks, books, and silent readers."
     },
@@ -143,30 +177,49 @@
         "admin building",
         "central office",
         "administration block",
-        "admin"
+        "admin",
+        "adm block",
+        "administration",
+        "office block"
       ],
       "hint": "Where student records, paperwork, and administrative affairs are managed."
     },
     {
       "id": 10,
       "type": "clue",
-      "title": "Savi Sannidhi",
+      "title": "Savisandhi",
       "question": "When hunger calls and stomachs complain,\nStudents gather here to recharge again.\nWhere delicious dosas and southern flavors delight,\nFind where delicious food brightens both day and night!\n\nWhere am I ?",
-      "answer": "Savi Sannidhi",
+      "answer": "Savisandhi",
       "aliases": [
-        "savi sannidhi",
+        "savisandhi",
+        "savi sandhi",
+        "savisandh",
+        "savisandi",
+        "savi sandi",
+        "savinidhi",
+        "savi nidhi",
+        "savinnidhi",
+        "savi nnidhi",
+        "savinidhy",
+        "savinidi",
+        "savi nidi",
         "savisannidhi",
+        "savi sannidhi",
+        "savisannidi",
         "savi sannidi",
         "savi",
+        "sandhi",
         "sannidhi",
+        "nidhi",
         "anant aahara",
         "ananth aahara",
         "anantha aahara",
         "ananta aahara",
         "south mess",
-        "canteen"
+        "canteen",
+        "south indian canteen"
       ],
-      "hint": "The campus eatery famous for dosas, snacks, and southern delicacies (formerly Anant Aahara)."
+      "hint": "The campus eatery famous for dosas, snacks, and southern delicacies (Savisandhi / Savisannidhi)."
     },
     {
       "id": 11,

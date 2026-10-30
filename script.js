@@ -434,7 +434,7 @@ function toggleHint() {
 }
 
 // ----------------------------------------------------
-// 7. ANSWER VERIFICATION & SUBMISSION
+// 7. ANSWER VERIFICATION & SUBMISSION (SMART FUZZY MATCHING)
 // ----------------------------------------------------
 function normalizeString(str) {
   return String(str || '')
@@ -442,16 +442,57 @@ function normalizeString(str) {
     .replace(/[^a-z0-9]/g, '');
 }
 
+function levenshteinDistance(a, b) {
+  if (a === b) return 0;
+  if (!a.length) return b.length;
+  if (!b.length) return a.length;
+
+  const row = [];
+  for (let i = 0; i <= b.length; i++) row[i] = i;
+
+  for (let i = 1; i <= a.length; i++) {
+    let prev = i;
+    for (let j = 1; j <= b.length; j++) {
+      let val;
+      if (a[i - 1] === b[j - 1]) {
+        val = row[j - 1];
+      } else {
+        val = Math.min(row[j - 1] + 1, prev + 1, row[j] + 1);
+      }
+      row[j - 1] = prev;
+      prev = val;
+    }
+    row[b.length] = prev;
+  }
+  return row[b.length];
+}
+
 function isAnswerCorrect(userAnswer, question) {
-  const normUser = normalizeString(userAnswer);
+  const rawUser = String(userAnswer || '').toLowerCase().trim();
+  const normUser = normalizeString(rawUser);
   if (!normUser) return false;
 
-  const normTarget = normalizeString(question.answer);
-  if (normUser === normTarget) return true;
+  const targets = [question.answer, ...(question.aliases || [])];
 
-  if (Array.isArray(question.aliases)) {
-    for (const alias of question.aliases) {
-      if (normalizeString(alias) === normUser) return true;
+  for (const t of targets) {
+    const rawTarget = String(t || '').toLowerCase().trim();
+    const normTarget = normalizeString(rawTarget);
+
+    // 1. Direct normalized match (ignores all spaces, punctuation, case)
+    if (normUser === normTarget) return true;
+
+    // 2. Keyword / Substring match (e.g. "at the savisandhi canteen" or "football")
+    if (normTarget.length >= 4 && (normUser.includes(normTarget) || (normUser.length >= 5 && normTarget.includes(normUser)))) {
+      return true;
+    }
+
+    // 3. Typo-tolerant Levenshtein distance:
+    // Allows 1-2 character typos (e.g. savinidhi, savinnidhi, footbal, workhop, criket)
+    const maxTypo = normTarget.length >= 8 ? 2 : normTarget.length >= 5 ? 1 : 0;
+    if (maxTypo > 0 && Math.abs(normUser.length - normTarget.length) <= maxTypo) {
+      if (levenshteinDistance(normUser, normTarget) <= maxTypo) {
+        return true;
+      }
     }
   }
 
