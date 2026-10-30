@@ -638,6 +638,8 @@ function viewSolvedCluesModal() {
 function handleLogout() {
   if (confirm('Log out from this team on this device?')) {
     localStorage.removeItem('th_authenticated');
+    localStorage.removeItem('th_team_id');
+    localStorage.removeItem('th_team_name');
     sessionStorage.clear();
     window.location.href = 'login.html';
   }
@@ -650,12 +652,18 @@ async function initApp() {
   // Check authentication
   const authTeamId = localStorage.getItem('th_team_id') || sessionStorage.getItem('teamId');
   const authName = localStorage.getItem('th_team_name') || sessionStorage.getItem('teamName');
-  const isAuth = localStorage.getItem('th_authenticated') || sessionStorage.getItem('authenticated');
 
-  if (!authTeamId || isAuth !== 'true') {
+  // If no team is identified at all, go to login
+  if (!authTeamId) {
     window.location.href = 'login.html';
     return;
   }
+
+  // Ensure authenticated state is marked across both storages
+  localStorage.setItem('th_team_id', String(authTeamId));
+  localStorage.setItem('th_authenticated', 'true');
+  sessionStorage.setItem('teamId', String(authTeamId));
+  sessionStorage.setItem('authenticated', 'true');
 
   teamId = String(authTeamId);
   teamName = authName || `Team ${teamId}`;

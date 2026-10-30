@@ -324,7 +324,10 @@
       <!-- Quick Resume Box if previously logged in -->
       <div id="quickResumeBox" class="quick-resume-box" style="display: none;">
         <span class="quick-resume-text" id="quickResumeLabel">Resume as Team 1?</span>
-        <button type="button" class="quick-resume-btn" onclick="quickResume()">Resume Hunt</button>
+        <div style="display: flex; gap: 8px;">
+          <button type="button" class="quick-resume-btn" onclick="quickResume()">Resume Hunt</button>
+          <button type="button" class="quick-resume-btn" style="background: rgba(255, 255, 255, 0.08); border-color: rgba(255, 255, 255, 0.2); color: var(--text-secondary);" onclick="clearSavedSession()" title="Log in as another team">Switch</button>
+        </div>
       </div>
 
       <!-- Feedback Alert -->
@@ -460,8 +463,8 @@
 
     function checkPreviousSession() {
       try {
-        const savedTeamId = localStorage.getItem('th_team_id');
-        const savedTeamName = localStorage.getItem('th_team_name');
+        const savedTeamId = localStorage.getItem('th_team_id') || sessionStorage.getItem('teamId');
+        const savedTeamName = localStorage.getItem('th_team_name') || sessionStorage.getItem('teamName');
         if (savedTeamId) {
           const box = document.getElementById('quickResumeBox');
           const label = document.getElementById('quickResumeLabel');
@@ -472,7 +475,34 @@
     }
 
     function quickResume() {
+      const savedTeamId = localStorage.getItem('th_team_id') || sessionStorage.getItem('teamId');
+      const savedTeamName = localStorage.getItem('th_team_name') || sessionStorage.getItem('teamName');
+      if (savedTeamId) {
+        localStorage.setItem('th_team_id', String(savedTeamId));
+        localStorage.setItem('th_authenticated', 'true');
+        sessionStorage.setItem('teamId', String(savedTeamId));
+        sessionStorage.setItem('authenticated', 'true');
+        if (savedTeamName) {
+          localStorage.setItem('th_team_name', savedTeamName);
+          sessionStorage.setItem('teamName', savedTeamName);
+        }
+      }
       window.location.href = 'index.html';
+    }
+
+    function clearSavedSession() {
+      localStorage.removeItem('th_authenticated');
+      localStorage.removeItem('th_team_id');
+      localStorage.removeItem('th_team_name');
+      sessionStorage.clear();
+      const box = document.getElementById('quickResumeBox');
+      if (box) box.style.display = 'none';
+      const teamIdInput = document.getElementById('teamId');
+      if (teamIdInput) teamIdInput.value = '';
+      const teamPassInput = document.getElementById('teamPass');
+      if (teamPassInput) teamPassInput.value = '';
+      const fb = document.getElementById('teamFeedback');
+      if (fb) fb.className = 'feedback-box';
     }
 
     async function handleLoginSubmit(event) {
@@ -502,15 +532,19 @@
           throw new Error(data.error || 'Invalid credentials. Please re-check with event organizers.');
         }
 
-        // Save session locally
-        localStorage.setItem('th_team_id', data.team.id);
+        // Save session locally and mark authenticated
+        localStorage.setItem('th_team_id', String(data.team.id));
         localStorage.setItem('th_team_name', data.team.name);
+        localStorage.setItem('th_authenticated', 'true');
+        sessionStorage.setItem('teamId', String(data.team.id));
+        sessionStorage.setItem('teamName', data.team.name);
+        sessionStorage.setItem('authenticated', 'true');
 
         showFeedback(`✓ Welcome ${data.team.name}! Loading clue stream...`, false);
 
         setTimeout(() => {
           window.location.href = 'index.html';
-        }, 700);
+        }, 500);
 
       } catch (err) {
         console.error('Login error:', err);
