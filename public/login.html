@@ -261,11 +261,56 @@
     .shake-anim {
       animation: shake 0.4s ease;
     }
+    .floating-symbols-container {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      overflow: hidden;
+      pointer-events: none;
+      z-index: 0;
+    }
+    .float-symbol {
+      position: absolute;
+      font-size: 32px;
+      opacity: 0;
+      filter: drop-shadow(0 0 12px rgba(245, 158, 11, 0.5));
+      animation: floatDrift linear infinite;
+      user-select: none;
+    }
+    @keyframes floatDrift {
+      0% {
+        transform: translateY(105vh) rotate(0deg) scale(0.85);
+        opacity: 0;
+      }
+      10% {
+        opacity: 0.35;
+      }
+      85% {
+        opacity: 0.35;
+      }
+      100% {
+        transform: translateY(-15vh) rotate(360deg) scale(1.15);
+        opacity: 0;
+      }
+    }
   </style>
 </head>
 <body>
   <div class="welcome-wrapper">
     <div class="welcome-bg-grid"></div>
+
+    <!-- Floating Symbols -->
+    <div class="floating-symbols-container">
+      <div class="float-symbol" style="left: 8%; animation-duration: 15s; animation-delay: 0s;">🧭</div>
+      <div class="float-symbol" style="left: 22%; animation-duration: 18s; animation-delay: 3s;">🗺️</div>
+      <div class="float-symbol" style="left: 36%; animation-duration: 16s; animation-delay: 7s;">🗝️</div>
+      <div class="float-symbol" style="left: 52%; animation-duration: 14s; animation-delay: 2s;">💎</div>
+      <div class="float-symbol" style="left: 68%; animation-duration: 17s; animation-delay: 5s;">🔍</div>
+      <div class="float-symbol" style="left: 82%; animation-duration: 19s; animation-delay: 1s;">🏆</div>
+      <div class="float-symbol" style="left: 92%; animation-duration: 15s; animation-delay: 4s;">⚡</div>
+    </div>
 
     <div class="welcome-card">
       <div class="logo-container">
@@ -341,6 +386,9 @@
         <button type="button" class="admin-link-btn" onclick="openAdminModal()">
           🔒 Organizer / Admin Master Gate
         </button>
+        <div style="margin-top: 10px;">
+          <a href="welcome.html" style="font-size: 12px; color: var(--text-muted); text-decoration: none;">← Back to Welcome Screen</a>
+        </div>
       </div>
     </div>
   </div>
@@ -362,7 +410,7 @@
             type="password" 
             id="adminMasterPass" 
             class="input-text" 
-            placeholder="Enter @Treasure2.0" 
+            placeholder="Enter Admin Password" 
             required
             autocomplete="current-password"
           >

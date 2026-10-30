@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Welcome to Alliance Treasure Hunt 2.0</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    .welcome-page {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 24px 16px;
+      position: relative;
+      overflow: hidden;
+      background: radial-gradient(circle at 50% 15%, rgba(99, 102, 241, 0.22), transparent 45%),
+                  radial-gradient(circle at 80% 85%, rgba(245, 158, 11, 0.16), transparent 45%),
+                  #0a0f1d;
+    }
+    
+    /* Background Grid Pattern */
+    .bg-grid {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-image: linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+                        linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+      background-size: 38px 38px;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    /* Ambient Floating Symbols Layer */
+    .floating-symbols-container {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      overflow: hidden;
+      pointer-events: none;
+      z-index: 2;
+    }
+
+    .float-symbol {
+      position: absolute;
+      font-size: 32px;
+      opacity: 0;
+      filter: drop-shadow(0 0 12px rgba(245, 158, 11, 0.5));
+      animation: floatDrift linear infinite;
+      user-select: none;
+    }
+
+    @keyframes floatDrift {
+      0% {
+        transform: translateY(105vh) rotate(0deg) scale(0.85);
+        opacity: 0;
+      }
+      10% {
+        opacity: 0.35;
+      }
+      85% {
+        opacity: 0.35;
+      }
+      100% {
+        transform: translateY(-15vh) rotate(360deg) scale(1.15);
+        opacity: 0;
+      }
+    }
+
+    /* Main Welcome Glass Card */
+    .welcome-card {
+      background: rgba(17, 24, 39, 0.88);
+      backdrop-filter: blur(25px);
+      -webkit-backdrop-filter: blur(25px);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: var(--radius-xl);
+      padding: 44px 32px;
+      width: 100%;
+      max-width: 460px;
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.7), 0 0 35px rgba(99, 102, 241, 0.2);
+      position: relative;
+      overflow: hidden;
+      z-index: 3;
+      text-align: center;
+      animation: scaleUp 0.35s ease;
+    }
+
+    .welcome-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, #f59e0b 0%, #6366f1 50%, #ec4899 100%);
+    }
+
+    .alliance-emblem-clean {
+      width: 130px;
+      height: 130px;
+      display: inline-block;
+      margin: 0 auto;
+      filter: drop-shadow(0 0 24px rgba(245, 158, 11, 0.5)) drop-shadow(0 10px 22px rgba(0, 0, 0, 0.7));
+      transition: transform 0.3s ease;
+      background: transparent;
+      border: none;
+    }
+    .alliance-emblem-clean:hover {
+      transform: scale(1.06);
+    }
+
+    .univ-tag {
+      display: inline-block;
+      text-transform: uppercase;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 2px;
+      color: #f59e0b;
+      margin-top: 14px;
+      background: rgba(245, 158, 11, 0.12);
+      padding: 5px 14px;
+      border-radius: var(--radius-full);
+      border: 1px solid rgba(245, 158, 11, 0.3);
+    }
+
+    .welcome-title {
+      font-size: 28px;
+      font-weight: 900;
+      color: var(--text-primary);
+      margin-top: 10px;
+      margin-bottom: 8px;
+      line-height: 1.2;
+    }
+
+    .welcome-subtitle {
+      font-size: 14px;
+      color: var(--text-secondary);
+      line-height: 1.5;
+      margin-bottom: 26px;
+    }
+
+    /* Highlights Row */
+    .hunt-highlights {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-bottom: 28px;
+    }
+    .highlight-pill {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: var(--radius-md);
+      padding: 10px 6px;
+    }
+    .highlight-val {
+      font-size: 18px;
+      font-weight: 800;
+      color: #a5b4fc;
+      display: block;
+    }
+    .highlight-lbl {
+      font-size: 10px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    /* Primary Enter Button */
+    .btn-enter-hunt {
+      width: 100%;
+      padding: 16px 24px;
+      font-size: 16px;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+      background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #ec4899 100%);
+      color: white;
+      border: none;
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      box-shadow: 0 10px 25px rgba(99, 102, 241, 0.4), 0 0 20px rgba(139, 92, 246, 0.3);
+      transition: all 0.25s ease;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      text-decoration: none;
+    }
+    .btn-enter-hunt:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 14px 30px rgba(99, 102, 241, 0.5), 0 0 30px rgba(139, 92, 246, 0.5);
+    }
+    .btn-enter-hunt:active {
+      transform: translateY(0);
+    }
+
+    .admin-link-wrap {
+      margin-top: 24px;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      padding-top: 16px;
+    }
+    .admin-link-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      padding: 6px 12px;
+      border-radius: var(--radius-sm);
+      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .admin-link-btn:hover {
+      color: #f59e0b;
+      background: rgba(245, 158, 11, 0.08);
+    }
+
+    /* Modal for Admin Master Password */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.85);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      z-index: 999;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .modal-overlay.show {
+      display: flex;
+      animation: fadeIn 0.25s ease;
+    }
+    .admin-gate-card {
+      background: #111827;
+      border: 1px solid rgba(245, 158, 11, 0.4);
+      border-radius: var(--radius-xl);
+      padding: 34px 26px;
+      width: 100%;
+      max-width: 390px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8), 0 0 30px rgba(245, 158, 11, 0.25);
+      text-align: center;
+      position: relative;
+    }
+    .admin-gate-icon {
+      font-size: 42px;
+      margin-bottom: 12px;
+    }
+    .admin-gate-title {
+      font-size: 20px;
+      font-weight: 800;
+      color: var(--text-primary);
+      margin-bottom: 6px;
+    }
+    .admin-gate-desc {
+      font-size: 13px;
+      color: var(--text-secondary);
+      margin-bottom: 20px;
+    }
+    .btn-close-modal {
+      position: absolute;
+      top: 14px;
+      right: 14px;
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-size: 20px;
+      cursor: pointer;
+      padding: 4px;
+    }
+    .btn-close-modal:hover {
+      color: var(--text-primary);
+    }
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      20%, 60% { transform: translateX(-8px); }
+      40%, 80% { transform: translateX(8px); }
+    }
+    .shake-anim {
+      animation: shake 0.4s ease;
+    }
+  </style>
+</head>
+<body>
+  <div class="welcome-page">
+    <div class="bg-grid"></div>
+
+    <!-- Ambient Floating Symbols -->
+    <div class="floating-symbols-container">
+      <div class="float-symbol" style="left: 6%; animation-duration: 14s; animation-delay: 0s;">🧭</div>
+      <div class="float-symbol" style="left: 18%; animation-duration: 18s; animation-delay: 3s;">🗺️</div>
+      <div class="float-symbol" style="left: 32%; animation-duration: 15s; animation-delay: 7s;">🗝️</div>
+      <div class="float-symbol" style="left: 48%; animation-duration: 13s; animation-delay: 2s;">💎</div>
+      <div class="float-symbol" style="left: 64%; animation-duration: 16s; animation-delay: 5s;">🔍</div>
+      <div class="float-symbol" style="left: 78%; animation-duration: 19s; animation-delay: 1s;">🏆</div>
+      <div class="float-symbol" style="left: 90%; animation-duration: 14s; animation-delay: 4s;">⚡</div>
+      <div class="float-symbol" style="left: 12%; animation-duration: 21s; animation-delay: 9s;">📜</div>
+      <div class="float-symbol" style="left: 40%; animation-duration: 17s; animation-delay: 6s;">👑</div>
+      <div class="float-symbol" style="left: 84%; animation-duration: 16s; animation-delay: 8s;">🚩</div>
+      <div class="float-symbol" style="left: 55%; animation-duration: 20s; animation-delay: 4s;">✨</div>
+      <div class="float-symbol" style="left: 24%; animation-duration: 15s; animation-delay: 11s;">🧭</div>
+    </div>
+
+    <!-- Central Welcome Card -->
+    <div class="welcome-card">
+      <img src="images/alliance-logo.png" alt="Alliance University Crest" class="alliance-emblem-clean">
+      <br>
+      <span class="univ-tag">Alliance University</span>
+      <h1 class="welcome-title">Treasure Hunt 2.0</h1>
+      <p class="welcome-subtitle">Welcome to the Ultimate Campus Mystery & Physical Challenge. 22 checkpoints across campus await your team!</p>
+
+      <!-- Highlights -->
+      <div class="hunt-highlights">
+        <div class="highlight-pill">
+          <span class="highlight-val">22</span>
+          <span class="highlight-lbl">Rounds</span>
+        </div>
+        <div class="highlight-pill">
+          <span class="highlight-val">4</span>
+          <span class="highlight-lbl">Live Games</span>
+        </div>
+        <div class="highlight-pill">
+          <span class="highlight-val">LC1</span>
+          <span class="highlight-lbl">Grand Summit</span>
+        </div>
+      </div>
+
+      <!-- Enter Hunt Button -->
+      <a href="login.html" class="btn-enter-hunt">
+        <span>🚀 Enter Hunt / Team Login</span>
+        <span>→</span>
+      </a>
+
+      <!-- Organizer Link -->
+      <div class="admin-link-wrap">
+        <button type="button" class="admin-link-btn" onclick="openAdminModal()">
+          🔒 Organizer / Admin Master Gate
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Admin Master Password Security Modal -->
+  <div id="adminModal" class="modal-overlay">
+    <div class="admin-gate-card" id="adminGateCard">
+      <button type="button" class="btn-close-modal" onclick="closeAdminModal()">✕</button>
+      <div class="admin-gate-icon">🔐</div>
+      <h3 class="admin-gate-title">Admin Access Control</h3>
+      <p class="admin-gate-desc">Enter Master Password to open Organizer Command Center</p>
+
+      <div id="adminModalFeedback" class="feedback-box"></div>
+
+      <form onsubmit="handleAdminAuth(event)">
+        <div class="form-group" style="text-align: left;">
+          <label class="form-label" for="adminMasterPass">Master Password</label>
+          <input 
+            type="password" 
+            id="adminMasterPass" 
+            class="input-text" 
+            placeholder="Enter Admin Password" 
+            required
+            autocomplete="current-password"
+          >
+        </div>
+        <button type="submit" class="btn-primary" style="margin-top: 14px; background: linear-gradient(135deg, #f59e0b 0%, #ef4444 100%);">
+          <span>⚡ Unlock Admin Dashboard</span>
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    const ADMIN_REQUIRED_PASS = '@Treasure2.0';
+
+    function openAdminModal() {
+      const modal = document.getElementById('adminModal');
+      modal.classList.add('show');
+      document.getElementById('adminMasterPass').value = '';
+      document.getElementById('adminModalFeedback').className = 'feedback-box';
+      setTimeout(() => document.getElementById('adminMasterPass').focus(), 100);
+    }
+
+    function closeAdminModal() {
+      document.getElementById('adminModal').classList.remove('show');
+    }
+
+    function handleAdminAuth(event) {
+      event.preventDefault();
+      const entered = document.getElementById('adminMasterPass').value.trim();
+      const fb = document.getElementById('adminModalFeedback');
+      const card = document.getElementById('adminGateCard');
+
+      if (entered === ADMIN_REQUIRED_PASS) {
+        sessionStorage.setItem('admin_auth_token', ADMIN_REQUIRED_PASS);
+        sessionStorage.setItem('admin_authenticated', 'true');
+        fb.textContent = '✓ Access Granted! Redirecting...';
+        fb.className = 'feedback-box show success';
+        setTimeout(() => {
+          window.location.href = 'admin.html';
+        }, 500);
+      } else {
+        fb.textContent = '❌ Invalid Master Password! Access Denied.';
+        fb.className = 'feedback-box show error';
+        card.classList.remove('shake-anim');
+        void card.offsetWidth;
+        card.classList.add('shake-anim');
+        document.getElementById('adminMasterPass').value = '';
+        document.getElementById('adminMasterPass').focus();
+      }
+    }
+  </script>
+</body>
+</html>

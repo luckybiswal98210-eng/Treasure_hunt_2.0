@@ -3,7 +3,7 @@
   "rewrites": [
     {
       "source": "/",
-      "destination": "/login.html"
+      "destination": "/welcome.html"
     }
   ],
   "headers": [

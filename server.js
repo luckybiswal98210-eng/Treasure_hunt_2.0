@@ -70,7 +70,7 @@ const requestListener = async (req, res) => {
   }
 
   // 3. Static files
-  let requestPath = pathname === '/' ? '/login.html' : pathname;
+  let requestPath = pathname === '/' ? '/welcome.html' : pathname;
   const decodedPath = decodeURIComponent(requestPath);
 
   const candidates = [
