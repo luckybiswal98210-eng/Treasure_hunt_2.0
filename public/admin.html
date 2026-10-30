@@ -14,10 +14,10 @@
     <!-- Navbar -->
     <header class="admin-navbar">
       <div class="brand">
-        <div class="brand-icon">⚡</div>
+        <img src="images/alliance-logo.png" alt="Alliance Logo" class="alliance-logo-badge" style="width: 44px; height: 44px; margin: 0; display: inline-block;">
         <div class="brand-title">
-          <h1>Treasure Hunt 2.0 Control Center</h1>
-          <p>Real-Time Campus Operations & Photo Intelligence</p>
+          <h1>Alliance Treasure Hunt 2.0 Control Center</h1>
+          <p>Real-Time Campus Operations • 22 Rounds • Live Tracking</p>
         </div>
       </div>
 
@@ -30,11 +30,11 @@
           <span id="soundIcon">🔔</span> Sound Alerts: ON
         </button>
         <button type="button" class="btn-control" onclick="manualRefresh()">
-          🔄 Refresh Now
+          🔄 Refresh
         </button>
-        <a href="login.html" class="btn-control" target="_blank">
-          🧭 Open Team Portal
-        </a>
+        <button type="button" class="btn-control" onclick="logoutAdmin()" style="border-color: rgba(239, 68, 68, 0.4); color: #f87171;">
+          🔒 Lock & Exit
+        </button>
       </div>
     </header>
 
@@ -314,6 +314,36 @@
           </a>
         </div>
       </div>
+    </div>
+  </div>
+
+  <!-- Security Gatekeeper Overlay -->
+  <div id="adminAuthGate" class="auth-gate-overlay">
+    <div class="auth-gate-card">
+      <img src="images/alliance-logo.png" alt="Alliance Logo" class="alliance-logo-badge" style="width: 80px; height: 80px; margin: 0 auto 14px auto; display: block;">
+      <h2 style="font-size: 22px; font-weight: 800; color: #f8fafc; margin-bottom: 6px;">Alliance Admin Gate</h2>
+      <p style="font-size: 13px; color: #94a3b8; margin-bottom: 20px;">Master Organizer Password Required to View Live Operations</p>
+      
+      <div id="authGateFeedback" class="feedback-box"></div>
+
+      <form onsubmit="verifyAdminGate(event)">
+        <div style="margin-bottom: 16px; text-align: left;">
+          <label style="display: block; font-size: 12px; font-weight: 700; color: #cbd5e1; margin-bottom: 6px;" for="gatePassInput">Organizer Master Password</label>
+          <input 
+            type="password" 
+            id="gatePassInput" 
+            class="editable-input" 
+            placeholder="Enter @Treasure2.0" 
+            required 
+            style="width: 100%; text-align: center; font-size: 16px; padding: 12px;"
+            autocomplete="current-password"
+            autofocus
+          >
+        </div>
+        <button type="submit" class="btn-control active" style="width: 100%; padding: 12px; font-size: 15px; font-weight: 700; background: linear-gradient(135deg, #f59e0b 0%, #ef4444 100%); color: white; border: none; border-radius: var(--radius-sm); cursor: pointer;">
+          ⚡ Unlock Live Dashboard
+        </button>
+      </form>
     </div>
   </div>
 

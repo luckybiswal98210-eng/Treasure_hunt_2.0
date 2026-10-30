@@ -134,45 +134,57 @@ function createSeededRandom(seed) {
   };
 }
 
-// Build question order tailored to each team
+// Build question order tailored to each team with exact 22-round sequence pattern:
+// 3 Clues -> 1 Game -> 3 Clues -> 1 Game -> 3 Clues -> 1 Game -> 5 Clues -> 1 Game -> 3 Clues -> 1 Summit (LC1 Top Floor)
 function buildTeamQuestions(config) {
-  const clues = Array.isArray(config.questions) ? config.questions : [];
-  const games = Array.isArray(config.gameCheckpoints) ? config.gameCheckpoints : [];
-  const lastClueId = config.fixedLastClueId || 18;
+  const allQuestions = Array.isArray(config.questions) ? config.questions : [];
 
-  const lastClue = clues.find((q) => Number(q.id) === Number(lastClueId));
-  const shufflePool = clues.filter((q) => Number(q.id) !== Number(lastClueId));
+  const regularClues = allQuestions.filter((q) => !q.isGame && !q.isLastClue);
+  const games = allQuestions.filter((q) => q.isGame);
+  const finalClue = allQuestions.find((q) => q.isLastClue || Number(q.id) === 22);
 
   const teamSeed = Number.parseInt(String(teamId), 10) || 1;
   const seededRandom = createSeededRandom((teamSeed * 1103515245 + SHUFFLE_SALT) >>> 0);
 
-  // Shuffle clues
-  for (let i = shufflePool.length - 1; i > 0; i--) {
+  // 1. Deterministically shuffle regular clues for this team
+  const shuffledClues = [...regularClues];
+  for (let i = shuffledClues.length - 1; i > 0; i--) {
     const j = Math.floor(seededRandom() * (i + 1));
-    [shufflePool[i], shufflePool[j]] = [shufflePool[j], shufflePool[i]];
+    [shuffledClues[i], shuffledClues[j]] = [shuffledClues[j], shuffledClues[i]];
   }
 
-  const flow = [];
-  let gameIndex = 0;
-  const interval = config.gameCheckpointsInterval || 4;
-
-  for (let i = 0; i < shufflePool.length; i++) {
-    flow.push(shufflePool[i]);
-    if ((i + 1) % interval === 0 && gameIndex < games.length) {
-      flow.push(games[gameIndex]);
-      gameIndex += 1;
-    }
+  // 2. Deterministically shuffle the 4 mini-games for this team
+  const shuffledGames = [...games];
+  for (let i = shuffledGames.length - 1; i > 0; i--) {
+    const j = Math.floor(seededRandom() * (i + 1));
+    [shuffledGames[i], shuffledGames[j]] = [shuffledGames[j], shuffledGames[i]];
   }
 
-  // Any remaining games
-  while (gameIndex < games.length) {
-    flow.push(games[gameIndex]);
-    gameIndex += 1;
-  }
-
-  if (lastClue) {
-    flow.push(lastClue);
-  }
+  // 3. Assemble sequence: 3 clues, 1 game, 3 clues, 1 game, 3 clues, 1 game, 5 clues, 1 game, 3 clues, 1 final
+  const flow = [
+    shuffledClues[0],  // Round 1
+    shuffledClues[1],  // Round 2
+    shuffledClues[2],  // Round 3
+    shuffledGames[0],  // Round 4 (Game 1)
+    shuffledClues[3],  // Round 5
+    shuffledClues[4],  // Round 6
+    shuffledClues[5],  // Round 7
+    shuffledGames[1],  // Round 8 (Game 2)
+    shuffledClues[6],  // Round 9
+    shuffledClues[7],  // Round 10
+    shuffledClues[8],  // Round 11
+    shuffledGames[2],  // Round 12 (Game 3)
+    shuffledClues[9],  // Round 13
+    shuffledClues[10], // Round 14
+    shuffledClues[11], // Round 15
+    shuffledClues[12], // Round 16
+    shuffledClues[13], // Round 17
+    shuffledGames[3],  // Round 18 (Game 4)
+    shuffledClues[14], // Round 19
+    shuffledClues[15], // Round 20
+    shuffledClues[16], // Round 21
+    finalClue           // Round 22 (LC1 Top Floor - Final Summit)
+  ].filter(Boolean);
 
   return flow.map((item, index) => ({
     ...item,
@@ -366,10 +378,13 @@ function renderCurrentQuestion() {
   // Update clue tag & text
   const tag = document.getElementById('clueTypeTag');
   if (q.isGame) {
-    tag.textContent = `Mini-Game ${q.gameNumber || ''}`;
+    tag.textContent = '🎮 MINI-GAME CHALLENGE';
     tag.className = 'clue-tag game-tag';
+  } else if (q.isLastClue || q.isFinal) {
+    tag.textContent = '🏆 FINAL SUMMIT';
+    tag.className = 'clue-tag final-tag';
   } else {
-    tag.textContent = `Clue ${stepNo}`;
+    tag.textContent = `Round ${stepNo} of ${total}`;
     tag.className = 'clue-tag';
   }
 

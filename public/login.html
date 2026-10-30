@@ -3,64 +3,156 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Campus Treasure Hunt 2.0 - Team Login</title>
+  <title>Welcome to Alliance Treasure Hunt 2.0</title>
   <link rel="stylesheet" href="styles.css">
   <style>
-    .login-wrapper {
+    .welcome-wrapper {
       min-height: 100vh;
       display: flex;
+      flex-direction: column;
       align-items: center;
       justify-content: center;
-      padding: 20px;
+      padding: 24px 16px;
+      position: relative;
+      background: radial-gradient(circle at 50% 10%, rgba(99, 102, 241, 0.22), transparent 45%),
+                  radial-gradient(circle at 85% 90%, rgba(245, 158, 11, 0.15), transparent 40%),
+                  #0a0f1d;
     }
-    .login-card {
-      background: var(--bg-card);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      border: 1px solid var(--border-subtle);
+    .welcome-bg-grid {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-image: linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+                        linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+      background-size: 36px 36px;
+      pointer-events: none;
+      z-index: 0;
+    }
+    .welcome-card {
+      background: rgba(17, 24, 39, 0.85);
+      backdrop-filter: blur(25px);
+      -webkit-backdrop-filter: blur(25px);
+      border: 1px solid rgba(255, 255, 255, 0.12);
       border-radius: var(--radius-xl);
       padding: 36px 28px;
       width: 100%;
-      max-width: 420px;
-      box-shadow: var(--shadow-lg);
+      max-width: 440px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6), 0 0 30px rgba(99, 102, 241, 0.2);
       position: relative;
       overflow: hidden;
+      z-index: 1;
       animation: scaleUp 0.35s ease;
     }
-    .login-card::before {
+    .welcome-card::before {
       content: '';
       position: absolute;
       top: 0;
       left: 0;
       right: 0;
       height: 4px;
-      background: var(--accent-gradient);
+      background: linear-gradient(90deg, #f59e0b 0%, #6366f1 50%, #ec4899 100%);
     }
-    .login-header {
+    .logo-container {
       text-align: center;
-      margin-bottom: 28px;
+      margin-bottom: 20px;
     }
-    .login-logo {
-      width: 64px;
-      height: 64px;
-      background: var(--accent-gradient);
+    .alliance-logo-badge {
+      width: 96px;
+      height: 96px;
       border-radius: 50%;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 32px;
-      margin-bottom: 14px;
-      box-shadow: var(--shadow-glow);
+      object-fit: cover;
+      background: #ffffff;
+      border: 3px solid #f59e0b;
+      box-shadow: 0 0 25px rgba(245, 158, 11, 0.5), 0 6px 20px rgba(0, 0, 0, 0.5);
+      display: inline-block;
+      transition: transform 0.3s ease;
     }
-    .login-title {
-      font-size: 24px;
+    .alliance-logo-badge:hover {
+      transform: scale(1.06);
+    }
+    .univ-tag {
+      display: inline-block;
+      text-transform: uppercase;
+      font-size: 11px;
       font-weight: 800;
-      color: var(--text-primary);
-      margin-bottom: 6px;
+      letter-spacing: 2px;
+      color: #f59e0b;
+      margin-top: 10px;
+      background: rgba(245, 158, 11, 0.12);
+      padding: 4px 12px;
+      border-radius: var(--radius-full);
+      border: 1px solid rgba(245, 158, 11, 0.3);
     }
-    .login-subtitle {
+    .welcome-title {
+      font-size: 26px;
+      font-weight: 900;
+      color: var(--text-primary);
+      text-align: center;
+      margin-top: 8px;
+      margin-bottom: 6px;
+      line-height: 1.2;
+    }
+    .welcome-subtitle {
       font-size: 13px;
       color: var(--text-secondary);
+      text-align: center;
+      margin-bottom: 22px;
+    }
+    .hunt-highlights {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin-bottom: 24px;
+    }
+    .highlight-pill {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: var(--radius-md);
+      padding: 8px 4px;
+      text-align: center;
+    }
+    .highlight-val {
+      font-size: 16px;
+      font-weight: 800;
+      color: #a5b4fc;
+      display: block;
+    }
+    .highlight-lbl {
+      font-size: 10px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .quick-resume-box {
+      background: rgba(99, 102, 241, 0.12);
+      border: 1px solid rgba(99, 102, 241, 0.3);
+      border-radius: var(--radius-md);
+      padding: 12px 14px;
+      margin-bottom: 20px;
+      font-size: 13px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .quick-resume-text {
+      color: #c7d2fe;
+      font-weight: 600;
+    }
+    .quick-resume-btn {
+      background: var(--accent-primary);
+      color: white;
+      border: none;
+      padding: 6px 14px;
+      border-radius: var(--radius-sm);
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.2s ease;
+    }
+    .quick-resume-btn:hover {
+      background: #4f46e5;
     }
     .password-wrap {
       position: relative;
@@ -77,62 +169,134 @@
       font-size: 16px;
       padding: 4px;
     }
-    .btn-toggle-pass:hover {
-      color: var(--text-primary);
-    }
-    .quick-resume-box {
-      display: none;
-      background: rgba(99, 102, 241, 0.1);
-      border: 1px solid rgba(99, 102, 241, 0.25);
-      border-radius: var(--radius-md);
-      padding: 12px 14px;
-      margin-bottom: 20px;
-      font-size: 13px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    .quick-resume-text {
-      color: #c7d2fe;
-    }
-    .quick-resume-btn {
-      background: var(--accent-primary);
-      color: white;
-      border: none;
-      padding: 6px 12px;
-      border-radius: var(--radius-sm);
-      font-size: 12px;
-      font-weight: 700;
-      cursor: pointer;
-    }
     .admin-link-wrap {
       text-align: center;
       margin-top: 24px;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      padding-top: 16px;
     }
-    .admin-link {
+    .admin-link-btn {
+      background: transparent;
+      border: none;
       color: var(--text-muted);
       font-size: 12px;
-      text-decoration: none;
-      transition: color 0.2s ease;
+      font-weight: 600;
+      cursor: pointer;
+      padding: 6px 12px;
+      border-radius: var(--radius-sm);
+      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
     }
-    .admin-link:hover {
-      color: #a5b4fc;
+    .admin-link-btn:hover {
+      color: #f59e0b;
+      background: rgba(245, 158, 11, 0.08);
+    }
+
+    /* Modal for Admin Master Password */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.85);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      z-index: 999;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .modal-overlay.show {
+      display: flex;
+      animation: fadeIn 0.25s ease;
+    }
+    .admin-gate-card {
+      background: #111827;
+      border: 1px solid rgba(245, 158, 11, 0.4);
+      border-radius: var(--radius-xl);
+      padding: 32px 24px;
+      width: 100%;
+      max-width: 380px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8), 0 0 30px rgba(245, 158, 11, 0.25);
+      text-align: center;
+      position: relative;
+    }
+    .admin-gate-icon {
+      font-size: 40px;
+      margin-bottom: 12px;
+    }
+    .admin-gate-title {
+      font-size: 20px;
+      font-weight: 800;
+      color: var(--text-primary);
+      margin-bottom: 6px;
+    }
+    .admin-gate-desc {
+      font-size: 13px;
+      color: var(--text-secondary);
+      margin-bottom: 20px;
+    }
+    .btn-close-modal {
+      position: absolute;
+      top: 14px;
+      right: 14px;
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-size: 20px;
+      cursor: pointer;
+      padding: 4px;
+    }
+    .btn-close-modal:hover {
+      color: var(--text-primary);
+    }
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      20%, 60% { transform: translateX(-8px); }
+      40%, 80% { transform: translateX(8px); }
+    }
+    .shake-anim {
+      animation: shake 0.4s ease;
     }
   </style>
 </head>
 <body>
-  <div class="login-wrapper">
-    <div class="login-card">
-      <div class="login-header">
-        <div class="login-logo">🧭</div>
-        <h1 class="login-title">Campus Treasure Hunt</h1>
-        <p class="login-subtitle">Enter your team credentials to start the hunt</p>
+  <div class="welcome-wrapper">
+    <div class="welcome-bg-grid"></div>
+
+    <div class="welcome-card">
+      <div class="logo-container">
+        <img src="images/alliance-logo.png" alt="Alliance University Logo" class="alliance-logo-badge">
+        <br>
+        <span class="univ-tag">Alliance University</span>
+        <h1 class="welcome-title">Treasure Hunt 2.0</h1>
+        <p class="welcome-subtitle">The Ultimate Campus Mystery & Physical Challenge</p>
+      </div>
+
+      <!-- Highlights -->
+      <div class="hunt-highlights">
+        <div class="highlight-pill">
+          <span class="highlight-val">22</span>
+          <span class="highlight-lbl">Rounds</span>
+        </div>
+        <div class="highlight-pill">
+          <span class="highlight-val">4</span>
+          <span class="highlight-lbl">Games</span>
+        </div>
+        <div class="highlight-pill">
+          <span class="highlight-val">LC1</span>
+          <span class="highlight-lbl">Summit</span>
+        </div>
       </div>
 
       <!-- Quick Resume Box if previously logged in -->
       <div id="quickResumeBox" class="quick-resume-box" style="display: none;">
         <span class="quick-resume-text" id="quickResumeLabel">Resume as Team 1?</span>
-        <button type="button" class="quick-resume-btn" onclick="quickResume()">Resume</button>
+        <button type="button" class="quick-resume-btn" onclick="quickResume()">Resume Hunt</button>
       </div>
 
       <!-- Feedback Alert -->
@@ -151,7 +315,7 @@
             autocomplete="off"
             autofocus
           >
-          <p class="input-help">Assigned by the event organizers</p>
+          <p class="input-help">Assigned team number (1 - 45)</p>
         </div>
 
         <div class="form-group">
@@ -175,12 +339,45 @@
       </form>
 
       <div class="admin-link-wrap">
-        <a href="admin.html" class="admin-link">⚙️ Organizer / Admin Control Center</a>
+        <button type="button" class="admin-link-btn" onclick="openAdminModal()">
+          🔒 Organizer / Admin Master Gate
+        </button>
       </div>
     </div>
   </div>
 
+  <!-- Admin Master Password Security Modal -->
+  <div id="adminModal" class="modal-overlay">
+    <div class="admin-gate-card" id="adminGateCard">
+      <button type="button" class="btn-close-modal" onclick="closeAdminModal()">✕</button>
+      <div class="admin-gate-icon">🔐</div>
+      <h3 class="admin-gate-title">Admin Access Control</h3>
+      <p class="admin-gate-desc">Enter Master Password to open Organizer Command Center</p>
+
+      <div id="adminModalFeedback" class="feedback-box"></div>
+
+      <form onsubmit="handleAdminAuth(event)">
+        <div class="form-group" style="text-align: left;">
+          <label class="form-label" for="adminMasterPass">Master Password</label>
+          <input 
+            type="password" 
+            id="adminMasterPass" 
+            class="input-text" 
+            placeholder="Enter @Treasure2.0" 
+            required
+            autocomplete="current-password"
+          >
+        </div>
+        <button type="submit" class="btn-primary" style="margin-top: 14px; background: linear-gradient(135deg, #f59e0b 0%, #ef4444 100%);">
+          <span>⚡ Unlock Admin Dashboard</span>
+        </button>
+      </form>
+    </div>
+  </div>
+
   <script>
+    const ADMIN_REQUIRED_PASS = '@Treasure2.0';
+
     function togglePasswordVisibility() {
       const pass = document.getElementById('teamPass');
       pass.type = pass.type === 'password' ? 'text' : 'password';
@@ -192,6 +389,44 @@
       fb.className = 'feedback-box show ' + (isError ? 'error' : 'success');
     }
 
+    function openAdminModal() {
+      const modal = document.getElementById('adminModal');
+      modal.classList.add('show');
+      document.getElementById('adminMasterPass').value = '';
+      document.getElementById('adminModalFeedback').className = 'feedback-box';
+      setTimeout(() => document.getElementById('adminMasterPass').focus(), 100);
+    }
+
+    function closeAdminModal() {
+      document.getElementById('adminModal').classList.remove('show');
+    }
+
+    function handleAdminAuth(event) {
+      event.preventDefault();
+      const entered = document.getElementById('adminMasterPass').value.trim();
+      const fb = document.getElementById('adminModalFeedback');
+      const card = document.getElementById('adminGateCard');
+
+      if (entered === ADMIN_REQUIRED_PASS) {
+        // Authenticated!
+        sessionStorage.setItem('admin_auth_token', ADMIN_REQUIRED_PASS);
+        sessionStorage.setItem('admin_authenticated', 'true');
+        fb.textContent = '✓ Access Granted! Redirecting...';
+        fb.className = 'feedback-box show success';
+        setTimeout(() => {
+          window.location.href = 'admin.html';
+        }, 500);
+      } else {
+        fb.textContent = '❌ Invalid Master Password! Access Denied.';
+        fb.className = 'feedback-box show error';
+        card.classList.remove('shake-anim');
+        void card.offsetWidth; // trigger reflow
+        card.classList.add('shake-anim');
+        document.getElementById('adminMasterPass').value = '';
+        document.getElementById('adminMasterPass').focus();
+      }
+    }
+
     function checkPreviousSession() {
       try {
         const savedTeamId = localStorage.getItem('th_team_id');
@@ -201,74 +436,63 @@
           const label = document.getElementById('quickResumeLabel');
           label.textContent = `Resume as ${savedTeamName || 'Team ' + savedTeamId}?`;
           box.style.display = 'flex';
-          document.getElementById('teamId').value = savedTeamId;
         }
-      } catch (e) {
-        console.warn('Local storage check warning:', e);
-      }
+      } catch (e) {}
     }
 
-    async function quickResume() {
-      const savedTeamId = localStorage.getItem('th_team_id');
-      const savedAuth = localStorage.getItem('th_authenticated');
-      if (savedTeamId && savedAuth === 'true') {
-        window.location.href = 'index.html';
-      } else {
-        document.getElementById('teamPass').focus();
-      }
+    function quickResume() {
+      window.location.href = 'index.html';
     }
 
     async function handleLoginSubmit(event) {
       event.preventDefault();
-      const teamId = document.getElementById('teamId').value.trim();
-      const password = document.getElementById('teamPass').value.trim();
-      const loginBtn = document.getElementById('loginBtn');
+      const teamIdInput = document.getElementById('teamId').value.trim();
+      const teamPassInput = document.getElementById('teamPass').value.trim();
+      const btn = document.getElementById('loginBtn');
 
-      if (!teamId || !password) {
-        showFeedback('Please enter both Team ID and Password.');
+      if (!teamIdInput || !teamPassInput) {
+        showFeedback('Please provide both your Team Number and Password.', true);
         return;
       }
 
       try {
-        loginBtn.disabled = true;
-        loginBtn.innerHTML = '<span class="spinner"></span> <span>Signing in...</span>';
+        btn.disabled = true;
+        btn.innerHTML = '<span class="spinner"></span> <span>Verifying credentials...</span>';
 
         const res = await fetch('/api/login', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ teamId, password })
+          body: JSON.stringify({ teamId: teamIdInput, password: teamPassInput })
         });
 
         const data = await res.json();
 
-        if (res.ok && data.success) {
-          showFeedback('✓ Login successful! Loading hunt progress...', false);
-
-          // Store session in localStorage (persistent across browser reopens) & sessionStorage
-          localStorage.setItem('th_team_id', data.team.id);
-          localStorage.setItem('th_team_name', data.team.name);
-          localStorage.setItem('th_authenticated', 'true');
-          sessionStorage.setItem('teamId', data.team.id);
-          sessionStorage.setItem('teamName', data.team.name);
-          sessionStorage.setItem('authenticated', 'true');
-
-          setTimeout(() => {
-            window.location.href = 'index.html';
-          }, 600);
-        } else {
-          showFeedback(data.error || 'Invalid credentials. Please verify your team ID and password.');
-          loginBtn.disabled = false;
-          loginBtn.innerHTML = '<span>🚀 Enter Treasure Hunt</span>';
+        if (!res.ok || !data.success) {
+          throw new Error(data.error || 'Invalid credentials. Please re-check with event organizers.');
         }
+
+        // Save session locally
+        localStorage.setItem('th_team_id', data.team.id);
+        localStorage.setItem('th_team_name', data.team.name);
+
+        showFeedback(`✓ Welcome ${data.team.name}! Loading clue stream...`, false);
+
+        setTimeout(() => {
+          window.location.href = 'index.html';
+        }, 700);
+
       } catch (err) {
         console.error('Login error:', err);
-        showFeedback('Network error during login. Please check connection and retry.');
-        loginBtn.disabled = false;
-        loginBtn.innerHTML = '<span>🚀 Enter Treasure Hunt</span>';
+        showFeedback(err.message, true);
+        btn.disabled = false;
+        btn.innerHTML = '<span>🚀 Enter Treasure Hunt</span>';
       }
     }
 
-    document.addEventListener('DOMContentLoaded', checkPreviousSession);
+    // Initialize
+    window.addEventListener('DOMContentLoaded', () => {
+      checkPreviousSession();
+    });
   </script>
 </body>
 </html>

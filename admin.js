@@ -2,6 +2,8 @@
 // Campus Treasure Hunt 2.0 - Organizer Control Center Logic
 // ==========================================================================
 
+const ADMIN_MASTER_PASSWORD = '@Treasure2.0';
+
 let allSubmissions = [];
 let allCredentials = [];
 let questionsConfig = null;
@@ -9,6 +11,57 @@ let soundAlerts = true;
 let pollTimer = null;
 let isFirstLoad = true;
 let activeModalTeamId = null;
+
+// ----------------------------------------------------
+// 0. ADMIN AUTHENTICATION GATE
+// ----------------------------------------------------
+function checkAdminAuth() {
+  const isAuth = sessionStorage.getItem('admin_authenticated') === 'true';
+  const token = sessionStorage.getItem('admin_auth_token');
+  const gate = document.getElementById('adminAuthGate');
+
+  if (isAuth && token === ADMIN_MASTER_PASSWORD) {
+    if (gate) gate.style.display = 'none';
+    return true;
+  }
+
+  if (gate) {
+    gate.style.display = 'flex';
+    const input = document.getElementById('gatePassInput');
+    if (input) setTimeout(() => input.focus(), 150);
+  }
+  return false;
+}
+
+function verifyAdminGate(event) {
+  event.preventDefault();
+  const entered = document.getElementById('gatePassInput').value.trim();
+  const fb = document.getElementById('authGateFeedback');
+  const gate = document.getElementById('adminAuthGate');
+
+  if (entered === ADMIN_MASTER_PASSWORD) {
+    sessionStorage.setItem('admin_authenticated', 'true');
+    sessionStorage.setItem('admin_auth_token', ADMIN_MASTER_PASSWORD);
+    fb.textContent = '✓ Access Granted! Initializing Live Command Center...';
+    fb.className = 'feedback-box show success';
+    setTimeout(() => {
+      gate.style.display = 'none';
+      startLivePolling();
+    }, 400);
+  } else {
+    fb.textContent = '❌ Invalid Master Password! Access Denied.';
+    fb.className = 'feedback-box show error';
+    document.getElementById('gatePassInput').value = '';
+    document.getElementById('gatePassInput').focus();
+  }
+}
+
+function logoutAdmin() {
+  sessionStorage.removeItem('admin_authenticated');
+  sessionStorage.removeItem('admin_auth_token');
+  if (pollTimer) clearInterval(pollTimer);
+  window.location.href = 'login.html';
+}
 
 // ----------------------------------------------------
 // 1. DATE & TIME FORMATTERS (EXACT TIMESTAMPS)
@@ -176,22 +229,25 @@ async function fetchAllData() {
 }
 
 function startLivePolling() {
+  if (!checkAdminAuth()) return;
   fetchAllData();
   if (pollTimer) clearInterval(pollTimer);
   pollTimer = setInterval(fetchAllData, 3000);
 }
 
 function manualRefresh() {
+  if (!checkAdminAuth()) return;
   fetchAllData();
 }
 
 function getTotalCheckpoints() {
-  if (questionsConfig && Array.isArray(questionsConfig.questions)) {
-    const qCount = questionsConfig.questions.length;
-    const gCount = Array.isArray(questionsConfig.gameCheckpoints) ? questionsConfig.gameCheckpoints.length : 0;
-    return qCount + gCount || 21;
+  if (questionsConfig && questionsConfig.totalRounds) {
+    return questionsConfig.totalRounds;
   }
-  return 21;
+  if (questionsConfig && Array.isArray(questionsConfig.questions)) {
+    return questionsConfig.questions.length || 22;
+  }
+  return 22;
 }
 
 // ----------------------------------------------------

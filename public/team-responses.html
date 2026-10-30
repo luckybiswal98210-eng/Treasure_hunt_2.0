@@ -303,7 +303,24 @@
       doc.save(`TreasureHunt_Team_${currentTeamId}_Progress_Report.pdf`);
     }
 
+    function checkAdminAuth() {
+      if (sessionStorage.getItem('admin_authenticated') !== 'true') {
+        const pass = prompt('Admin Master Password Required:');
+        if (pass === '@Treasure2.0') {
+          sessionStorage.setItem('admin_authenticated', 'true');
+          sessionStorage.setItem('admin_auth_token', '@Treasure2.0');
+          return true;
+        } else {
+          alert('Access Denied. Incorrect Master Password.');
+          window.location.href = 'login.html';
+          return false;
+        }
+      }
+      return true;
+    }
+
     async function loadTeamResponses() {
+      if (!checkAdminAuth()) return;
       const urlParams = new URLSearchParams(window.location.search);
       currentTeamId = urlParams.get('teamId') || localStorage.getItem('th_team_id') || '1';
       currentTeamName = localStorage.getItem('th_team_name') || `Team ${currentTeamId}`;
