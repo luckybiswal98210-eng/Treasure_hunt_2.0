@@ -185,6 +185,15 @@ function manualRefresh() {
   fetchAllData();
 }
 
+function getTotalCheckpoints() {
+  if (questionsConfig && Array.isArray(questionsConfig.questions)) {
+    const qCount = questionsConfig.questions.length;
+    const gCount = Array.isArray(questionsConfig.gameCheckpoints) ? questionsConfig.gameCheckpoints.length : 0;
+    return qCount + gCount || 21;
+  }
+  return 21;
+}
+
 // ----------------------------------------------------
 // 5. STATS & LIVE FEED (WITH EXACT TIME WISE PROOFS)
 // ----------------------------------------------------
@@ -198,6 +207,12 @@ function updateStats() {
 
   const photoCount = allSubmissions.filter((s) => Boolean(s.photoPath)).length;
   document.getElementById('statTotalPhotos').textContent = photoCount;
+
+  const totalCheckpoints = getTotalCheckpoints();
+  const qCountEl1 = document.getElementById('tabQuestionsCount');
+  if (qCountEl1) qCountEl1.textContent = totalCheckpoints;
+  const qCountEl2 = document.getElementById('questionsCountHeading');
+  if (qCountEl2) qCountEl2.textContent = totalCheckpoints;
 
   // Compute leader
   const teamScores = {};
@@ -345,7 +360,7 @@ function renderLeaderboard() {
   const tbody = document.getElementById('leaderboardTbody');
   if (!tbody) return;
 
-  const totalCheckpoints = 25;
+  const totalCheckpoints = getTotalCheckpoints();
 
   const teamsMap = {};
   allCredentials.forEach((t) => {
@@ -434,7 +449,7 @@ function renderMatrix() {
   const table = document.getElementById('matrixTable');
   if (!table) return;
 
-  const totalCheckpoints = 25;
+  const totalCheckpoints = getTotalCheckpoints();
   const teams = [...allCredentials].sort((a, b) => Number(a.id) - Number(b.id));
 
   const teamSolves = {};
@@ -520,7 +535,7 @@ function renderCredentialsTable() {
           </td>
           <td>
             <span style="font-weight: 700; color: ${count > 0 ? 'var(--success)' : 'var(--text-dim)'};">
-              ${count} / 25
+              ${count} / ${getTotalCheckpoints()}
             </span>
           </td>
           <td>
@@ -789,7 +804,8 @@ async function generateTeamProgressPdf(targetTeamId) {
   doc.setFontSize(9);
   doc.setFont('helvetica', 'normal');
   doc.setTextColor(100, 116, 139);
-  doc.text(`Team ID: ${targetTeamId}   |   Checkpoints Cleared: ${teamSubs.length} of 25 (${Math.round((teamSubs.length / 25) * 100)}%)`, margin + 6, 64);
+  const totalCheckpoints = getTotalCheckpoints();
+  doc.text(`Team ID: ${targetTeamId}   |   Checkpoints Cleared: ${teamSubs.length} of ${totalCheckpoints} (${Math.round((teamSubs.length / totalCheckpoints) * 100)}%)`, margin + 6, 64);
 
   const firstTime = teamSubs[0] ? formatExactTime(teamSubs[0].createdAt || teamSubs[0].submittedAt) : '--';
   const lastTime = teamSubs[teamSubs.length - 1] ? formatExactTime(teamSubs[teamSubs.length - 1].createdAt || teamSubs[teamSubs.length - 1].submittedAt) : '--';

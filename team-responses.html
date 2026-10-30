@@ -145,6 +145,7 @@
     let currentTeamId = '1';
     let currentTeamName = 'Team 1';
     let currentSubmissions = [];
+    let currentTotalCheckpoints = 21;
 
     function formatExactTime(dateInput) {
       if (!dateInput) return '--';
@@ -236,7 +237,7 @@
       doc.setFontSize(9);
       doc.setFont('helvetica', 'normal');
       doc.setTextColor(100, 116, 139);
-      doc.text(`Team ID: ${currentTeamId}   |   Checkpoints Cleared: ${currentSubmissions.length} of 25 (${Math.round((currentSubmissions.length / 25) * 100)}%)`, margin + 6, 64);
+      doc.text(`Team ID: ${currentTeamId}   |   Checkpoints Cleared: ${currentSubmissions.length} of ${currentTotalCheckpoints} (${Math.round((currentSubmissions.length / currentTotalCheckpoints) * 100)}%)`, margin + 6, 64);
       const firstTime = currentSubmissions[0] ? formatExactTime(currentSubmissions[0].createdAt || currentSubmissions[0].submittedAt) : '--';
       const lastTime = currentSubmissions[currentSubmissions.length - 1] ? formatExactTime(currentSubmissions[currentSubmissions.length - 1].createdAt || currentSubmissions[currentSubmissions.length - 1].submittedAt) : '--';
       doc.text(`First Upload: ${firstTime}   |   Latest Upload: ${lastTime}`, margin + 6, 70);
@@ -308,6 +309,14 @@
       currentTeamName = localStorage.getItem('th_team_name') || `Team ${currentTeamId}`;
 
       document.getElementById('pageTeamTitle').textContent = `${currentTeamName} (ID: ${currentTeamId}) — Journey Log`;
+
+      try {
+        const qRes = await fetch('/api/questions');
+        const qData = await qRes.json();
+        if (qData && Array.isArray(qData.questions)) {
+          currentTotalCheckpoints = qData.questions.length;
+        }
+      } catch (e) {}
 
       try {
         const res = await fetch(`/api/submissions?teamId=${encodeURIComponent(currentTeamId)}`);
