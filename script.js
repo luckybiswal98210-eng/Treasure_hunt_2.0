@@ -253,7 +253,7 @@ async function syncProgressWithServer() {
 
     if (data && typeof data.completedCount === 'number') {
       const serverIndex = data.completedCount;
-      if (serverIndex > currentQuestionIndex) {
+      if (serverIndex !== currentQuestionIndex) {
         currentQuestionIndex = Math.min(serverIndex, orderedQuestions.length);
         saveLocalProgress();
         renderCurrentQuestion();
@@ -679,7 +679,7 @@ async function initApp() {
     }
   }
 
-  // Restore local progress
+  // Restore local progress as initial fallback
   try {
     const saved = localStorage.getItem(getProgressStorageKey());
     if (saved) {
@@ -690,8 +690,12 @@ async function initApp() {
     }
   } catch (e) {}
 
-  // Sync with server progress to ensure cross-device / reconnection continuation
+  // Authoritative sync with server (ensures admin reset goes to Checkpoint 1, or continues from where they left off)
   await syncProgressWithServer();
+
+  // Keep live sync active so if admin resets while page is open, it auto-resets to Checkpoint 1
+  setInterval(syncProgressWithServer, 5000);
+  window.addEventListener('focus', syncProgressWithServer);
 
   // Auto-save draft on input change
   const answerInput = document.getElementById('answerInput');

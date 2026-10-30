@@ -1,6 +1,6 @@
 {
-  "version": "2.5.0",
-  "info": "Alliance University Campus Treasure Hunt 2.0 Official Questions Configuration",
+  "version": "3.0.0",
+  "info": "Alliance University Campus Treasure Hunt Official Questions Configuration",
   "totalRounds": 22,
   "fixedLastClueId": 22,
   "gameSequencePattern": [
@@ -26,48 +26,46 @@
       "id": 1,
       "type": "clue",
       "title": "Campus Clue",
-      "question": "Where crowds gather and events come alive,\nWith a roof overhead, excitement thrives.\nFrom college shows to moments of cheer,\nYour next hidden clue is waiting here!\n\nWhere should you go?",
-      "answer": "Alfreshco",
+      "question": "A crowd can gather here for a show or celebration,\nWith a roof above and room for a standing ovation.\nIt is not a classroom, yet the whole college may appear;\nFind the covered place where events bring people near.\n\nWhere should you go?",
+      "answer": "Alfresco",
       "aliases": [
-        "alfreshco",
         "alfresco",
+        "alfreshco",
         "al fresco",
         "al freshco",
         "freshco",
         "fresco",
         "open cafeteria",
         "cafeteria",
+        "the alfresco",
         "alfresco area",
-        "alfreshco area",
-        "the alfresco"
-      ],
-      "hint": "An open-air gathering spot with a roof overhead for shows and events."
+        "alfreshco area"
+      ]
     },
     {
       "id": 2,
       "type": "clue",
       "title": "Campus Clue",
-      "question": "When hunger strikes, this is the place,\nWhere food and friends put a smile on your face.\nWith trays in hand, students gather to eat,\nFollow the aroma to find your next treat!\n\nWhere should you go?",
-      "answer": "Mess",
+      "question": "At a certain hour, queues form and trays appear;\nThe sound of friends talking is often what you hear.\nWhen lectures leave you hungry and lunch is the quest,\nFind the campus place where many students eat best.\n\nWhere should you go?",
+      "answer": "College Mess",
       "aliases": [
+        "college mess",
         "mess",
         "hostel mess",
         "dining hall",
         "food mess",
         "dining mess",
         "student mess",
-        "canteen",
-        "dining",
         "central mess",
-        "food hall"
-      ],
-      "hint": "Where students take trays in hand for meals every day."
+        "food hall",
+        "dining"
+      ]
     },
     {
       "id": 3,
       "type": "clue",
       "title": "Campus Clue",
-      "question": "A bowler runs, a batter takes aim,\nOne ball can change the course of the game.\nLook for the pitch where stumps stand tall,\nAnd boundaries bring cheers from all!\n\nWhere am I ?",
+      "question": "A bowler runs in while a batter guards three wooden friends;\nThe game moves in overs, and the score rises at the ends.\nFind the field where wickets fall and boundaries bring delight,\nWhere bat and ball decide who earns the right.\n\nWhere am I?",
       "answer": "Cricket Ground",
       "aliases": [
         "cricket ground",
@@ -80,14 +78,13 @@
         "stadium",
         "criket ground",
         "criket"
-      ],
-      "hint": "The pitch where wickets stand and cricket boundaries are hit."
+      ]
     },
     {
       "id": 4,
       "type": "clue",
       "title": "Campus Clue",
-      "question": "I have no engine, yet I host a fleet,\nWhere journeys pause before moving feet.\nRows of travelers stand still in line,\nFind where their wheels rest to uncover your sign.\n\nWhere am I ?",
+      "question": "I hold many journeys still, though I never travel away;\nTwo-wheelers and cars wait here through much of the day.\nBefore you walk to class, your ride may rest with mine;\nFind the place where vehicles stand in a line.\n\nWhere am I?",
       "answer": "Parking Area",
       "aliases": [
         "parking area",
@@ -97,17 +94,16 @@
         "car parking",
         "vehicle parking",
         "cycle parking",
-        "vehicle stand",
         "scooter parking",
+        "vehicle stand",
         "two wheeler parking"
-      ],
-      "hint": "Where bikes, scooters, and cars rest their wheels in rows."
+      ]
     },
     {
       "id": 5,
       "type": "clue",
       "title": "Campus Clue",
-      "question": "Not a classroom, yet learning takes place,\nNot a playground, yet fun fills the space.\nWhere talents awaken and activities unite,\nFind this lively hub to continue your hunt right!\n\nWhere am I ?",
+      "question": "Not quite a classroom, and not a sports field,\nYet hobbies and talents have room to be revealed.\nStudents come to take part, create, and explore;\nFind the campus hub for activities and more.\n\nWhere am I?",
       "answer": "Activity Centre",
       "aliases": [
         "activity centre",
@@ -119,33 +115,32 @@
         "student center",
         "student centre",
         "sac building"
-      ],
-      "hint": "The campus hub for student clubs, music, drama, and council activities."
+      ]
     },
     {
       "id": 6,
       "type": "clue",
       "title": "Campus Clue",
-      "question": "A little taste of India, loved by all,\nFrom creamy delights to treats that call.\nA famous mascot and a butter-rich name,\nFind this spot to continue the game!\n\nWhere am I ?",
-      "answer": "Amul",
+      "question": "A familiar dairy name is known across the land,\nWith a cheerful spotted mascot many understand.\nFor a cold treat or a dairy snack, this is a popular stop;\nFind the campus outlet linked to that famous brand on top.\n\nWhere am I?",
+      "answer": "Amul Outlet",
       "aliases": [
+        "amul outlet",
         "amul",
-        "amul parlor",
         "amul parlour",
+        "amul parlor",
         "amul store",
         "amul booth",
         "amul shop",
+        "amul kiosk",
         "ice cream parlour",
-        "ice cream parlor",
-        "amul kiosk"
-      ],
-      "hint": "Famous for dairy delights, ice cream, and its iconic butter girl mascot."
+        "ice cream parlor"
+      ]
     },
     {
       "id": 7,
       "type": "clue",
       "title": "Campus Clue",
-      "question": "My name speaks of grains and water,\nYet I serve much more to every daughter and son.\nWhere hungry souls come looking for a feast,\nFind this spot to continue your quest!\n\nWhere am I ?",
+      "question": "My name brings together two things that help life grow:\nOne comes from fields, the other makes rivers flow.\nBut here the clue points to a place where people dine;\nFind the food spot whose name joins these signs.\n\nWhere am I?",
       "answer": "Daana Paani",
       "aliases": [
         "daana paani",
@@ -159,14 +154,13 @@
         "paani",
         "pani",
         "daanapani"
-      ],
-      "hint": "The popular eating canopy named after grains and water."
+      ]
     },
     {
       "id": 8,
       "type": "clue",
       "title": "Campus Clue",
-      "question": "I hold a thousand worlds but have no doors to roam,\nWithin my silent walls, curious minds find a home.\nNo voices are needed for knowledge to speak,\nFind where the answers hide, and wisdom you seek!\n\nWhere am I ?",
+      "question": "I hold many stories, facts, and worlds inside,\nThough my books stay still while your thoughts can travel wide.\nVoices are kept low as curious minds explore;\nFind the quiet place where knowledge fills each shelf and more.\n\nWhere am I?",
       "answer": "Library",
       "aliases": [
         "library",
@@ -178,14 +172,13 @@
         "digital library",
         "lib",
         "librari"
-      ],
-      "hint": "Surrounded by quiet study desks, books, and silent readers."
+      ]
     },
     {
       "id": 9,
       "type": "clue",
       "title": "Campus Clue",
-      "question": "Behind every rule and official decree,\nThere’s a place where decisions come to be.\nFrom papers and records to approvals in store,\nFind where the college is managed at its core!\n\nWhere am I ?",
+      "question": "For forms, records, permissions, and decisions to be made,\nThere is a place where official college work is laid.\nIt may not host your usual lecture or test;\nFind the block where campus administration does the rest.\n\nWhere am I?",
       "answer": "Admin Block",
       "aliases": [
         "admin block",
@@ -197,16 +190,21 @@
         "adm block",
         "administration",
         "office block"
-      ],
-      "hint": "Where student records, paperwork, and administrative affairs are managed."
+      ]
     },
     {
       "id": 10,
       "type": "clue",
       "title": "Campus Clue",
-      "question": "When hunger calls and stomachs complain,\nStudents gather here to recharge again.\nWhere delicious dosas and southern flavors delight,\nFind where delicious food brightens both day and night!\n\nWhere am I ?",
-      "answer": "Savisandhi",
+      "question": "When hunger returns between one class and the next,\nStudents look for food to help them feel refreshed.\nMy name suggests plenty, and meals are the clue;\nFind the campus food stop that matches these two.\n\nWhere am I?",
+      "answer": "Anant Aahara",
       "aliases": [
+        "anant aahara",
+        "ananth aahara",
+        "anantha aahara",
+        "ananta aahara",
+        "anant ahara",
+        "ananth ahara",
         "savisandhi",
         "savi sandhi",
         "savisandh",
@@ -215,33 +213,17 @@
         "savinidhi",
         "savi nidhi",
         "savinnidhi",
-        "savi nnidhi",
-        "savinidhy",
-        "savinidi",
-        "savi nidi",
         "savisannidhi",
-        "savi sannidhi",
-        "savisannidi",
-        "savi sannidi",
-        "savi",
-        "sandhi",
-        "sannidhi",
-        "nidhi",
-        "anant aahara",
-        "ananth aahara",
-        "anantha aahara",
-        "ananta aahara",
         "south mess",
         "canteen",
         "south indian canteen"
-      ],
-      "hint": "The campus eatery famous for dosas, snacks, and southern delicacies (Savisandhi / Savisannidhi)."
+      ]
     },
     {
       "id": 11,
       "type": "clue",
       "title": "Campus Clue",
-      "question": "I welcome the many, yet let others depart,\nI mark the beginning of every journey's start.\nStudents pass through me both coming and going,\nFind where the campus begins, and your next clue is waiting!\n\nWhere am I ?",
+      "question": "People enter through me and leave the same way;\nI mark the campus boundary at the start of the day.\nVisitors look for me, and students pass through in a stream;\nFind the main entrance that leads into the college scene.\n\nWhere am I?",
       "answer": "College Main Gate",
       "aliases": [
         "college main gate",
@@ -251,14 +233,13 @@
         "main entrance",
         "gate",
         "college gate"
-      ],
-      "hint": "The main entrance where everyone enters and leaves the campus."
+      ]
     },
     {
       "id": 12,
       "type": "clue",
       "title": "Campus Clue",
-      "question": "I hold no wallet, yet help you spend,\nI give you cash when you need a friend.\nWith a secret code and a card in your hand,\nFind me to continue your hunt across the land!\n\nWhere am I ?",
+      "question": "I am not a bank teller, yet I can provide cash;\nA card and a secret number help make the transaction flash.\nWhen your wallet is light, I may be your call;\nFind the machine that lets you withdraw it all.\n\nWhere am I?",
       "answer": "ATM",
       "aliases": [
         "atm",
@@ -266,14 +247,13 @@
         "bank atm",
         "atm machine",
         "bank"
-      ],
-      "hint": "Where you insert your debit card and enter your PIN for cash."
+      ]
     },
     {
       "id": 13,
       "type": "clue",
       "title": "Campus Clue",
-      "question": "I deal with stains but never complain,\nI turn yesterday’s dirt into freshness again.\nYour daily companions arrive in a mess,\nAnd leave looking ready to impress.\n\nFind the place where fabric gets a fresh start!\n\nWhere am I ?",
+      "question": "Clothes arrive with stains from a busy day,\nAnd leave much cleaner, ready to wear away.\nWater and soap help me do my part;\nFind the place that gives used clothes a fresh start.\n\nWhere am I?",
       "answer": "Laundry",
       "aliases": [
         "laundry",
@@ -282,14 +262,13 @@
         "washing area",
         "laundromat",
         "laundry room"
-      ],
-      "hint": "Where clothes are washed, dried, and cleaned on campus."
+      ]
     },
     {
       "id": 14,
       "type": "clue",
       "title": "Campus Clue",
-      "question": "When lectures end and the classrooms grow still,\nSome find their rest beyond the hill.\nWhere those who guide young minds reside,\nYour next hidden clue is waiting inside!\n\nWhere am I ?",
+      "question": "When teaching hours end, lecturers need a place to stay;\nAway from classrooms, they return at the close of the day.\nFind the residential area connected to those who teach,\nWhere campus homes are within reach.\n\nWhere am I?",
       "answer": "Faculty Quarters",
       "aliases": [
         "faculty quarters",
@@ -298,28 +277,26 @@
         "staff quarters",
         "faculty quarter",
         "professors residence"
-      ],
-      "hint": "The residential colony where professors and teachers live."
+      ]
     },
     {
       "id": 15,
       "type": "clue",
       "title": "Campus Clue",
-      "question": "I dance without feet and rise without wings,\nI sparkle in sunlight like a thousand tiny rings.\nI have no voice, yet make a soothing sound,\nLook for where flowing water dances round!\n\nWhere am I ?",
+      "question": "I send water upward, then watch it fall;\nIn sunlight, tiny droplets can sparkle for all.\nI make a gentle sound but never leave my place;\nFind the water feature that brings movement to the space.\n\nWhere am I?",
       "answer": "Fountain",
       "aliases": [
         "fountain",
         "mess fountain",
         "water fountain",
         "central fountain"
-      ],
-      "hint": "The sparkling water fountain located between the dining halls."
+      ]
     },
     {
       "id": 16,
       "type": "clue",
       "title": "Campus Clue",
-      "question": "Where future managers learn to lead,\nAnd business minds are shaped for success indeed.\nBeyond these halls, tomorrow’s leaders take flight,\nFind the gateway to management and get your next clue right!\n\nWhere am I ?",
+      "question": "Future managers study leadership and business inside;\nLook for the entrance where their classes reside.\nThe building is known as LC1, so use that name as your guide;\nFind the main gate to the MBA block on this side.\n\nWhere am I?",
       "answer": "LC1 Main Gate",
       "aliases": [
         "lc1 main gate",
@@ -328,15 +305,17 @@
         "lc1 gate",
         "lc1 entrance",
         "management gate",
-        "lc 1 gate"
-      ],
-      "hint": "The main entrance/gateway leading into Learning Complex 1 (MBA block)."
+        "lc 1 gate",
+        "mba gate",
+        "mba block main gate",
+        "mba block gate"
+      ]
     },
     {
       "id": 17,
       "type": "clue",
       "title": "Campus Clue",
-      "question": "Heading for fun or heading to eat,\nYou will pass a red cube on this street.\nBig, bold, and hard to ignore,\nYour next hidden clue waits at its door!\n\nWhere am I ?",
+      "question": "Heading for fun or heading to eat,\nYou will pass a red cube on this street.\nBig, bold, and hard to ignore,\nYour next hidden clue waits at its door!\n\nWhere am I?",
       "answer": "Red Room",
       "aliases": [
         "red room",
@@ -344,81 +323,67 @@
         "the red room",
         "red cube room",
         "redroom"
-      ],
-      "hint": "The big red cube structure along the central walking corridor."
+      ]
     },
     {
       "id": 101,
       "type": "game",
       "isGame": true,
       "title": "Mini Game",
-      "question": "Reach the sacred Temple grounds. Meet the Game Volunteer stationed here to receive and play your team's physical challenge!\n\n⚠️ Disclaimer: You must take the photo with the volunteer only after successfully passing the game.",
+      "question": "People come here carrying hopes they cannot hold,\nAnd lower their voices though no sign may be told.\nLook for the peaceful place where prayers are said,\nAnd folded hands rise while bowed heads bend.\n\nWhere am I?\n\n⚠️ Disclaimer: You must take the photo with the volunteer only after successfully passing the game.",
       "answer": "Temple",
       "aliases": [
         "temple",
         "mandir",
+        "campus temple",
         "nripendra",
-        "completed",
-        "done",
-        "pass",
-        "win",
-        "temple game",
-        "game 1",
-        "game1"
-      ],
-      "hint": "Locate the Game Coordinator at the campus temple."
+        "temple ground",
+        "temple area",
+        "the temple",
+        "temple game"
+      ]
     },
     {
       "id": 102,
       "type": "game",
       "isGame": true,
       "title": "Mini Game",
-      "question": "Sprint to the Football Ground goalpost / turf area! Report to the Game Volunteer stationed here to execute your team's physical challenge!\n\n⚠️ Disclaimer: You must take the photo with the volunteer only after successfully passing the game.",
+      "question": "A ball rolls across the field, but hands must stay away;\nTwo goals wait at either end for teams to score and play.\nLook for the place where boots race over the ground,\nAnd cheers grow loud when the winning goal is found.\n\nWhere am I?\n\n⚠️ Disclaimer: You must take the photo with the volunteer only after successfully passing the game.",
       "answer": "Football Ground",
       "aliases": [
         "football ground",
         "football",
         "football field",
         "turf",
+        "football turf",
         "joy",
-        "completed",
-        "done",
-        "pass",
-        "win",
-        "football game",
-        "game 2",
-        "game2"
-      ],
-      "hint": "Find the Game Referee at the Football Ground turf."
+        "ground",
+        "football game"
+      ]
     },
     {
       "id": 103,
       "type": "game",
       "isGame": true,
       "title": "Mini Game",
-      "question": "Navigate to the Engineering Workshop! Meet the Game Volunteer stationed at the bench to complete your team's physical challenge!\n\n⚠️ Disclaimer: You must take the photo with the volunteer only after successfully passing the game.",
+      "question": "Here, tools and ideas work together side by side;\nThings may be built or fixed, tested, changed, or tried.\nIt is where practical skills grow stronger than before;\nFind the place where hands-on learning opens a door.\n\nWhere should you go?\n\n⚠️ Disclaimer: You must take the photo with the volunteer only after successfully passing the game.",
       "answer": "Workshop",
       "aliases": [
         "workshop",
         "mechanical workshop",
         "engineering workshop",
         "akash",
-        "completed",
-        "done",
-        "pass",
-        "win",
-        "workshop game",
-        "game 3",
-        "game3"
-      ],
-      "hint": "Meet the Game Coordinator inside the campus workshop."
+        "mech workshop",
+        "the workshop",
+        "workshop game"
+      ]
     },
     {
       "id": 104,
       "type": "game",
       "isGame": true,
       "title": "Mini Game",
-      "question": "Rush to the Departmental Store entrance! Find the Game Volunteer stationed here to conquer your team's physical challenge!\n\n⚠️ Disclaimer: You must take the photo with the volunteer only after successfully passing the game.",
+      "question": "If you need a snack, a notebook, or something small,\nThis shop may have the answer among its shelves and all.\nMany everyday items are gathered behind one door;\nFind the campus store where you can browse for more.\n\nWhere am I?\n\n⚠️ Disclaimer: You must take the photo with the volunteer only after successfully passing the game.",
       "answer": "Departmental Store",
       "aliases": [
         "departmental store",
@@ -426,22 +391,19 @@
         "general store",
         "store",
         "debi",
-        "completed",
-        "done",
-        "pass",
-        "win",
-        "store game",
-        "game 4",
-        "game4"
-      ],
-      "hint": "Report to the Game Coordinator at the Departmental Store."
+        "grocery store",
+        "supermarket",
+        "deptstore",
+        "store game"
+      ]
     },
     {
       "id": 22,
       "type": "clue",
       "isLastClue": true,
+      "isFinal": true,
       "title": "Final Summit",
-      "question": "Climb beyond the floors where most people stay,\nHead to the highest level to finish your way.\nWhere the MBA block reaches closest to the sky,\nYour ultimate final clue is waiting up high!\n\nWhere am I ?",
+      "question": "You have reached LC1, but the ground floor is not the end;\nKeep climbing upward, using the stairs as your friend.\nWhen there are no more floors above your view,\nThe highest level of the MBA block is waiting for you.\n\nWhere am I?",
       "answer": "LC1 Top Floor",
       "aliases": [
         "lc1 top floor",
@@ -451,10 +413,9 @@
         "lc1 terrace",
         "lc1 rooftop",
         "top floor",
-        "top floor lc 1"
-      ],
-      "hint": "The highest floor of LC1 reaching for the sky. Final destination!",
-      "isFinal": true
+        "top floor lc 1",
+        "highest level"
+      ]
     }
   ]
 }
