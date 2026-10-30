@@ -377,18 +377,23 @@ function renderCurrentQuestion() {
 
   // Update clue tag & text
   const tag = document.getElementById('clueTypeTag');
+  const titleEl = document.getElementById('clueTitle');
   if (q.isGame) {
     tag.textContent = '🎮 MINI-GAME CHALLENGE';
     tag.className = 'clue-tag game-tag';
-    document.getElementById('clueTitle').textContent = 'Mini Game';
+    titleEl.textContent = 'Mini Game';
+    titleEl.style.display = 'block';
   } else if (q.isLastClue || q.isFinal) {
     tag.textContent = '🏆 FINAL SUMMIT';
     tag.className = 'clue-tag final-tag';
-    document.getElementById('clueTitle').textContent = q.title || 'The Summit';
+    titleEl.textContent = 'Final Summit';
+    titleEl.style.display = 'block';
   } else {
     tag.textContent = `Round ${stepNo} of ${total}`;
     tag.className = 'clue-tag';
-    document.getElementById('clueTitle').textContent = q.title || `Checkpoint ${stepNo}`;
+    // Remove title for regular riddle clues so NO hints or place names are shown
+    titleEl.textContent = '';
+    titleEl.style.display = 'none';
   }
 
   document.getElementById('clueText').textContent = q.question;

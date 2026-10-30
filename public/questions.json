@@ -1,15 +1,31 @@
 {
-  "version": "2.4.0",
+  "version": "2.5.0",
   "info": "Alliance University Campus Treasure Hunt 2.0 Official Questions Configuration",
   "totalRounds": 22,
   "fixedLastClueId": 22,
-  "gameSequencePattern": [3, 1, 3, 1, 3, 1, 5, 1, 3, 1],
-  "gameRoundSlots": [4, 8, 12, 18],
+  "gameSequencePattern": [
+    3,
+    1,
+    3,
+    1,
+    3,
+    1,
+    5,
+    1,
+    3,
+    1
+  ],
+  "gameRoundSlots": [
+    4,
+    8,
+    12,
+    18
+  ],
   "questions": [
     {
       "id": 1,
       "type": "clue",
-      "title": "The Gathering Haven",
+      "title": "Campus Clue",
       "question": "Where crowds gather and events come alive,\nWith a roof overhead, excitement thrives.\nFrom college shows to moments of cheer,\nYour next hidden clue is waiting here!\n\nWhere should you go?",
       "answer": "Alfreshco",
       "aliases": [
@@ -30,7 +46,7 @@
     {
       "id": 2,
       "type": "clue",
-      "title": "The Dining Hall",
+      "title": "Campus Clue",
       "question": "When hunger strikes, this is the place,\nWhere food and friends put a smile on your face.\nWith trays in hand, students gather to eat,\nFollow the aroma to find your next treat!\n\nWhere should you go?",
       "answer": "Mess",
       "aliases": [
@@ -50,7 +66,7 @@
     {
       "id": 3,
       "type": "clue",
-      "title": "The Pitch of Glory",
+      "title": "Campus Clue",
       "question": "A bowler runs, a batter takes aim,\nOne ball can change the course of the game.\nLook for the pitch where stumps stand tall,\nAnd boundaries bring cheers from all!\n\nWhere am I ?",
       "answer": "Cricket Ground",
       "aliases": [
@@ -70,7 +86,7 @@
     {
       "id": 4,
       "type": "clue",
-      "title": "The Fleet's Harbor",
+      "title": "Campus Clue",
       "question": "I have no engine, yet I host a fleet,\nWhere journeys pause before moving feet.\nRows of travelers stand still in line,\nFind where their wheels rest to uncover your sign.\n\nWhere am I ?",
       "answer": "Parking Area",
       "aliases": [
@@ -90,7 +106,7 @@
     {
       "id": 5,
       "type": "clue",
-      "title": "The Creative Hub",
+      "title": "Campus Clue",
       "question": "Not a classroom, yet learning takes place,\nNot a playground, yet fun fills the space.\nWhere talents awaken and activities unite,\nFind this lively hub to continue your hunt right!\n\nWhere am I ?",
       "answer": "Activity Centre",
       "aliases": [
@@ -109,7 +125,7 @@
     {
       "id": 6,
       "type": "clue",
-      "title": "The Taste of India",
+      "title": "Campus Clue",
       "question": "A little taste of India, loved by all,\nFrom creamy delights to treats that call.\nA famous mascot and a butter-rich name,\nFind this spot to continue the game!\n\nWhere am I ?",
       "answer": "Amul",
       "aliases": [
@@ -128,7 +144,7 @@
     {
       "id": 7,
       "type": "clue",
-      "title": "Grains & Water",
+      "title": "Campus Clue",
       "question": "My name speaks of grains and water,\nYet I serve much more to every daughter and son.\nWhere hungry souls come looking for a feast,\nFind this spot to continue your quest!\n\nWhere am I ?",
       "answer": "Daana Paani",
       "aliases": [
@@ -149,7 +165,7 @@
     {
       "id": 8,
       "type": "clue",
-      "title": "The Hall of Wisdom",
+      "title": "Campus Clue",
       "question": "I hold a thousand worlds but have no doors to roam,\nWithin my silent walls, curious minds find a home.\nNo voices are needed for knowledge to speak,\nFind where the answers hide, and wisdom you seek!\n\nWhere am I ?",
       "answer": "Library",
       "aliases": [
@@ -168,7 +184,7 @@
     {
       "id": 9,
       "type": "clue",
-      "title": "The Seat of Control",
+      "title": "Campus Clue",
       "question": "Behind every rule and official decree,\nThere’s a place where decisions come to be.\nFrom papers and records to approvals in store,\nFind where the college is managed at its core!\n\nWhere am I ?",
       "answer": "Admin Block",
       "aliases": [
@@ -187,7 +203,7 @@
     {
       "id": 10,
       "type": "clue",
-      "title": "The Flavor Haven",
+      "title": "Campus Clue",
       "question": "When hunger calls and stomachs complain,\nStudents gather here to recharge again.\nWhere delicious dosas and southern flavors delight,\nFind where delicious food brightens both day and night!\n\nWhere am I ?",
       "answer": "Savisandhi",
       "aliases": [
@@ -224,7 +240,7 @@
     {
       "id": 11,
       "type": "clue",
-      "title": "The Threshold of Journeys",
+      "title": "Campus Clue",
       "question": "I welcome the many, yet let others depart,\nI mark the beginning of every journey's start.\nStudents pass through me both coming and going,\nFind where the campus begins, and your next clue is waiting!\n\nWhere am I ?",
       "answer": "College Main Gate",
       "aliases": [
@@ -241,7 +257,7 @@
     {
       "id": 12,
       "type": "clue",
-      "title": "The Paper Spitter",
+      "title": "Campus Clue",
       "question": "I hold no wallet, yet help you spend,\nI give you cash when you need a friend.\nWith a secret code and a card in your hand,\nFind me to continue your hunt across the land!\n\nWhere am I ?",
       "answer": "ATM",
       "aliases": [
@@ -256,7 +272,7 @@
     {
       "id": 13,
       "type": "clue",
-      "title": "The Fabric Refresher",
+      "title": "Campus Clue",
       "question": "I deal with stains but never complain,\nI turn yesterday’s dirt into freshness again.\nYour daily companions arrive in a mess,\nAnd leave looking ready to impress.\n\nFind the place where fabric gets a fresh start!\n\nWhere am I ?",
       "answer": "Laundry",
       "aliases": [
@@ -272,7 +288,7 @@
     {
       "id": 14,
       "type": "clue",
-      "title": "The Mentors' Haven",
+      "title": "Campus Clue",
       "question": "When lectures end and the classrooms grow still,\nSome find their rest beyond the hill.\nWhere those who guide young minds reside,\nYour next hidden clue is waiting inside!\n\nWhere am I ?",
       "answer": "Faculty Quarters",
       "aliases": [
@@ -288,7 +304,7 @@
     {
       "id": 15,
       "type": "clue",
-      "title": "The Dancing Waters",
+      "title": "Campus Clue",
       "question": "I dance without feet and rise without wings,\nI sparkle in sunlight like a thousand tiny rings.\nI have no voice, yet make a soothing sound,\nLook for where flowing water dances round!\n\nWhere am I ?",
       "answer": "Fountain",
       "aliases": [
@@ -302,7 +318,7 @@
     {
       "id": 16,
       "type": "clue",
-      "title": "The Management Gateway",
+      "title": "Campus Clue",
       "question": "Where future managers learn to lead,\nAnd business minds are shaped for success indeed.\nBeyond these halls, tomorrow’s leaders take flight,\nFind the gateway to management and get your next clue right!\n\nWhere am I ?",
       "answer": "LC1 Main Gate",
       "aliases": [
@@ -319,7 +335,7 @@
     {
       "id": 17,
       "type": "clue",
-      "title": "The Red Room",
+      "title": "Campus Clue",
       "question": "Heading for fun or heading to eat,\nYou will pass a red cube on this street.\nBig, bold, and hard to ignore,\nYour next hidden clue waits at its door!\n\nWhere am I ?",
       "answer": "Red Room",
       "aliases": [
@@ -424,7 +440,7 @@
       "id": 22,
       "type": "clue",
       "isLastClue": true,
-      "title": "🏆 The Summit (Final Destination)",
+      "title": "Final Summit",
       "question": "Climb beyond the floors where most people stay,\nHead to the highest level to finish your way.\nWhere the MBA block reaches closest to the sky,\nYour ultimate final clue is waiting up high!\n\nWhere am I ?",
       "answer": "LC1 Top Floor",
       "aliases": [
