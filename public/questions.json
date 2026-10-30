@@ -1,5 +1,5 @@
 {
-  "version": "2.3.0",
+  "version": "2.4.0",
   "info": "Alliance University Campus Treasure Hunt 2.0 Official Questions Configuration",
   "totalRounds": 22,
   "fixedLastClueId": 22,
@@ -187,7 +187,7 @@
     {
       "id": 10,
       "type": "clue",
-      "title": "Savisandhi",
+      "title": "The Flavor Haven",
       "question": "When hunger calls and stomachs complain,\nStudents gather here to recharge again.\nWhere delicious dosas and southern flavors delight,\nFind where delicious food brightens both day and night!\n\nWhere am I ?",
       "answer": "Savisandhi",
       "aliases": [
@@ -335,8 +335,8 @@
       "id": 101,
       "type": "game",
       "isGame": true,
-      "title": "🎮 Mini Game #1: Temple Challenge",
-      "question": "⚡ PHYSICAL GAME CHALLENGE AT TEMPLE! ⚡\nReach the sacred Temple grounds. Meet the Game Coordinator stationed here to receive and play your team's physical challenge! Once completed, capture your team photo with the coordinator/setup and enter the completion answer.",
+      "title": "Mini Game",
+      "question": "Reach the sacred Temple grounds. Meet the Game Volunteer stationed here to receive and play your team's physical challenge!\n\n⚠️ Disclaimer: You must take the photo with the volunteer only after successfully passing the game.",
       "answer": "Temple",
       "aliases": [
         "temple",
@@ -356,8 +356,8 @@
       "id": 102,
       "type": "game",
       "isGame": true,
-      "title": "🎮 Mini Game #2: Football Ground Challenge",
-      "question": "⚡ PHYSICAL GAME CHALLENGE AT FOOTBALL GROUND! ⚡\nSprint to the Football Ground goalpost / flag area! Report to the Game Coordinator, execute your field mission, snap your team verification photo, and submit the completion answer to move ahead!",
+      "title": "Mini Game",
+      "question": "Sprint to the Football Ground goalpost / turf area! Report to the Game Volunteer stationed here to execute your team's physical challenge!\n\n⚠️ Disclaimer: You must take the photo with the volunteer only after successfully passing the game.",
       "answer": "Football Ground",
       "aliases": [
         "football ground",
@@ -379,8 +379,8 @@
       "id": 103,
       "type": "game",
       "isGame": true,
-      "title": "🎮 Mini Game #3: Workshop Challenge",
-      "question": "⚡ PHYSICAL GAME CHALLENGE AT WORKSHOP! ⚡\nNavigate to the Engineering Workshop! Meet the Game Coordinator at the bench, finish the physical task, take your team photo with the game prop, and enter the completion word!",
+      "title": "Mini Game",
+      "question": "Navigate to the Engineering Workshop! Meet the Game Volunteer stationed at the bench to complete your team's physical challenge!\n\n⚠️ Disclaimer: You must take the photo with the volunteer only after successfully passing the game.",
       "answer": "Workshop",
       "aliases": [
         "workshop",
@@ -401,8 +401,8 @@
       "id": 104,
       "type": "game",
       "isGame": true,
-      "title": "🎮 Mini Game #4: Departmental Store Challenge",
-      "question": "⚡ PHYSICAL GAME CHALLENGE AT DEPARTMENTAL STORE! ⚡\nRush to the Departmental Store entrance! Find the Game Coordinator, conquer the quick challenge, take your team photo, and enter the completion answer!",
+      "title": "Mini Game",
+      "question": "Rush to the Departmental Store entrance! Find the Game Volunteer stationed here to conquer your team's physical challenge!\n\n⚠️ Disclaimer: You must take the photo with the volunteer only after successfully passing the game.",
       "answer": "Departmental Store",
       "aliases": [
         "departmental store",

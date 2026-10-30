@@ -120,6 +120,9 @@
         <button type="button" class="btn-pdf" onclick="downloadCurrentTeamPdf()">
           📄 Download Team PDF Report
         </button>
+        <button type="button" class="btn-pdf" style="background: rgba(239, 68, 68, 0.15); border-color: rgba(239, 68, 68, 0.4); color: #fca5a5;" onclick="deleteCurrentTeamUploads()">
+          🗑️ Delete Team Uploads
+        </button>
         <button type="button" class="btn-primary" style="padding: 8px 16px; font-size: 13px; width: auto;" onclick="window.location.href='index.html'">
           🧭 Return to Hunt
         </button>
@@ -386,6 +389,30 @@
 
       } catch (e) {
         console.error('Failed to load responses:', e);
+      }
+    }
+
+    async function deleteCurrentTeamUploads() {
+      if (!confirm(`⚠️ DELETE ALL UPLOADED PHOTOS AND ANSWERS FOR ${currentTeamName}?\n\nThis will reset their progress to Checkpoint 1.`)) {
+        return;
+      }
+      const token = sessionStorage.getItem('admin_auth_token') || prompt('Enter Admin Master Password to confirm deletion:');
+      if (!token) return;
+
+      try {
+        const res = await fetch('/api/admin/reset-team', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ teamId: currentTeamId, token })
+        });
+        const data = await res.json();
+        if (!res.ok || !data.success) {
+          throw new Error(data.error || 'Failed to delete team data');
+        }
+        alert(`✓ All uploaded data for ${currentTeamName} has been deleted!`);
+        window.location.reload();
+      } catch (err) {
+        alert('Error: ' + err.message);
       }
     }
 

@@ -380,29 +380,18 @@ function renderCurrentQuestion() {
   if (q.isGame) {
     tag.textContent = '🎮 MINI-GAME CHALLENGE';
     tag.className = 'clue-tag game-tag';
+    document.getElementById('clueTitle').textContent = 'Mini Game';
   } else if (q.isLastClue || q.isFinal) {
     tag.textContent = '🏆 FINAL SUMMIT';
     tag.className = 'clue-tag final-tag';
+    document.getElementById('clueTitle').textContent = q.title || 'The Summit';
   } else {
     tag.textContent = `Round ${stepNo} of ${total}`;
     tag.className = 'clue-tag';
+    document.getElementById('clueTitle').textContent = q.title || `Checkpoint ${stepNo}`;
   }
 
-  document.getElementById('clueTitle').textContent = q.title || (q.isGame ? 'Physical Checkpoint' : `Checkpoint ${stepNo}`);
   document.getElementById('clueText').textContent = q.question;
-
-  // Hint
-  const hintBox = document.getElementById('hintBox');
-  const hintText = document.getElementById('hintText');
-  const hintBtn = document.getElementById('hintToggleBtn');
-  hintBox.classList.remove('show');
-
-  if (q.hint) {
-    hintBtn.style.display = 'inline-flex';
-    hintText.textContent = q.hint;
-  } else {
-    hintBtn.style.display = 'none';
-  }
 
   // Clear inputs & previews
   const answerInput = document.getElementById('answerInput');
@@ -426,11 +415,6 @@ function renderCurrentQuestion() {
   if (window.innerWidth > 768) {
     answerInput.focus();
   }
-}
-
-function toggleHint() {
-  const box = document.getElementById('hintBox');
-  box.classList.toggle('show');
 }
 
 // ----------------------------------------------------

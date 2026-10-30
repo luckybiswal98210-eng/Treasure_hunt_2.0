@@ -256,15 +256,29 @@ function getTotalCheckpoints() {
 function updateStats() {
   const activeTeams = new Set(allSubmissions.map((s) => String(s.teamId)));
   const totalTeams = allCredentials.length || 45;
-  document.getElementById('statActiveTeams').textContent = `${activeTeams.size} / ${totalTeams}`;
-
-  const correctSubs = allSubmissions.filter((s) => s.isCorrect);
-  document.getElementById('statCompletedClues').textContent = correctSubs.length;
-
-  const photoCount = allSubmissions.filter((s) => Boolean(s.photoPath)).length;
-  document.getElementById('statTotalPhotos').textContent = photoCount;
+  const activeTeamsEl = document.getElementById('statActiveTeams');
+  if (activeTeamsEl) activeTeamsEl.textContent = `${activeTeams.size} / ${totalTeams}`;
 
   const totalCheckpoints = getTotalCheckpoints();
+  const correctSubs = allSubmissions.filter((s) => s.isCorrect);
+
+  // 1. Teams Finished (Summit Reached / all checkpoints cleared)
+  const teamSolves = {};
+  correctSubs.forEach((s) => {
+    const tid = String(s.teamId);
+    if (!teamSolves[tid]) teamSolves[tid] = new Set();
+    teamSolves[tid].add(Number(s.questionId));
+  });
+  const finishedCount = Object.values(teamSolves).filter((set) => set.size >= totalCheckpoints || set.has(22)).length;
+  const finishedEl = document.getElementById('statFinishedTeams');
+  if (finishedEl) finishedEl.textContent = `${finishedCount} / ${totalTeams}`;
+
+  // 2. Mini-Games Completed across campus
+  const gameIds = new Set([101, 102, 103, 104]);
+  const miniGamesCount = correctSubs.filter((s) => gameIds.has(Number(s.questionId)) || s.isGame).length;
+  const gamesEl = document.getElementById('statMiniGamesCleared');
+  if (gamesEl) gamesEl.textContent = `${miniGamesCount} Cleared`;
+
   const qCountEl1 = document.getElementById('tabQuestionsCount');
   if (qCountEl1) qCountEl1.textContent = totalCheckpoints;
   const qCountEl2 = document.getElementById('questionsCountHeading');
@@ -483,13 +497,16 @@ function renderLeaderboard() {
           </td>
           <td style="font-size: 13px;">${timeStr}</td>
           <td>
-            <div style="display: flex; gap: 6px;">
-              <button type="button" class="btn-pdf" onclick="generateTeamProgressPdf('${team.id}')">
+            <div style="display: flex; gap: 6px; flex-wrap: wrap;">
+              <button type="button" class="btn-pdf" style="padding: 4px 8px; font-size: 11px;" onclick="generateTeamProgressPdf('${team.id}')">
                 📄 PDF
               </button>
-              <a href="team-responses.html?teamId=${encodeURIComponent(team.id)}" class="btn-control" style="padding: 4px 10px; font-size: 12px;">
+              <a href="team-responses.html?teamId=${encodeURIComponent(team.id)}" class="btn-control" style="padding: 4px 8px; font-size: 11px;">
                 🔍 Photos
               </a>
+              <button type="button" class="btn-danger-outline" style="padding: 4px 8px; font-size: 11px; color: #f87171; border-color: rgba(239, 68, 68, 0.35);" onclick="resetSingleTeamData('${team.id}', '${escapeHtml(team.name)}')">
+                🗑️ Reset Data
+              </button>
             </div>
           </td>
         </tr>
@@ -595,15 +612,18 @@ function renderCredentialsTable() {
             </span>
           </td>
           <td>
-            <div class="cred-actions-cell">
-              <button type="button" class="btn-control active" style="padding: 6px 12px; font-size: 12px;" onclick="saveSingleTeamCredential('${t.id}')">
+            <div class="cred-actions-cell" style="display: flex; gap: 5px; flex-wrap: wrap;">
+              <button type="button" class="btn-control active" style="padding: 5px 9px; font-size: 11px;" onclick="saveSingleTeamCredential('${t.id}')">
                 💾 Save
               </button>
-              <button type="button" class="btn-pdf" onclick="generateTeamProgressPdf('${t.id}')">
+              <button type="button" class="btn-pdf" style="padding: 5px 9px; font-size: 11px;" onclick="generateTeamProgressPdf('${t.id}')">
                 📄 PDF
               </button>
-              <button type="button" class="btn-danger-outline" onclick="deleteSingleTeam('${t.id}', '${escapeHtml(t.name || 'Team ' + t.id)}')">
-                🗑️ Delete
+              <button type="button" class="btn-danger-outline" style="padding: 5px 9px; font-size: 11px; color: #f87171; border-color: rgba(239, 68, 68, 0.35);" onclick="resetSingleTeamData('${t.id}', '${escapeHtml(t.name || 'Team ' + t.id)}')">
+                🧹 Reset Data
+              </button>
+              <button type="button" class="btn-danger-outline" style="padding: 5px 9px; font-size: 11px; opacity: 0.65;" onclick="deleteSingleTeam('${t.id}', '${escapeHtml(t.name || 'Team ' + t.id)}')">
+                🗑️ Del
               </button>
             </div>
           </td>
@@ -666,6 +686,38 @@ async function deleteSingleTeam(teamId, teamName) {
     }
   } catch (e) {
     alert('Network error while deleting team.');
+  }
+}
+
+async function resetSingleTeamData(teamId, teamName) {
+  const displayName = teamName || `Team ${teamId}`;
+  const confirmed = confirm(
+    `⚠️ RESET & DELETE ALL DATA FOR ${displayName.toUpperCase()}?\n\n` +
+    `This action will permanently delete:\n` +
+    `• All uploaded checkpoint photos\n` +
+    `• All submitted riddle and game answers\n` +
+    `• Their progress will reset to Checkpoint 1\n\n` +
+    `(The team's login ID and password will stay intact so they can play anew.)\n\n` +
+    `Are you sure you want to proceed?`
+  );
+  if (!confirmed) return;
+
+  try {
+    const token = sessionStorage.getItem('admin_auth_token') || '@Treasure2.0';
+    const res = await fetch('/api/admin/reset-team', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ teamId: String(teamId), token })
+    });
+    const data = await res.json();
+    if (!res.ok || !data.success) {
+      throw new Error(data.error || 'Failed to reset team data');
+    }
+
+    alert(`✓ All uploaded data for ${displayName} has been successfully deleted!`);
+    await fetchAllData();
+  } catch (err) {
+    alert('Error resetting team data: ' + err.message);
   }
 }
 
