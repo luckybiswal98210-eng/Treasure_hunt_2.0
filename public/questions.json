@@ -1,0 +1,344 @@
+{
+  "version": "2.0.0",
+  "info": "Campus Treasure Hunt 2.0 Official Questions Configuration",
+  "fixedLastClueId": 21,
+  "gameCheckpointsInterval": 0,
+  "questions": [
+    {
+      "id": 1,
+      "type": "clue",
+      "title": "The Gathering Haven",
+      "question": "Where crowds gather and events come alive,\nWith a roof overhead, excitement thrives.\nFrom college shows to moments of cheer,\nYour next hidden clue is waiting here!\n\nWhere should you go?",
+      "answer": "Alfreshco",
+      "aliases": [
+        "alfreshco",
+        "alfresco",
+        "al fresco",
+        "open cafeteria",
+        "alfresco area",
+        "alfreshco area"
+      ],
+      "hint": "An open-air gathering spot with a roof overhead for shows and events."
+    },
+    {
+      "id": 2,
+      "type": "clue",
+      "title": "The Dining Hall",
+      "question": "When hunger strikes, this is the place,\nWhere food and friends put a smile on your face.\nWith trays in hand, students gather to eat,\nFollow the aroma to find your next treat!\n\nWhere should you go?",
+      "answer": "Mess",
+      "aliases": [
+        "mess",
+        "hostel mess",
+        "dining hall",
+        "food mess",
+        "dining mess",
+        "student mess"
+      ],
+      "hint": "Where students take trays in hand for meals every day."
+    },
+    {
+      "id": 3,
+      "type": "clue",
+      "title": "The Green Arena",
+      "question": "No hands allowed when the game is on,\nChase the round ball from dusk till dawn.\nFind the place where goalposts stand,\nAnd victory comes with a cheering stand!\n\nWhere am I ?",
+      "answer": "Football Ground",
+      "aliases": [
+        "football ground",
+        "football field",
+        "football turf",
+        "football",
+        "goalposts"
+      ],
+      "hint": "Look for the large green field with goalposts at each end."
+    },
+    {
+      "id": 4,
+      "type": "clue",
+      "title": "The Pitch of Glory",
+      "question": "A bowler runs, a batter takes aim,\nOne ball can change the course of the game.\nLook for the pitch where stumps stand tall,\nAnd boundaries bring cheers from all!\n\nWhere am I ?",
+      "answer": "Cricket Ground",
+      "aliases": [
+        "cricket ground",
+        "cricket pitch",
+        "cricket stadium",
+        "cricket",
+        "stadium"
+      ],
+      "hint": "The pitch where wickets stand and cricket boundaries are hit."
+    },
+    {
+      "id": 5,
+      "type": "clue",
+      "title": "The Fleet's Harbor",
+      "question": "I have no engine, yet I host a fleet,\nWhere journeys pause before moving feet.\nRows of travelers stand still in line,\nFind where their wheels rest to uncover your sign.\n\nWhere am I ?",
+      "answer": "Parking Area",
+      "aliases": [
+        "parking area",
+        "parking lot",
+        "parking",
+        "bike parking",
+        "car parking",
+        "vehicle parking",
+        "cycle parking"
+      ],
+      "hint": "Where bikes, scooters, and cars rest their wheels in rows."
+    },
+    {
+      "id": 6,
+      "type": "clue",
+      "title": "The Maker's Forge",
+      "question": "Where ideas are tested and skills are refined,\nWhere tools meet talent and hands use the mind.\nThings are built, repaired, and brought to life,\nFind this place to continue your strive!\n\nWhere should you go ?",
+      "answer": "Workshop",
+      "aliases": [
+        "workshop",
+        "mechanical workshop",
+        "engineering workshop",
+        "tools lab",
+        "work shop"
+      ],
+      "hint": "Where machines, tools, and hands bring designs to life."
+    },
+    {
+      "id": 7,
+      "type": "clue",
+      "title": "The Sacred Sanctuary",
+      "question": "Where silence speaks and prayers take flight,\nA sacred place of peace and light.\nWith folded hands, people come to pray,\nFind me to unlock your next clue today!\n\nWhere am I ?",
+      "answer": "Temple",
+      "aliases": [
+        "temple",
+        "campus temple",
+        "mandir",
+        "shrine",
+        "the temple"
+      ],
+      "hint": "The spiritual and peaceful campus shrine."
+    },
+    {
+      "id": 8,
+      "type": "clue",
+      "title": "The Creative Hub",
+      "question": "Not a classroom, yet learning takes place,\nNot a playground, yet fun fills the space.\nWhere talents awaken and activities unite,\nFind this lively hub to continue your hunt right!\n\nWhere am I ?",
+      "answer": "Activity Centre",
+      "aliases": [
+        "activity centre",
+        "activity center",
+        "student activity centre",
+        "sac",
+        "student activity center"
+      ],
+      "hint": "The campus hub for student clubs, music, drama, and council activities."
+    },
+    {
+      "id": 9,
+      "type": "clue",
+      "title": "The Taste of India",
+      "question": "A little taste of India, loved by all,\nFrom creamy delights to treats that call.\nA famous mascot and a butter-rich name,\nFind this spot to continue the game!\n\nWhere am I ?",
+      "answer": "Amul",
+      "aliases": [
+        "amul",
+        "amul parlor",
+        "amul parlour",
+        "amul store",
+        "amul booth",
+        "amul shop"
+      ],
+      "hint": "Famous for dairy delights, ice cream, and its iconic butter girl mascot."
+    },
+    {
+      "id": 10,
+      "type": "clue",
+      "title": "The Campus Market",
+      "question": "From daily needs to snacks galore,\nYou’ll find many things behind one door.\nWhen something runs out, this is the place to explore,\nFind this little market to unlock what’s in store!\n\nWhere am I ?",
+      "answer": "Departmental Store",
+      "aliases": [
+        "departmental store",
+        "dept store",
+        "general store",
+        "grocery store",
+        "campus store",
+        "convenience store",
+        "store"
+      ],
+      "hint": "The all-in-one store for snacks, stationery, and daily necessities."
+    },
+    {
+      "id": 11,
+      "type": "clue",
+      "title": "Grains & Water",
+      "question": "My name speaks of grains and water,\nYet I serve much more to every daughter and son.\nWhere hungry souls come looking for a feast,\nFind this spot to continue your quest!\n\nWhere am I ?",
+      "answer": "Daana Paani",
+      "aliases": [
+        "daana paani",
+        "dana paani",
+        "danapaani",
+        "daanapaani",
+        "dana pani",
+        "daana pani"
+      ],
+      "hint": "The popular eating canopy named after grains and water."
+    },
+    {
+      "id": 12,
+      "type": "clue",
+      "title": "The Hall of Wisdom",
+      "question": "I hold a thousand worlds but have no doors to roam,\nWithin my silent walls, curious minds find a home.\nNo voices are needed for knowledge to speak,\nFind where the answers hide, and wisdom you seek!\n\nWhere am I ?",
+      "answer": "Library",
+      "aliases": [
+        "library",
+        "central library",
+        "campus library",
+        "reading room"
+      ],
+      "hint": "Surrounded by quiet study desks, books, and silent readers."
+    },
+    {
+      "id": 13,
+      "type": "clue",
+      "title": "The Seat of Control",
+      "question": "Behind every rule and official decree,\nThere’s a place where decisions come to be.\nFrom papers and records to approvals in store,\nFind where the college is managed at its core!\n\nWhere am I ?",
+      "answer": "Admin Block",
+      "aliases": [
+        "admin block",
+        "administrative block",
+        "admin building",
+        "central office",
+        "administration block",
+        "admin"
+      ],
+      "hint": "Where student records, paperwork, and administrative affairs are managed."
+    },
+    {
+      "id": 14,
+      "type": "clue",
+      "title": "The Southern Kitchen",
+      "question": "When hunger calls and stomachs complain,\nStudents gather here to recharge again.\nNot a classroom, nor a place to play,\nFind where delicious bites brighten the day!\n\nWhere am I ?",
+      "answer": "Anant Aahara",
+      "aliases": [
+        "anant aahara",
+        "ananth aahara",
+        "anantha aahara",
+        "ananta aahara",
+        "anant ahara",
+        "anantha ahara",
+        "anant ahar",
+        "south mess"
+      ],
+      "hint": "The canteen with long benches popular for dosas and South Indian snacks."
+    },
+    {
+      "id": 15,
+      "type": "clue",
+      "title": "The Threshold of Journeys",
+      "question": "I welcome the many, yet let others depart,\nI mark the beginning of every journey's start.\nStudents pass through me both coming and going,\nFind where the campus begins, and your next clue is waiting!\n\nWhere am I ?",
+      "answer": "College Main Gate",
+      "aliases": [
+        "college main gate",
+        "main gate",
+        "campus gate",
+        "maingate",
+        "main entrance",
+        "gate",
+        "college gate"
+      ],
+      "hint": "The main entrance where everyone enters and leaves the campus."
+    },
+    {
+      "id": 16,
+      "type": "clue",
+      "title": "The Paper Spitter",
+      "question": "I hold no wallet, yet help you spend,\nI give you cash when you need a friend.\nWith a secret code and a card in your hand,\nFind me to continue your hunt across the land!\n\nWhere am I ?",
+      "answer": "ATM",
+      "aliases": [
+        "atm",
+        "cash machine",
+        "bank atm",
+        "atm machine",
+        "bank"
+      ],
+      "hint": "Where you insert your debit card and enter your PIN for cash."
+    },
+    {
+      "id": 17,
+      "type": "clue",
+      "title": "The Fabric Refresher",
+      "question": "I deal with stains but never complain,\nI turn yesterday’s dirt into freshness again.\nYour daily companions arrive in a mess,\nAnd leave looking ready to impress.\n\nFind the place where fabric gets a fresh start!\n\nWhere am I ?",
+      "answer": "Laundry",
+      "aliases": [
+        "laundry",
+        "dhobi",
+        "clothes wash",
+        "washing area",
+        "laundromat",
+        "laundry room"
+      ],
+      "hint": "Where clothes are washed, dried, and cleaned on campus."
+    },
+    {
+      "id": 18,
+      "type": "clue",
+      "title": "The Mentors' Haven",
+      "question": "When lectures end and the classrooms grow still,\nSome find their rest beyond the hill.\nWhere those who guide young minds reside,\nYour next hidden clue is waiting inside!\n\nWhere am I ?",
+      "answer": "Faculty Quarters",
+      "aliases": [
+        "faculty quarters",
+        "teachers quarters",
+        "professors quarters",
+        "staff quarters",
+        "faculty quarter",
+        "professors residence"
+      ],
+      "hint": "The residential colony where professors and teachers live."
+    },
+    {
+      "id": 19,
+      "type": "clue",
+      "title": "The Dancing Waters",
+      "question": "I dance without feet and rise without wings,\nI sparkle in sunlight like a thousand tiny rings.\nI have no voice, yet make a soothing sound,\nLook for where flowing water dances round!\n\nWhere am I ?",
+      "answer": "Fountain",
+      "aliases": [
+        "fountain",
+        "mess fountain",
+        "water fountain",
+        "central fountain"
+      ],
+      "hint": "The sparkling water fountain located between the dining halls."
+    },
+    {
+      "id": 20,
+      "type": "clue",
+      "title": "The Management Gateway",
+      "question": "Where future managers learn to lead,\nAnd business minds are shaped for success indeed.\nBeyond these halls, tomorrow’s leaders take flight,\nFind the gateway to management and get your next clue right!\n\nWhere am I ?",
+      "answer": "LC1 Main Gate",
+      "aliases": [
+        "lc1 main gate",
+        "lc 1 main gate",
+        "lc-1 main gate",
+        "lc1 gate",
+        "lc1 entrance",
+        "management gate",
+        "lc 1 gate"
+      ],
+      "hint": "The main entrance/gateway leading into Learning Complex 1 (MBA block)."
+    },
+    {
+      "id": 21,
+      "type": "clue",
+      "title": "The Summit (Final Destination)",
+      "question": "Climb beyond the floors where most people stay,\nHead to the highest level to continue your way.\nWhere the MBA block reaches closest to the sky,\nYour next hidden clue is waiting up high!\n\nWhere am I ?",
+      "answer": "LC1 Top Floor",
+      "aliases": [
+        "lc1 top floor",
+        "lc 1 top floor",
+        "lc-1 top floor",
+        "top floor lc1",
+        "lc1 terrace",
+        "lc1 rooftop",
+        "top floor",
+        "top floor lc 1"
+      ],
+      "hint": "The highest floor of LC1 reaching for the sky. Final destination!",
+      "isLastClue": true
+    }
+  ],
+  "gameCheckpoints": []
+}

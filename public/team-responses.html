@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Team Journey & Responses - Treasure Hunt 2.0</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="vendor/jspdf.umd.min.js"></script>
+  <style>
+    .team-resp-header {
+      background: var(--bg-card);
+      backdrop-filter: blur(16px);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: 20px 24px;
+      margin-bottom: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .grid-submissions {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 18px;
+    }
+    .resp-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      box-shadow: var(--shadow-sm);
+    }
+    .resp-img-wrap {
+      width: 100%;
+      height: 200px;
+      background: #000;
+      cursor: zoom-in;
+    }
+    .resp-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .resp-time-banner {
+      background: rgba(99, 102, 241, 0.15);
+      border-bottom: 1px solid rgba(99, 102, 241, 0.25);
+      padding: 8px 12px;
+      font-size: 12px;
+      font-weight: 700;
+      color: #c7d2fe;
+    }
+    .resp-body {
+      padding: 16px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .resp-clue-title {
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 6px;
+      font-size: 15px;
+    }
+    .resp-answer-box {
+      background: var(--bg-glass);
+      border-radius: var(--radius-sm);
+      padding: 8px 12px;
+      margin-bottom: 12px;
+      font-size: 13px;
+    }
+    .btn-pdf {
+      background: rgba(139, 92, 246, 0.2);
+      border: 1px solid rgba(139, 92, 246, 0.4);
+      color: #c4b5fd;
+      padding: 8px 16px;
+      border-radius: var(--radius-md);
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .btn-pdf:hover {
+      background: var(--accent-secondary);
+      color: white;
+    }
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.9);
+      backdrop-filter: blur(8px);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+    }
+    .modal-overlay.show { display: flex; }
+    .modal-img { max-width: 90vw; max-height: 80vh; object-fit: contain; border-radius: 8px; }
+  </style>
+</head>
+<body>
+  <div class="app-container" style="max-width: 1200px;">
+    <header class="team-resp-header">
+      <div>
+        <h1 id="pageTeamTitle" style="font-size: 20px; font-weight: 800; color: var(--text-primary);">
+          Team Journey & Proofs
+        </h1>
+        <p id="pageTeamSub" style="color: var(--text-secondary); font-size: 13px;">
+          Chronological photo proof stream with exact upload timestamps
+        </p>
+      </div>
+      <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+        <button type="button" class="btn-pdf" onclick="downloadCurrentTeamPdf()">
+          📄 Download Team PDF Report
+        </button>
+        <button type="button" class="btn-primary" style="padding: 8px 16px; font-size: 13px; width: auto;" onclick="window.location.href='index.html'">
+          🧭 Return to Hunt
+        </button>
+        <button type="button" class="btn-primary" style="padding: 8px 16px; font-size: 13px; width: auto; background: var(--bg-glass); border: 1px solid var(--border-subtle);" onclick="window.location.href='admin.html'">
+          ⚡ Admin Center
+        </button>
+      </div>
+    </header>
+
+    <div id="responsesGrid" class="grid-submissions">
+      <div style="grid-column: 1 / -1; text-align: center; padding: 40px; color: var(--text-muted);">
+        Loading team journey...
+      </div>
+    </div>
+  </div>
+
+  <!-- Zoom Lightbox -->
+  <div id="zoomModal" class="modal-overlay" onclick="closeZoomModal()">
+    <img id="zoomImg" class="modal-img" src="" alt="Proof zoom">
+  </div>
+
+  <script>
+    let currentTeamId = '1';
+    let currentTeamName = 'Team 1';
+    let currentSubmissions = [];
+    let currentTotalCheckpoints = 21;
+
+    function formatExactTime(dateInput) {
+      if (!dateInput) return '--';
+      const d = new Date(dateInput);
+      if (isNaN(d.getTime())) return String(dateInput);
+      return d.toLocaleString('en-US', {
+        day: '2-digit',
+        month: 'short',
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+        hour12: true
+      });
+    }
+
+    function openZoom(src) {
+      document.getElementById('zoomImg').src = src;
+      document.getElementById('zoomModal').classList.add('show');
+    }
+    function closeZoomModal() {
+      document.getElementById('zoomModal').classList.remove('show');
+    }
+
+    async function imageSrcToDataUrl(src) {
+      if (!src) return null;
+      if (src.startsWith('data:image')) return src;
+
+      return new Promise((resolve) => {
+        const img = new Image();
+        img.crossOrigin = 'Anonymous';
+        img.onload = () => {
+          try {
+            const canvas = document.createElement('canvas');
+            canvas.width = img.width;
+            canvas.height = img.height;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(img, 0, 0);
+            resolve(canvas.toDataURL('image/jpeg', 0.8));
+          } catch (err) {
+            resolve(null);
+          }
+        };
+        img.onerror = () => resolve(null);
+        img.src = src;
+      });
+    }
+
+    async function downloadCurrentTeamPdf() {
+      const { jsPDF } = window.jspdf || {};
+      if (!jsPDF) {
+        alert('PDF library loading. Please try again.');
+        return;
+      }
+
+      if (currentSubmissions.length === 0) {
+        alert('No cleared checkpoints found for this team to generate PDF.');
+        return;
+      }
+
+      const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
+      const pageWidth = 210;
+      const pageHeight = 297;
+      const margin = 14;
+      const contentWidth = pageWidth - margin * 2;
+
+      // Header Banner
+      doc.setFillColor(15, 23, 42);
+      doc.rect(0, 0, pageWidth, 42, 'F');
+      doc.setTextColor(255, 255, 255);
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(17);
+      doc.text('CAMPUS TREASURE HUNT 2.0', margin, 16);
+      doc.setFontSize(10);
+      doc.setTextColor(165, 180, 252);
+      doc.text('OFFICIAL TEAM JOURNEY & TIME-WISE PHOTO REPORT', margin, 24);
+      doc.setFontSize(8);
+      doc.setTextColor(148, 163, 184);
+      doc.text(`Report Generated: ${formatExactTime(new Date())}`, margin, 32);
+
+      // Team Summary Card
+      doc.setFillColor(248, 250, 252);
+      doc.setDrawColor(226, 232, 240);
+      doc.roundedRect(margin, 48, contentWidth, 26, 3, 3, 'FD');
+      doc.setFontSize(14);
+      doc.setFont('helvetica', 'bold');
+      doc.setTextColor(30, 41, 59);
+      doc.text(currentTeamName, margin + 6, 57);
+      doc.setFontSize(9);
+      doc.setFont('helvetica', 'normal');
+      doc.setTextColor(100, 116, 139);
+      doc.text(`Team ID: ${currentTeamId}   |   Checkpoints Cleared: ${currentSubmissions.length} of ${currentTotalCheckpoints} (${Math.round((currentSubmissions.length / currentTotalCheckpoints) * 100)}%)`, margin + 6, 64);
+      const firstTime = currentSubmissions[0] ? formatExactTime(currentSubmissions[0].createdAt || currentSubmissions[0].submittedAt) : '--';
+      const lastTime = currentSubmissions[currentSubmissions.length - 1] ? formatExactTime(currentSubmissions[currentSubmissions.length - 1].createdAt || currentSubmissions[currentSubmissions.length - 1].submittedAt) : '--';
+      doc.text(`First Upload: ${firstTime}   |   Latest Upload: ${lastTime}`, margin + 6, 70);
+
+      let cursorY = 82;
+      for (let i = 0; i < currentSubmissions.length; i++) {
+        const s = currentSubmissions[i];
+        const exactTime = formatExactTime(s.createdAt || s.submittedAt);
+        const boxHeight = 76;
+
+        if (cursorY + boxHeight > pageHeight - 15) {
+          doc.addPage();
+          cursorY = 20;
+        }
+
+        doc.setFillColor(255, 255, 255);
+        doc.setDrawColor(203, 213, 225);
+        doc.roundedRect(margin, cursorY, contentWidth, boxHeight, 2, 2, 'FD');
+        doc.setFillColor(99, 102, 241);
+        doc.rect(margin, cursorY, 3, boxHeight, 'F');
+
+        doc.setFontSize(11);
+        doc.setFont('helvetica', 'bold');
+        doc.setTextColor(15, 23, 42);
+        doc.text(`Checkpoint #${s.questionId}: ${(s.question || '').slice(0, 70)}`, margin + 7, cursorY + 7);
+
+        doc.setFontSize(9);
+        doc.setFont('helvetica', 'bold');
+        doc.setTextColor(79, 70, 229);
+        doc.text(`[UPLOAD TIME]: ${exactTime}`, margin + 7, cursorY + 14);
+
+        doc.setFont('helvetica', 'normal');
+        doc.setTextColor(71, 85, 105);
+        doc.text(`Team Answer: "${s.answer}"   |   Status: Verified Correct [OK]`, margin + 7, cursorY + 20);
+
+        const photoSrc = s.photoPath;
+        if (photoSrc) {
+          const dataUrl = await imageSrcToDataUrl(photoSrc);
+          if (dataUrl) {
+            doc.addImage(dataUrl, 'JPEG', margin + 7, cursorY + 24, 72, 48);
+            doc.setDrawColor(203, 213, 225);
+            doc.rect(margin + 7, cursorY + 24, 72, 48, 'S');
+
+            doc.setFontSize(8);
+            doc.setTextColor(100, 116, 139);
+            doc.text(`Original Photo Proof`, margin + 84, cursorY + 30);
+            doc.text(`Timestamp: ${exactTime}`, margin + 84, cursorY + 36);
+            doc.text(`Uploaded by: ${currentTeamName}`, margin + 84, cursorY + 42);
+          }
+        }
+
+        cursorY += boxHeight + 6;
+      }
+
+      const pageCount = doc.internal.getNumberOfPages();
+      for (let p = 1; p <= pageCount; p++) {
+        doc.setPage(p);
+        doc.setFontSize(8);
+        doc.setTextColor(148, 163, 184);
+        doc.text(`Campus Treasure Hunt 2.0 • ${currentTeamName} Progress Dossier • Page ${p} of ${pageCount}`, pageWidth / 2, pageHeight - 7, { align: 'center' });
+      }
+
+      doc.save(`TreasureHunt_Team_${currentTeamId}_Progress_Report.pdf`);
+    }
+
+    async function loadTeamResponses() {
+      const urlParams = new URLSearchParams(window.location.search);
+      currentTeamId = urlParams.get('teamId') || localStorage.getItem('th_team_id') || '1';
+      currentTeamName = localStorage.getItem('th_team_name') || `Team ${currentTeamId}`;
+
+      document.getElementById('pageTeamTitle').textContent = `${currentTeamName} (ID: ${currentTeamId}) — Journey Log`;
+
+      try {
+        const qRes = await fetch('/api/questions');
+        const qData = await qRes.json();
+        if (qData && Array.isArray(qData.questions)) {
+          currentTotalCheckpoints = qData.questions.length;
+        }
+      } catch (e) {}
+
+      try {
+        const res = await fetch(`/api/submissions?teamId=${encodeURIComponent(currentTeamId)}`);
+        const submissions = await res.json();
+        const grid = document.getElementById('responsesGrid');
+
+        if (!Array.isArray(submissions) || submissions.length === 0) {
+          grid.innerHTML = `
+            <div style="grid-column: 1 / -1; text-align: center; padding: 60px 20px; background: var(--bg-card); border-radius: var(--radius-lg); border: 1px dashed var(--border-subtle);">
+              <div style="font-size: 40px; margin-bottom: 12px;">🗺️</div>
+              <h3 style="font-size: 18px; color: var(--text-primary); margin-bottom: 6px;">No Checkpoints Cleared Yet</h3>
+              <p style="color: var(--text-muted); font-size: 14px;">Solve riddles and upload camera proofs to see your team's photo journal here!</p>
+            </div>
+          `;
+          return;
+        }
+
+        currentSubmissions = submissions.filter(s => s.isCorrect).sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
+
+        grid.innerHTML = currentSubmissions.map(s => {
+          const photoUrl = s.photoPath || '';
+          const exactTime = formatExactTime(s.createdAt || s.submittedAt);
+          return `
+            <div class="resp-card">
+              <div class="resp-img-wrap" onclick="openZoom('${photoUrl}')">
+                <img class="resp-img" src="${photoUrl}" alt="Proof checkpoint ${s.questionId}" loading="lazy">
+              </div>
+              <div class="resp-time-banner">
+                📅 Exact Upload: ${exactTime}
+              </div>
+              <div class="resp-body">
+                <div>
+                  <div class="resp-clue-title">Checkpoint #${s.questionId}</div>
+                  <div style="font-size: 12px; color: var(--text-secondary); margin-bottom: 8px; font-style: italic;">
+                    "${s.question || ''}"
+                  </div>
+                  <div class="resp-answer-box">
+                    <span style="color: var(--text-muted); font-size: 11px;">ANSWER: </span>
+                    <strong style="color: var(--success);">${s.answer}</strong>
+                  </div>
+                </div>
+                <div style="font-size: 11px; color: var(--text-muted); display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border-subtle); padding-top: 8px;">
+                  <span>✓ Verified</span>
+                  <a href="${photoUrl}" download="checkpoint-${s.questionId}.jpg" style="color: #a5b4fc; text-decoration: none;">⬇️ Save Photo</a>
+                </div>
+              </div>
+            </div>
+          `;
+        }).join('');
+
+      } catch (e) {
+        console.error('Failed to load responses:', e);
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', loadTeamResponses);
+  </script>
+</body>
+</html>

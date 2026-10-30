@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Campus Treasure Hunt 2.0 - Team Login</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    .login-wrapper {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .login-card {
+      background: var(--bg-card);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-xl);
+      padding: 36px 28px;
+      width: 100%;
+      max-width: 420px;
+      box-shadow: var(--shadow-lg);
+      position: relative;
+      overflow: hidden;
+      animation: scaleUp 0.35s ease;
+    }
+    .login-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: var(--accent-gradient);
+    }
+    .login-header {
+      text-align: center;
+      margin-bottom: 28px;
+    }
+    .login-logo {
+      width: 64px;
+      height: 64px;
+      background: var(--accent-gradient);
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 32px;
+      margin-bottom: 14px;
+      box-shadow: var(--shadow-glow);
+    }
+    .login-title {
+      font-size: 24px;
+      font-weight: 800;
+      color: var(--text-primary);
+      margin-bottom: 6px;
+    }
+    .login-subtitle {
+      font-size: 13px;
+      color: var(--text-secondary);
+    }
+    .password-wrap {
+      position: relative;
+    }
+    .btn-toggle-pass {
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      font-size: 16px;
+      padding: 4px;
+    }
+    .btn-toggle-pass:hover {
+      color: var(--text-primary);
+    }
+    .quick-resume-box {
+      display: none;
+      background: rgba(99, 102, 241, 0.1);
+      border: 1px solid rgba(99, 102, 241, 0.25);
+      border-radius: var(--radius-md);
+      padding: 12px 14px;
+      margin-bottom: 20px;
+      font-size: 13px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .quick-resume-text {
+      color: #c7d2fe;
+    }
+    .quick-resume-btn {
+      background: var(--accent-primary);
+      color: white;
+      border: none;
+      padding: 6px 12px;
+      border-radius: var(--radius-sm);
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .admin-link-wrap {
+      text-align: center;
+      margin-top: 24px;
+    }
+    .admin-link {
+      color: var(--text-muted);
+      font-size: 12px;
+      text-decoration: none;
+      transition: color 0.2s ease;
+    }
+    .admin-link:hover {
+      color: #a5b4fc;
+    }
+  </style>
+</head>
+<body>
+  <div class="login-wrapper">
+    <div class="login-card">
+      <div class="login-header">
+        <div class="login-logo">🧭</div>
+        <h1 class="login-title">Campus Treasure Hunt</h1>
+        <p class="login-subtitle">Enter your team credentials to start the hunt</p>
+      </div>
+
+      <!-- Quick Resume Box if previously logged in -->
+      <div id="quickResumeBox" class="quick-resume-box" style="display: none;">
+        <span class="quick-resume-text" id="quickResumeLabel">Resume as Team 1?</span>
+        <button type="button" class="quick-resume-btn" onclick="quickResume()">Resume</button>
+      </div>
+
+      <!-- Feedback Alert -->
+      <div id="loginFeedback" class="feedback-box"></div>
+
+      <!-- Login Form -->
+      <form id="loginForm" onsubmit="handleLoginSubmit(event)">
+        <div class="form-group">
+          <label class="form-label" for="teamId">Team ID / Number</label>
+          <input 
+            type="text" 
+            id="teamId" 
+            class="input-text" 
+            placeholder="e.g. 1 to 45" 
+            required 
+            autocomplete="off"
+            autofocus
+          >
+          <p class="input-help">Assigned by the event organizers</p>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="teamPass">Team Password</label>
+          <div class="password-wrap">
+            <input 
+              type="password" 
+              id="teamPass" 
+              class="input-text" 
+              placeholder="Enter team password" 
+              required
+            >
+            <button type="button" class="btn-toggle-pass" onclick="togglePasswordVisibility()" title="Show/Hide Password">👁️</button>
+          </div>
+          <p class="input-help">Case-insensitive. Spaces are trimmed automatically.</p>
+        </div>
+
+        <button type="submit" id="loginBtn" class="btn-primary" style="margin-top: 10px;">
+          <span>🚀 Enter Treasure Hunt</span>
+        </button>
+      </form>
+
+      <div class="admin-link-wrap">
+        <a href="admin.html" class="admin-link">⚙️ Organizer / Admin Control Center</a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function togglePasswordVisibility() {
+      const pass = document.getElementById('teamPass');
+      pass.type = pass.type === 'password' ? 'text' : 'password';
+    }
+
+    function showFeedback(msg, isError = true) {
+      const fb = document.getElementById('loginFeedback');
+      fb.textContent = msg;
+      fb.className = 'feedback-box show ' + (isError ? 'error' : 'success');
+    }
+
+    function checkPreviousSession() {
+      try {
+        const savedTeamId = localStorage.getItem('th_team_id');
+        const savedTeamName = localStorage.getItem('th_team_name');
+        if (savedTeamId) {
+          const box = document.getElementById('quickResumeBox');
+          const label = document.getElementById('quickResumeLabel');
+          label.textContent = `Resume as ${savedTeamName || 'Team ' + savedTeamId}?`;
+          box.style.display = 'flex';
+          document.getElementById('teamId').value = savedTeamId;
+        }
+      } catch (e) {
+        console.warn('Local storage check warning:', e);
+      }
+    }
+
+    async function quickResume() {
+      const savedTeamId = localStorage.getItem('th_team_id');
+      const savedAuth = localStorage.getItem('th_authenticated');
+      if (savedTeamId && savedAuth === 'true') {
+        window.location.href = 'index.html';
+      } else {
+        document.getElementById('teamPass').focus();
+      }
+    }
+
+    async function handleLoginSubmit(event) {
+      event.preventDefault();
+      const teamId = document.getElementById('teamId').value.trim();
+      const password = document.getElementById('teamPass').value.trim();
+      const loginBtn = document.getElementById('loginBtn');
+
+      if (!teamId || !password) {
+        showFeedback('Please enter both Team ID and Password.');
+        return;
+      }
+
+      try {
+        loginBtn.disabled = true;
+        loginBtn.innerHTML = '<span class="spinner"></span> <span>Signing in...</span>';
+
+        const res = await fetch('/api/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ teamId, password })
+        });
+
+        const data = await res.json();
+
+        if (res.ok && data.success) {
+          showFeedback('✓ Login successful! Loading hunt progress...', false);
+
+          // Store session in localStorage (persistent across browser reopens) & sessionStorage
+          localStorage.setItem('th_team_id', data.team.id);
+          localStorage.setItem('th_team_name', data.team.name);
+          localStorage.setItem('th_authenticated', 'true');
+          sessionStorage.setItem('teamId', data.team.id);
+          sessionStorage.setItem('teamName', data.team.name);
+          sessionStorage.setItem('authenticated', 'true');
+
+          setTimeout(() => {
+            window.location.href = 'index.html';
+          }, 600);
+        } else {
+          showFeedback(data.error || 'Invalid credentials. Please verify your team ID and password.');
+          loginBtn.disabled = false;
+          loginBtn.innerHTML = '<span>🚀 Enter Treasure Hunt</span>';
+        }
+      } catch (err) {
+        console.error('Login error:', err);
+        showFeedback('Network error during login. Please check connection and retry.');
+        loginBtn.disabled = false;
+        loginBtn.innerHTML = '<span>🚀 Enter Treasure Hunt</span>';
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', checkPreviousSession);
+  </script>
+</body>
+</html>

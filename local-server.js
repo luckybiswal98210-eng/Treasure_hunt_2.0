@@ -72,7 +72,10 @@ async function start() {
     // 3. Static files
     let requestPath = pathname === '/' ? '/login.html' : pathname;
     const decodedPath = decodeURIComponent(requestPath);
-    const fullPath = path.normalize(path.join(ROOT, decodedPath));
+    let fullPath = path.normalize(path.join(ROOT, 'public', decodedPath));
+    if (!fs.existsSync(fullPath)) {
+      fullPath = path.normalize(path.join(ROOT, decodedPath));
+    }
 
     if (!fullPath.startsWith(ROOT)) {
       res.writeHead(403, { 'Content-Type': 'text/plain' });
