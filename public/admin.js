@@ -197,18 +197,33 @@ function switchTab(tabId) {
 // ----------------------------------------------------
 async function fetchAllData() {
   try {
-    const [subsRes, credsRes, questRes] = await Promise.all([
-      fetch('/api/submissions'),
-      fetch('/api/credentials'),
-      fetch('/api/questions')
-    ]);
+    const subsPromise = fetch(`/api/submissions?t=${Date.now()}`)
+      .then((r) => r.json())
+      .catch((e) => {
+        console.warn('Submissions live fetch deferred:', e);
+        return null;
+      });
+    const credsPromise = fetch(`/api/credentials?t=${Date.now()}`)
+      .then((r) => r.json())
+      .catch((e) => {
+        console.warn('Credentials fetch deferred:', e);
+        return null;
+      });
+    const questPromise = fetch(`/api/questions?t=${Date.now()}`)
+      .then((r) => r.json())
+      .catch((e) => {
+        console.warn('Questions fetch deferred:', e);
+        return null;
+      });
 
-    const subs = await subsRes.json();
-    const creds = await credsRes.json();
-    const quests = await questRes.json();
+    const [subs, creds, quests] = await Promise.all([subsPromise, credsPromise, questPromise]);
 
-    allCredentials = Array.isArray(creds.teams) ? creds.teams : [];
-    questionsConfig = quests;
+    if (creds && Array.isArray(creds.teams)) {
+      allCredentials = creds.teams;
+    }
+    if (quests && Array.isArray(quests.questions)) {
+      questionsConfig = quests;
+    }
 
     if (Array.isArray(subs)) {
       if (!isFirstLoad && subs.length > allSubmissions.length) {

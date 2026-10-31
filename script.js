@@ -736,11 +736,15 @@ async function initApp() {
     }
   } catch (e) {}
 
-  // Render question IMMEDIATELY so student sees their clue without delay
-  renderCurrentQuestion();
+  // Authoritative sync with server to resume exactly where the team left off
+  try {
+    await syncProgressWithServer();
+  } catch (e) {
+    console.warn('Initial server sync warning:', e);
+  }
 
-  // Authoritative sync with server in background
-  syncProgressWithServer();
+  // Render the exact clue where the team left off!
+  renderCurrentQuestion();
 
   // Keep live sync active so if admin resets while page is open, it auto-resets to Checkpoint 1
   setInterval(syncProgressWithServer, 5000);
