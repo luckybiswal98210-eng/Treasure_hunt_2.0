@@ -637,9 +637,6 @@ function renderCredentialsTable() {
               <button type="button" class="btn-pdf" style="padding: 5px 9px; font-size: 11px;" onclick="generateTeamProgressPdf('${t.id}')">
                 📄 PDF
               </button>
-              <button type="button" class="btn-danger-outline" style="padding: 5px 9px; font-size: 11px; color: #f87171; border-color: rgba(239, 68, 68, 0.35);" onclick="resetSingleTeamData('${t.id}', '${escapeHtml(t.name || 'Team ' + t.id)}')">
-                🧹 Reset Data
-              </button>
               <button type="button" class="btn-danger-outline" style="padding: 5px 9px; font-size: 11px; opacity: 0.65;" onclick="deleteSingleTeam('${t.id}', '${escapeHtml(t.name || 'Team ' + t.id)}')">
                 🗑️ Del
               </button>

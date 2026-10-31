@@ -254,30 +254,10 @@ async function syncProgressWithServer() {
 
     if (data && typeof data.completedCount === 'number') {
       const serverIndex = data.completedCount;
-      const serverResetAt = Number(data.resetAt || 0);
 
-      // Check when local progress was last saved on this device
-      const localRaw = localStorage.getItem(getProgressStorageKey());
-      let localUpdatedAt = 0;
-      if (localRaw) {
-        try {
-          const parsed = JSON.parse(localRaw);
-          localUpdatedAt = new Date(parsed.updatedAt || 0).getTime();
-        } catch (e) {}
-      }
-
-      // If an ADMIN RESET occurred AFTER the team's local progress was saved:
-      if (serverResetAt > 0 && serverResetAt > localUpdatedAt) {
-        console.log('Admin reset detected! Restarting team from Checkpoint 1.');
-        currentQuestionIndex = 0;
-        saveLocalProgress();
-        renderCurrentQuestion();
-        return;
-      }
-
-      // OTHERWISE: Always continue from the furthest checkpoint reached (where the team left off)
+      // Always advance to furthest checkpoint reached (never move backwards)
       const furthestIndex = Math.max(currentQuestionIndex, serverIndex);
-      if (furthestIndex !== currentQuestionIndex) {
+      if (furthestIndex > currentQuestionIndex) {
         currentQuestionIndex = Math.min(furthestIndex, orderedQuestions.length);
         saveLocalProgress();
         renderCurrentQuestion();
@@ -735,6 +715,11 @@ async function initApp() {
       }
     }
   } catch (e) {}
+
+  // Render immediately if we have local progress so student never sees Checkpoint 1
+  if (currentQuestionIndex > 0) {
+    renderCurrentQuestion();
+  }
 
   // Authoritative sync with server to resume exactly where the team left off
   try {
