@@ -137,7 +137,8 @@ function createSeededRandom(seed) {
 // Build question order tailored to each team with exact 22-round sequence pattern:
 // 3 Clues -> 1 Game -> 3 Clues -> 1 Game -> 3 Clues -> 1 Game -> 5 Clues -> 1 Game -> 3 Clues -> 1 Summit (LC1 Top Floor)
 function buildTeamQuestions(config) {
-  const allQuestions = Array.isArray(config.questions) ? config.questions : [];
+  const allQuestions = Array.isArray(config && config.questions) ? config.questions : [];
+  if (allQuestions.length === 0) return [];
 
   const regularClues = allQuestions.filter((q) => !q.isGame && !q.isLastClue);
   const games = allQuestions.filter((q) => q.isGame);
@@ -360,6 +361,11 @@ async function handlePhotoSelected(event) {
 function renderCurrentQuestion() {
   const total = orderedQuestions.length;
 
+  if (total === 0) {
+    document.getElementById('clueText').textContent = 'Loading campus clue...';
+    return;
+  }
+
   // Check if finished
   if (currentQuestionIndex >= total) {
     showVictoryScreen();
@@ -367,6 +373,11 @@ function renderCurrentQuestion() {
   }
 
   const q = orderedQuestions[currentQuestionIndex];
+  if (!q) {
+    document.getElementById('clueText').textContent = 'Loading campus clue...';
+    return;
+  }
+
   const stepNo = currentQuestionIndex + 1;
   const pct = Math.round((stepNo / total) * 100);
 
@@ -662,21 +673,33 @@ async function initApp() {
 
   updateNetworkStatus();
 
-  // Load questions
+  // Load questions (Try API, with instant static fallback so students are never blocked)
   try {
     const res = await fetch('/api/questions');
-    const qConfig = await res.json();
-    orderedQuestions = buildTeamQuestions(qConfig);
+    if (res.ok) {
+      const qConfig = await res.json();
+      if (qConfig && Array.isArray(qConfig.questions) && qConfig.questions.length >= 22) {
+        orderedQuestions = buildTeamQuestions(qConfig);
+      }
+    }
   } catch (err) {
-    console.error('Failed to fetch questions from API, attempting local fallback:', err);
+    console.warn('API questions fetch deferred, loading static questions:', err);
+  }
+
+  // Reliable instant static questions fallback
+  if (!orderedQuestions || orderedQuestions.length === 0) {
     try {
-      const localRes = await fetch('questions.json');
+      const localRes = await fetch('questions.json?v=3.0.0');
       const localConfig = await localRes.json();
       orderedQuestions = buildTeamQuestions(localConfig);
     } catch (e) {
-      alert('Error loading hunt questions. Please check connection and refresh.');
-      return;
+      console.error('Static questions fallback error:', e);
     }
+  }
+
+  if (!orderedQuestions || orderedQuestions.length === 0) {
+    alert('Error loading hunt questions. Please check connection and refresh.');
+    return;
   }
 
   // Restore local progress as initial fallback
@@ -690,8 +713,11 @@ async function initApp() {
     }
   } catch (e) {}
 
-  // Authoritative sync with server (ensures admin reset goes to Checkpoint 1, or continues from where they left off)
-  await syncProgressWithServer();
+  // Render question IMMEDIATELY so student sees their clue without delay
+  renderCurrentQuestion();
+
+  // Authoritative sync with server in background
+  syncProgressWithServer();
 
   // Keep live sync active so if admin resets while page is open, it auto-resets to Checkpoint 1
   setInterval(syncProgressWithServer, 5000);
