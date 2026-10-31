@@ -260,9 +260,14 @@
           <p style="color: var(--text-sub); font-size: 15px; margin-bottom: 16px;">
             Bundles all high-resolution proof photos into an organized ZIP archive with folders per team directly inside your browser without hitting Vercel timeouts.
           </p>
-          <button type="button" id="btnDownloadZip" class="btn-control active" onclick="downloadAllPhotosZip()">
-            <span>⬇️ Generate & Download ZIP</span>
-          </button>
+          <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+            <a href="all-teams-photos.zip" download="all-teams-photos.zip" class="btn-control active" style="text-decoration: none; display: inline-flex; align-items: center; gap: 8px; background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white;">
+              <span>⚡ Direct Download Complete Archive (8.3 MB ZIP)</span>
+            </a>
+            <button type="button" id="btnDownloadZip" class="btn-control" onclick="downloadAllPhotosZip()">
+              <span>🔄 Generate Live ZIP</span>
+            </button>
+          </div>
           <div id="zipProgress" style="font-size: 14px; color: var(--success); margin-top: 10px; display: none;"></div>
         </div>
 

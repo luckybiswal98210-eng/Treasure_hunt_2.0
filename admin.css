@@ -51,7 +51,7 @@ body {
   min-height: 100vh;
   padding: 20px;
   line-height: 1.5;
-  font-size: 16px;
+  font-size: 17px;
 }
 
 .admin-layout {
@@ -401,7 +401,7 @@ body {
   border: 1px solid rgba(99, 102, 241, 0.4);
   padding: 5px 12px;
   border-radius: var(--radius-full);
-  font-size: 14px;
+  font-size: 15px;
   font-weight: 700;
 }
 
@@ -412,7 +412,7 @@ body {
   border: 1px solid rgba(255, 255, 255, 0.2);
   padding: 5px 12px;
   border-radius: var(--radius-full);
-  font-size: 14px;
+  font-size: 15px;
   font-weight: 600;
 }
 
@@ -421,7 +421,7 @@ body {
   background: rgba(99, 102, 241, 0.12);
   border-bottom: 1px solid rgba(99, 102, 241, 0.25);
   padding: 8px 14px;
-  font-size: 14px;
+  font-size: 15px;
   font-weight: 700;
   color: #c7d2fe;
   display: flex;
@@ -438,7 +438,7 @@ body {
 }
 
 .sub-clue-title {
-  font-size: 17px;
+  font-size: 18px;
   font-weight: 700;
   color: var(--text-main);
   margin-bottom: 6px;
@@ -450,12 +450,12 @@ body {
   border-radius: var(--radius-sm);
   padding: 10px 12px;
   margin-bottom: 12px;
-  font-size: 15px;
+  font-size: 16px;
 }
 
 .sub-answer-label {
   color: var(--text-dim);
-  font-size: 13px;
+  font-size: 14px;
   text-transform: uppercase;
   font-weight: 700;
   margin-bottom: 2px;
@@ -464,7 +464,7 @@ body {
 .sub-answer-val {
   color: var(--success);
   font-weight: 700;
-  font-size: 15px;
+  font-size: 16.5px;
 }
 
 .sub-actions {

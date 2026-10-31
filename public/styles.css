@@ -65,7 +65,7 @@ body {
   color: var(--text-primary);
   min-height: 100vh;
   line-height: 1.6;
-  font-size: 16px;
+  font-size: 17.5px;
   display: flex;
   flex-direction: column;
 }
@@ -144,7 +144,7 @@ body {
 }
 
 .team-info p {
-  font-size: 14px;
+  font-size: 15.5px;
   color: var(--text-secondary);
 }
 
@@ -370,7 +370,7 @@ body {
 }
 
 .clue-title {
-  font-size: 20px;
+  font-size: 22px;
   font-weight: 800;
   color: var(--text-primary);
   margin-bottom: 12px;
@@ -378,11 +378,11 @@ body {
 }
 
 .clue-text {
-  font-size: 18px;
-  color: #e2e8f0;
+  font-size: 20px;
+  color: #f1f5f9;
   line-height: 1.8;
   font-style: italic;
-  padding: 14px 16px;
+  padding: 16px 18px;
   background: var(--bg-glass);
   border-radius: var(--radius-md);
   border-left: 4px solid var(--accent-primary);
@@ -394,7 +394,7 @@ body {
   background: none;
   border: none;
   color: #a5b4fc;
-  font-size: 15px;
+  font-size: 16.5px;
   font-weight: 600;
   cursor: pointer;
   display: inline-flex;
@@ -411,12 +411,13 @@ body {
 .hint-content {
   display: none;
   margin-top: 10px;
-  padding: 12px 14px;
+  padding: 14px 16px;
   background: rgba(139, 92, 246, 0.1);
   border: 1px dashed rgba(139, 92, 246, 0.3);
   border-radius: var(--radius-md);
-  font-size: 15px;
+  font-size: 16.5px;
   color: #ddd6fe;
+  line-height: 1.6;
   animation: fadeIn 0.3s ease;
 }
 
@@ -442,11 +443,11 @@ body {
 
 .form-label {
   display: block;
-  font-size: 15px;
+  font-size: 16.5px;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.5px;
-  color: var(--text-secondary);
+  color: #cbd5e1;
   margin-bottom: 8px;
 }
 
@@ -456,14 +457,14 @@ body {
   border: 1.5px solid var(--border-subtle);
   border-radius: var(--radius-md);
   padding: 14px 16px;
-  font-size: 17px;
+  font-size: 18.5px;
   color: var(--text-primary);
   outline: none;
   transition: all 0.2s ease;
 }
 
 .input-text::placeholder {
-  font-size: 16px;
+  font-size: 17.5px;
   color: #94a3b8;
 }
 
@@ -474,10 +475,10 @@ body {
 }
 
 .input-help {
-  font-size: 14px;
-  color: var(--text-muted);
+  font-size: 15.5px;
+  color: #94a3b8;
   margin-top: 6px;
-  line-height: 1.4;
+  line-height: 1.5;
 }
 
 /* Camera & Upload Area */
@@ -516,15 +517,15 @@ body {
 }
 
 .camera-title {
-  font-size: 17px;
+  font-size: 18.5px;
   font-weight: 700;
   color: var(--text-primary);
   margin-bottom: 4px;
 }
 
 .camera-subtitle {
-  font-size: 14px;
-  color: var(--text-muted);
+  font-size: 15.5px;
+  color: #94a3b8;
 }
 
 /* Photo Preview Box */
@@ -769,15 +770,22 @@ body {
     padding: 12px;
   }
   .clue-card {
-    padding: 18px;
+    padding: 20px 16px;
   }
   .form-card {
-    padding: 18px;
+    padding: 20px 16px;
   }
   .clue-title {
-    font-size: 18px;
+    font-size: 20px;
   }
   .clue-text {
+    font-size: 18px;
+    line-height: 1.75;
+  }
+  .input-help {
     font-size: 15px;
+  }
+  .form-label {
+    font-size: 15.5px;
   }
 }
