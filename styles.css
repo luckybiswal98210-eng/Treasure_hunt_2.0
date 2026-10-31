@@ -65,6 +65,7 @@ body {
   color: var(--text-primary);
   min-height: 100vh;
   line-height: 1.6;
+  font-size: 16px;
   display: flex;
   flex-direction: column;
 }
@@ -77,7 +78,7 @@ body {
   color: var(--warning);
   text-align: center;
   padding: 8px 16px;
-  font-size: 13px;
+  font-size: 15px;
   font-weight: 600;
   position: sticky;
   top: 0;
@@ -143,7 +144,7 @@ body {
 }
 
 .team-info p {
-  font-size: 12px;
+  font-size: 14px;
   color: var(--text-secondary);
 }
 
@@ -159,7 +160,7 @@ body {
   gap: 6px;
   padding: 4px 10px;
   border-radius: var(--radius-full);
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 600;
   background: var(--success-bg);
   border: 1px solid var(--success-border);
@@ -217,7 +218,7 @@ body {
   justify-content: space-between;
   align-items: center;
   margin-bottom: 8px;
-  font-size: 13px;
+  font-size: 15px;
   font-weight: 600;
 }
 
@@ -377,7 +378,7 @@ body {
 }
 
 .clue-text {
-  font-size: 16px;
+  font-size: 18px;
   color: #e2e8f0;
   line-height: 1.8;
   font-style: italic;
@@ -393,7 +394,7 @@ body {
   background: none;
   border: none;
   color: #a5b4fc;
-  font-size: 13px;
+  font-size: 15px;
   font-weight: 600;
   cursor: pointer;
   display: inline-flex;
@@ -414,7 +415,7 @@ body {
   background: rgba(139, 92, 246, 0.1);
   border: 1px dashed rgba(139, 92, 246, 0.3);
   border-radius: var(--radius-md);
-  font-size: 13px;
+  font-size: 15px;
   color: #ddd6fe;
   animation: fadeIn 0.3s ease;
 }
@@ -441,7 +442,7 @@ body {
 
 .form-label {
   display: block;
-  font-size: 13px;
+  font-size: 15px;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.5px;
@@ -455,10 +456,15 @@ body {
   border: 1.5px solid var(--border-subtle);
   border-radius: var(--radius-md);
   padding: 14px 16px;
-  font-size: 15px;
+  font-size: 17px;
   color: var(--text-primary);
   outline: none;
   transition: all 0.2s ease;
+}
+
+.input-text::placeholder {
+  font-size: 16px;
+  color: #94a3b8;
 }
 
 .input-text:focus {
@@ -468,9 +474,10 @@ body {
 }
 
 .input-help {
-  font-size: 12px;
+  font-size: 14px;
   color: var(--text-muted);
   margin-top: 6px;
+  line-height: 1.4;
 }
 
 /* Camera & Upload Area */
@@ -509,14 +516,14 @@ body {
 }
 
 .camera-title {
-  font-size: 15px;
+  font-size: 17px;
   font-weight: 700;
   color: var(--text-primary);
   margin-bottom: 4px;
 }
 
 .camera-subtitle {
-  font-size: 12px;
+  font-size: 14px;
   color: var(--text-muted);
 }
 
@@ -556,7 +563,7 @@ body {
 }
 
 .preview-badge {
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 600;
   color: var(--success);
   display: flex;
@@ -569,9 +576,9 @@ body {
   backdrop-filter: blur(8px);
   border: 1px solid rgba(255, 255, 255, 0.4);
   color: white;
-  padding: 5px 12px;
+  padding: 6px 14px;
   border-radius: var(--radius-sm);
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 600;
   cursor: pointer;
   transition: background 0.2s ease;
@@ -589,7 +596,7 @@ body {
   border-radius: var(--radius-lg);
   background: var(--accent-gradient);
   color: white;
-  font-size: 16px;
+  font-size: 17px;
   font-weight: 700;
   letter-spacing: 0.3px;
   cursor: pointer;
@@ -623,7 +630,7 @@ body {
   padding: 14px 16px;
   border-radius: var(--radius-md);
   margin-top: 16px;
-  font-size: 14px;
+  font-size: 15px;
   font-weight: 600;
   animation: slideIn 0.3s ease;
 }
@@ -675,7 +682,7 @@ body {
 
 .victory-subtitle {
   color: var(--text-secondary);
-  font-size: 15px;
+  font-size: 17px;
   margin-bottom: 24px;
 }
 
@@ -700,7 +707,7 @@ body {
 }
 
 .stat-label {
-  font-size: 12px;
+  font-size: 14px;
   color: var(--text-secondary);
 }
 

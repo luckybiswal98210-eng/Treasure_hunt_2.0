@@ -123,7 +123,7 @@
         <select id="teamFilterSelect" class="select-input" onchange="filterSubmissions()">
           <option value="">All Teams</option>
         </select>
-        <span id="submissionCountBadge" style="font-size: 13px; color: var(--text-sub); margin-left: auto;">
+        <span id="submissionCountBadge" style="font-size: 15px; color: var(--text-sub); margin-left: auto;">
           Showing 0 submissions
         </span>
       </div>
@@ -203,10 +203,10 @@
     <!-- TAB 5: QUESTIONS & CLUES -->
     <section id="tabQuestions" class="tab-panel">
       <div class="filter-bar">
-        <span style="font-weight: 700; color: var(--text-main); font-size: 15px;">
+        <span style="font-weight: 700; color: var(--text-main); font-size: 16px;">
           ❓ Campus Checkpoints & Clues Directory (<span id="questionsCountHeading">21</span> Total)
         </span>
-        <span style="margin-left: auto; color: var(--text-sub); font-size: 13px;">
+        <span style="margin-left: auto; color: var(--text-sub); font-size: 14px;">
           Edit in <code style="color: #a5b4fc;">questions.json</code> or update via API
         </span>
       </div>
@@ -239,7 +239,7 @@
             <span style="font-size: 28px;">📄</span>
             <h3 style="font-size: 20px; font-weight: 800; color: #fff;">Download Team Progress Report (PDF)</h3>
           </div>
-          <p style="color: #cbd5e1; font-size: 14px; margin-bottom: 16px; line-height: 1.6;">
+          <p style="color: #cbd5e1; font-size: 16px; margin-bottom: 16px; line-height: 1.6;">
             Generates a high-quality, printable PDF document containing full team details and a <strong>chronological, time-wise record of all uploaded photo proofs</strong>, timestamps (with seconds), riddles, and team answers.
           </p>
           <div style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap; width: 100%;">
@@ -247,29 +247,29 @@
               <option value="all">🌟 All Teams (Combined Dossier)</option>
               <!-- Populated dynamically with teams -->
             </select>
-            <button type="button" id="btnGeneratePdf" class="btn-control active" style="padding: 10px 20px; font-size: 14px; background: var(--secondary);" onclick="generateTeamProgressPdfFromExportTab()">
+            <button type="button" id="btnGeneratePdf" class="btn-control active" style="padding: 10px 20px; font-size: 15px; background: var(--secondary);" onclick="generateTeamProgressPdfFromExportTab()">
               <span>📄 Download PDF Report</span>
             </button>
           </div>
-          <div id="pdfExportProgress" style="font-size: 13px; color: #34d399; margin-top: 12px; font-weight: 600; display: none;"></div>
+          <div id="pdfExportProgress" style="font-size: 15px; color: #34d399; margin-top: 12px; font-weight: 600; display: none;"></div>
         </div>
 
         <!-- ZIP EXPORT CARD -->
         <div class="stat-card" style="flex-direction: column; align-items: flex-start;">
           <h3 style="font-size: 18px; margin-bottom: 8px;">📦 Download All Photos (ZIP)</h3>
-          <p style="color: var(--text-sub); font-size: 13px; margin-bottom: 16px;">
+          <p style="color: var(--text-sub); font-size: 15px; margin-bottom: 16px;">
             Bundles all high-resolution proof photos into an organized ZIP archive with folders per team directly inside your browser without hitting Vercel timeouts.
           </p>
           <button type="button" id="btnDownloadZip" class="btn-control active" onclick="downloadAllPhotosZip()">
             <span>⬇️ Generate & Download ZIP</span>
           </button>
-          <div id="zipProgress" style="font-size: 12px; color: var(--success); margin-top: 10px; display: none;"></div>
+          <div id="zipProgress" style="font-size: 14px; color: var(--success); margin-top: 10px; display: none;"></div>
         </div>
 
         <!-- CSV EXPORT CARD -->
         <div class="stat-card" style="flex-direction: column; align-items: flex-start;">
           <h3 style="font-size: 18px; margin-bottom: 8px;">📊 Export Submissions Report (CSV)</h3>
-          <p style="color: var(--text-sub); font-size: 13px; margin-bottom: 16px;">
+          <p style="color: var(--text-sub); font-size: 15px; margin-bottom: 16px;">
             Download complete spreadsheet logs including submission timestamps, team answers, correctness status, and proof paths.
           </p>
           <button type="button" class="btn-control active" onclick="exportSubmissionsCsv()">
@@ -280,7 +280,7 @@
         <!-- RESET CARD -->
         <div class="stat-card" style="flex-direction: column; align-items: flex-start; border-color: rgba(239, 68, 68, 0.3);">
           <h3 style="font-size: 18px; color: var(--danger); margin-bottom: 8px;">🗑️ Reset Event Submissions</h3>
-          <p style="color: var(--text-sub); font-size: 13px; margin-bottom: 16px;">
+          <p style="color: var(--text-sub); font-size: 15px; margin-bottom: 16px;">
             Clear all test submissions and uploaded photos before starting the live event. Credentials and team setup remain preserved.
           </p>
           <button type="button" class="btn-control" style="border-color: var(--danger); color: var(--danger);" onclick="resetEventSubmissions()">
@@ -352,25 +352,25 @@
     <div class="auth-gate-card">
       <img src="images/alliance-logo.png" alt="Alliance Logo" class="alliance-logo-badge" style="width: 80px; height: 80px; margin: 0 auto 14px auto; display: block;">
       <h2 style="font-size: 22px; font-weight: 800; color: #f8fafc; margin-bottom: 6px;">Alliance Admin Gate</h2>
-      <p style="font-size: 13px; color: #94a3b8; margin-bottom: 20px;">Master Organizer Password Required to View Live Operations</p>
+      <p style="font-size: 15px; color: #94a3b8; margin-bottom: 20px;">Master Organizer Password Required to View Live Operations</p>
       
       <div id="authGateFeedback" class="feedback-box"></div>
 
       <form onsubmit="verifyAdminGate(event)">
         <div style="margin-bottom: 16px; text-align: left;">
-          <label style="display: block; font-size: 12px; font-weight: 700; color: #cbd5e1; margin-bottom: 6px;" for="gatePassInput">Organizer Master Password</label>
+          <label style="display: block; font-size: 14px; font-weight: 700; color: #cbd5e1; margin-bottom: 6px;" for="gatePassInput">Organizer Master Password</label>
           <input 
             type="password" 
             id="gatePassInput" 
             class="editable-input" 
             placeholder="Enter Admin Password" 
             required 
-            style="width: 100%; text-align: center; font-size: 16px; padding: 12px;"
+            style="width: 100%; text-align: center; font-size: 17px; padding: 12px;"
             autocomplete="current-password"
             autofocus
           >
         </div>
-        <button type="submit" class="btn-control active" style="width: 100%; padding: 12px; font-size: 15px; font-weight: 700; background: linear-gradient(135deg, #f59e0b 0%, #ef4444 100%); color: white; border: none; border-radius: var(--radius-sm); cursor: pointer;">
+        <button type="submit" class="btn-control active" style="width: 100%; padding: 12px; font-size: 16px; font-weight: 700; background: linear-gradient(135deg, #f59e0b 0%, #ef4444 100%); color: white; border: none; border-radius: var(--radius-sm); cursor: pointer;">
           ⚡ Unlock Live Dashboard
         </button>
       </form>
