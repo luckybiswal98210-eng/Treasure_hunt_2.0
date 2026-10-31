@@ -247,16 +247,24 @@ function clearDraft() {
 }
 
 async function syncProgressWithServer() {
+  if (!teamId) return;
   try {
     const res = await fetch(`/api/team-progress?teamId=${encodeURIComponent(teamId)}`);
     if (!res.ok) return;
     const data = await res.json();
 
-    if (data && typeof data.completedCount === 'number') {
-      const serverIndex = data.completedCount;
+    if (data) {
+      const serverCount = Number(data.completedCount || 0);
+      const serverMaxQ = Number(data.lastCompletedQuestionId || 0);
+      const listMax = Array.isArray(data.completedQuestionIds) && data.completedQuestionIds.length > 0
+        ? Math.max(...data.completedQuestionIds)
+        : 0;
+
+      // Furthest checkpoint reached or completed across all records
+      const serverFurthest = Math.max(serverCount, serverMaxQ, listMax);
 
       // Always advance to furthest checkpoint reached (never move backwards)
-      const furthestIndex = Math.max(currentQuestionIndex, serverIndex);
+      const furthestIndex = Math.max(currentQuestionIndex, serverFurthest);
       if (furthestIndex > currentQuestionIndex) {
         currentQuestionIndex = Math.min(furthestIndex, orderedQuestions.length);
         saveLocalProgress();
@@ -676,27 +684,31 @@ async function initApp() {
 
   updateNetworkStatus();
 
-  // Load questions (Try API, with instant static fallback so students are never blocked)
+  // Load questions (Instant static questions so students are never blocked)
   try {
-    const res = await fetch('/api/questions');
-    if (res.ok) {
-      const qConfig = await res.json();
-      if (qConfig && Array.isArray(qConfig.questions) && qConfig.questions.length >= 22) {
-        orderedQuestions = buildTeamQuestions(qConfig);
+    const localRes = await fetch('questions.json?v=3.1.0');
+    if (localRes.ok) {
+      const localConfig = await localRes.json();
+      if (localConfig && Array.isArray(localConfig.questions) && localConfig.questions.length >= 22) {
+        orderedQuestions = buildTeamQuestions(localConfig);
       }
     }
-  } catch (err) {
-    console.warn('API questions fetch deferred, loading static questions:', err);
+  } catch (e) {
+    console.warn('Direct questions fetch deferred:', e);
   }
 
-  // Reliable instant static questions fallback
+  // Fallback to API if static didn't populate
   if (!orderedQuestions || orderedQuestions.length === 0) {
     try {
-      const localRes = await fetch('questions.json?v=3.0.0');
-      const localConfig = await localRes.json();
-      orderedQuestions = buildTeamQuestions(localConfig);
-    } catch (e) {
-      console.error('Static questions fallback error:', e);
+      const res = await fetch('/api/questions');
+      if (res.ok) {
+        const qConfig = await res.json();
+        if (qConfig && Array.isArray(qConfig.questions)) {
+          orderedQuestions = buildTeamQuestions(qConfig);
+        }
+      }
+    } catch (err) {
+      console.error('API questions fallback error:', err);
     }
   }
 
@@ -716,10 +728,8 @@ async function initApp() {
     }
   } catch (e) {}
 
-  // Render immediately if we have local progress so student never sees Checkpoint 1
-  if (currentQuestionIndex > 0) {
-    renderCurrentQuestion();
-  }
+  // Render immediately so student never sees "Fetching campus coordinates..."
+  renderCurrentQuestion();
 
   // Authoritative sync with server to resume exactly where the team left off
   try {
@@ -731,9 +741,14 @@ async function initApp() {
   // Render the exact clue where the team left off!
   renderCurrentQuestion();
 
-  // Keep live sync active so if admin resets while page is open, it auto-resets to Checkpoint 1
-  setInterval(syncProgressWithServer, 5000);
+  // Keep live sync active (25s interval to preserve serverless bandwidth)
+  setInterval(syncProgressWithServer, 25000);
   window.addEventListener('focus', syncProgressWithServer);
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'visible') {
+      syncProgressWithServer();
+    }
+  });
 
   // Auto-save draft on input change
   const answerInput = document.getElementById('answerInput');
