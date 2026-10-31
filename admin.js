@@ -195,7 +195,11 @@ function switchTab(tabId) {
 // ----------------------------------------------------
 // 4. DATA FETCHING & LIVE POLLING
 // ----------------------------------------------------
+let isDataFetching = false;
 async function fetchAllData() {
+  if (isDataFetching) return;
+  isDataFetching = true;
+
   try {
     const subsPromise = fetch(`/api/submissions?t=${Date.now()}`)
       .then((r) => r.json())
@@ -203,18 +207,15 @@ async function fetchAllData() {
         console.warn('Submissions live fetch deferred:', e);
         return null;
       });
-    const credsPromise = fetch(`/api/credentials?t=${Date.now()}`)
-      .then((r) => r.json())
-      .catch((e) => {
-        console.warn('Credentials fetch deferred:', e);
-        return null;
-      });
-    const questPromise = fetch(`/api/questions?t=${Date.now()}`)
-      .then((r) => r.json())
-      .catch((e) => {
-        console.warn('Questions fetch deferred:', e);
-        return null;
-      });
+
+    // Only fetch credentials and questions on initial load or if empty
+    const credsPromise = allCredentials.length === 0
+      ? fetch(`/api/credentials?t=${Date.now()}`).then((r) => r.json()).catch(() => null)
+      : Promise.resolve(null);
+
+    const questPromise = (!questionsConfig || !questionsConfig.questions)
+      ? fetch(`/api/questions?t=${Date.now()}`).then((r) => r.json()).catch(() => null)
+      : Promise.resolve(null);
 
     const [subs, creds, quests] = await Promise.all([subsPromise, credsPromise, questPromise]);
 
@@ -240,6 +241,8 @@ async function fetchAllData() {
     renderLeaderboard();
   } catch (err) {
     console.error('Data sync error:', err);
+  } finally {
+    isDataFetching = false;
   }
 }
 
