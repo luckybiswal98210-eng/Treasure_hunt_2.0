@@ -254,8 +254,31 @@ async function syncProgressWithServer() {
 
     if (data && typeof data.completedCount === 'number') {
       const serverIndex = data.completedCount;
-      if (serverIndex !== currentQuestionIndex) {
-        currentQuestionIndex = Math.min(serverIndex, orderedQuestions.length);
+      const serverResetAt = Number(data.resetAt || 0);
+
+      // Check when local progress was last saved on this device
+      const localRaw = localStorage.getItem(getProgressStorageKey());
+      let localUpdatedAt = 0;
+      if (localRaw) {
+        try {
+          const parsed = JSON.parse(localRaw);
+          localUpdatedAt = new Date(parsed.updatedAt || 0).getTime();
+        } catch (e) {}
+      }
+
+      // If an ADMIN RESET occurred AFTER the team's local progress was saved:
+      if (serverResetAt > 0 && serverResetAt > localUpdatedAt) {
+        console.log('Admin reset detected! Restarting team from Checkpoint 1.');
+        currentQuestionIndex = 0;
+        saveLocalProgress();
+        renderCurrentQuestion();
+        return;
+      }
+
+      // OTHERWISE: Always continue from the furthest checkpoint reached (where the team left off)
+      const furthestIndex = Math.max(currentQuestionIndex, serverIndex);
+      if (furthestIndex !== currentQuestionIndex) {
+        currentQuestionIndex = Math.min(furthestIndex, orderedQuestions.length);
         saveLocalProgress();
         renderCurrentQuestion();
       }
