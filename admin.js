@@ -564,14 +564,37 @@ function renderMatrix() {
   if (!table) return;
 
   const totalCheckpoints = getTotalCheckpoints();
-  const teams = [...allCredentials].sort((a, b) => Number(a.id) - Number(b.id));
+  const teams = [...allCredentials];
+
+  // Include any extra teams that have submitted
+  const credsTeamIds = new Set(teams.map((t) => String(t.id)));
+  allSubmissions.forEach((s) => {
+    const sId = String(s.teamId);
+    if (!credsTeamIds.has(sId)) {
+      credsTeamIds.add(sId);
+      teams.push({ id: sId, name: s.teamName || `Team ${sId}` });
+    }
+  });
+
+  // Sort numerically where possible, then alphabetically
+  teams.sort((a, b) => {
+    const numA = Number(a.id);
+    const numB = Number(b.id);
+    if (!isNaN(numA) && !isNaN(numB)) return numA - numB;
+    if (!isNaN(numA)) return -1;
+    if (!isNaN(numB)) return 1;
+    return String(a.id).localeCompare(String(b.id));
+  });
 
   const teamSolves = {};
   allSubmissions.forEach((s) => {
     if (!s.isCorrect) return;
-    const tid = String(s.teamId);
+    const tid = String(s.teamId).trim();
     if (!teamSolves[tid]) teamSolves[tid] = {};
     teamSolves[tid][Number(s.questionId)] = s;
+
+    const tName = String(s.teamName || '').toLowerCase().trim();
+    if (tName && !teamSolves[tName]) teamSolves[tName] = teamSolves[tid];
   });
 
   let html = '<thead><tr><th>Team</th>';
@@ -581,8 +604,9 @@ function renderMatrix() {
   html += '<th>Total</th></tr></thead><tbody>';
 
   teams.forEach((t) => {
-    const tid = String(t.id);
-    const solvedMap = teamSolves[tid] || {};
+    const tid = String(t.id).trim();
+    const tName = String(t.name || '').toLowerCase().trim();
+    const solvedMap = teamSolves[tid] || (tName ? teamSolves[tName] : {}) || {};
     const solvedCount = Object.keys(solvedMap).length;
 
     html += `<tr><td style="font-weight:700; text-align:left; white-space:nowrap;">${escapeHtml(t.name || 'Team ' + tid)}</td>`;
